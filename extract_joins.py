@@ -28,12 +28,19 @@ class JoinExtractor:
         # Оригинальный SQL плюс имя файла (для сообщений об ошибках)
         self.sql_text = strip_placeholders(sql_text)
         self.source_name = source_name
-        # direct_sources: имя CTE -> множество “сырьевых” таблиц
+        # direct_sources: имя CTE -> множество "сырьевых" таблиц
         self.direct_sources: Dict[str, Set[str]] = defaultdict(set)
         # Кэш для уже развёрнутых алиасов, чтобы не обходить граф повторно
         self._resolved_cache: Dict[str, Set[str]] = {}
+        # Кэш для _tables_from_select (по id объекта SELECT)
+        self._select_tables_cache: Dict[int, Set[str]] = {}
+        # Кэш для _tables_from_relation (по id объекта)
+        self._relation_tables_cache: Dict[int, Set[str]] = {}
         self.results: List[Dict[str, str]] = []
         self._trees: List[exp.Expression] = []
+        # Список уже обработанных SELECT (по id), чтобы избежать дубликатов
+        self._processed_selects: Set[int] = set()
+        self.count = 0
 
     def extract(self) -> List[Dict[str, str]]:
         """
@@ -59,27 +66,44 @@ class JoinExtractor:
         # Шаг 1: запоминаем, из каких таблиц строится каждый CTE
         self._collect_direct_sources()
 
-        # Шаг 2: идём по всем SELECT внутри дерева и извлекаем JOIN-ы
+        # Шаг 2: собираем все SELECT один раз (оптимизация: избегаем множественных обходов дерева)
+        all_selects: List[exp.Select] = []
         for tree in self._trees:
-            for select in tree.find_all(exp.Select):
-                alias_map = self._build_alias_map(select)
-                self._collect_joins(select, alias_map)
+            all_selects.extend(tree.find_all(exp.Select))
+
+        # Шаг 3: обрабатываем каждый SELECT только один раз
+        for select in all_selects:
+            select_id = id(select)
+            if select_id in self._processed_selects:
+                continue
+            self._processed_selects.add(select_id)
+            alias_map = self._build_alias_map(select)
+            self._collect_joins(select, alias_map)
 
         return self.results
 
     def _collect_direct_sources(self) -> None:
         """Для каждого CTE узнаем список таблиц, которые встречаются в его FROM/JOIN."""
+        # Оптимизация: собираем все CTE один раз
+        all_ctes: List[exp.CTE] = []
         for tree in self._trees:
-            for cte in tree.find_all(exp.CTE):
-                name = (cte.alias_or_name or "").lower()
-                if not name:
-                    continue
-                sources = self._tables_from_select(cte.this)
-                if sources:
-                    self.direct_sources[name].update(sources)
+            all_ctes.extend(tree.find_all(exp.CTE))
+        
+        for cte in all_ctes:
+            name = (cte.alias_or_name or "").lower()
+            if not name:
+                continue
+            sources = self._tables_from_select(cte.this)
+            if sources:
+                self.direct_sources[name].update(sources)
 
     def _tables_from_select(self, select_expr: exp.Select) -> Set[str]:
         """Возвращаем множество таблиц, встречающихся в SELECT (как в FROM, так и в JOIN)."""
+        # Оптимизация: кэшируем результат по id объекта SELECT
+        select_id = id(select_expr)
+        if select_id in self._select_tables_cache:
+            return self._select_tables_cache[select_id]
+
         sources: Set[str] = set()
         from_clause = self._get_from_clause(select_expr)
         if from_clause and from_clause.this:
@@ -87,35 +111,65 @@ class JoinExtractor:
 
         for join in select_expr.args.get("joins") or []:
             sources.update(self._tables_from_relation(join.this))
+        
+        # Сохраняем в кэш
+        self._select_tables_cache[select_id] = sources
         return sources
 
     def _tables_from_relation(self, relation: exp.Expression) -> Set[str]:
         """
-        Универсальный разбор “источника данных”.
+        Универсальный разбор "источника данных".
         Источником может быть обычная таблица либо подзапрос; подзапрос разбираем рекурсивно.
         """
+        # Оптимизация: кэшируем результат по id объекта relation
+        relation_id = id(relation)
+        if relation_id in self._relation_tables_cache:
+            return self._relation_tables_cache[relation_id]
+
+        result: Set[str] = set()
         if isinstance(relation, exp.Table):
-            return {relation.name}
-        if isinstance(relation, exp.Subquery):
+            result = {relation.name}
+        elif isinstance(relation, exp.Subquery):
             inner = relation.this
             if isinstance(inner, exp.Select):
-                return self._tables_from_select(inner)
-        return set()
+                result = self._tables_from_select(inner)
+        
+        # Сохраняем в кэш
+        self._relation_tables_cache[relation_id] = result
+        return result
 
-    def _resolve_table(self, name: str) -> Set[str]:
+    def _resolve_table(self, name: str, visited: Optional[Set[str]] = None) -> Set[str]:
         """
         Разворачиваем алиас/CTE до физических таблиц.
         Если имя — это CTE, рекурсивно идём к его источникам,
         иначе считаем, что это уже настоящая таблица.
+        
+        Оптимизация: добавлена защита от циклических зависимостей через параметр visited.
         """
         normalized = name.lower()
+        
+        # Проверка кэша (быстрый путь)
         if normalized in self._resolved_cache:
             return self._resolved_cache[normalized]
+
+        # Защита от циклических зависимостей
+        if visited is None:
+            visited = set()
+        
+        if normalized in visited:
+            # Обнаружен цикл - возвращаем имя как есть, чтобы избежать бесконечной рекурсии
+            result = {name}
+            self._resolved_cache[normalized] = result
+            return result
+        
+        # Добавляем текущий узел в путь обхода
+        visited.add(normalized)
 
         if normalized in self.direct_sources:
             resolved: Set[str] = set()
             for source in self.direct_sources[normalized]:
-                resolved.update(self._resolve_table(source))
+                # Передаём visited дальше для отслеживания пути
+                resolved.update(self._resolve_table(source, visited.copy()))
             self._resolved_cache[normalized] = resolved
             return resolved
 
@@ -175,6 +229,7 @@ class JoinExtractor:
         """Проходим по JOIN-ам и преобразуем каждую ON-условие в строку результата."""
         joins = select_expr.args.get("joins") or []
         for join in joins:
+            self.count += 1
             join_type = (join.args.get("kind") or join.args.get("side") or "INNER").upper()
             on_expr = join.args.get("on")
             pair_conditions: Dict[Tuple[str, str], List[str]] = defaultdict(list)
@@ -305,6 +360,7 @@ def main() -> None:
     """Читаем каждый файл, запускаем пайплайн и записываем строки в CSV."""
     args = parse_args()
     rows: List[Dict[str, str]] = []
+    counter = 0
 
     for raw_path in args.paths:
         path = Path(raw_path)
@@ -313,6 +369,7 @@ def main() -> None:
         sql_text = path.read_text(encoding=args.encoding)
         extractor = JoinExtractor(sql_text, source_name=raw_path)
         rows.extend(extractor.extract())
+        counter += extractor.count
 
     header = "Таблица1;Таблица2;Тип связи;Связь1"
     output_path = Path(args.output)
@@ -321,6 +378,8 @@ def main() -> None:
         for row in rows:
             outfile.write(f"{row['table1']};{row['table2']};{row['join_type']};{row['condition']}\n")
     print(f"Готово. Результат сохранён в {output_path.resolve()}")
+
+    print(f"Total count: {counter}")
 
 
 if __name__ == "__main__":
