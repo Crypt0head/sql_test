@@ -16,6 +16,18 @@ def strip_placeholders(sql_text: str) -> str:
     return re.sub(r"\{([^}]+)\}", r"\1", sql_text)
 
 
+def count_joins_by_regex(sql_text: str) -> int:
+    """
+    Подсчитывает количество JOIN'ов в SQL тексте при помощи регулярного выражения.
+    Ищет различные типы JOIN: INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, просто JOIN.
+    """
+    # Паттерн для поиска JOIN'ов (case-insensitive)
+    # Ищем: JOIN, INNER JOIN, LEFT JOIN, RIGHT JOIN, FULL JOIN, LEFT OUTER JOIN и т.д.
+    join_pattern = r'\b(?:INNER\s+)?JOIN\b|\bLEFT\s+(?:OUTER\s+)?JOIN\b|\bRIGHT\s+(?:OUTER\s+)?JOIN\b|\bFULL\s+(?:OUTER\s+)?JOIN\b'
+    matches = re.findall(join_pattern, sql_text, re.IGNORECASE)
+    return len(matches)
+
+
 class JoinExtractor:
     """
     Обёртка вокруг sqlglot, которая:
@@ -40,7 +52,10 @@ class JoinExtractor:
         self._trees: List[exp.Expression] = []
         # Список уже обработанных SELECT (по id), чтобы избежать дубликатов
         self._processed_selects: Set[int] = set()
+        # Счетчик JOIN'ов, обработанных через sqlglot
         self.count = 0
+        # Количество JOIN'ов, найденных регулярным выражением
+        self.regex_join_count = count_joins_by_regex(self.sql_text)
 
     def extract(self) -> List[Dict[str, str]]:
         """
@@ -360,7 +375,9 @@ def main() -> None:
     """Читаем каждый файл, запускаем пайплайн и записываем строки в CSV."""
     args = parse_args()
     rows: List[Dict[str, str]] = []
-    counter = 0
+    # Счетчики для статистики
+    total_sqlglot_joins = 0
+    total_regex_joins = 0
 
     for raw_path in args.paths:
         path = Path(raw_path)
@@ -369,7 +386,8 @@ def main() -> None:
         sql_text = path.read_text(encoding=args.encoding)
         extractor = JoinExtractor(sql_text, source_name=raw_path)
         rows.extend(extractor.extract())
-        counter += extractor.count
+        total_sqlglot_joins += extractor.count
+        total_regex_joins += extractor.regex_join_count
 
     header = "Таблица1;Таблица2;Тип связи;Связь1"
     output_path = Path(args.output)
@@ -379,7 +397,18 @@ def main() -> None:
             outfile.write(f"{row['table1']};{row['table2']};{row['join_type']};{row['condition']}\n")
     print(f"Готово. Результат сохранён в {output_path.resolve()}")
 
-    print(f"Total count: {counter}")
+    # Выводим статистику обработки JOIN'ов
+    print("\n" + "="*60)
+    print("СТАТИСТИКА ОБРАБОТКИ JOIN'ОВ:")
+    print("="*60)
+    print(f"JOIN'ов найдено регулярным выражением: {total_regex_joins}")
+    print(f"JOIN'ов обработано через sqlglot: {total_sqlglot_joins}")
+    if total_regex_joins > 0:
+        percentage = (total_sqlglot_joins / total_regex_joins) * 100
+        print(f"Процент обработки: {percentage:.2f}%")
+    else:
+        print("Процент обработки: N/A (не найдено JOIN'ов в исходных файлах)")
+    print("="*60)
 
 
 if __name__ == "__main__":
