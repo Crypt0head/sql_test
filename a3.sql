@@ -1,6 +1,6 @@
 WITH LAST_TRX_CFT_ID_RN AS (
         SELECT cft_id
-        FROM corpcard_trx_temp
+        FROM {corpcard_trx_temp}
 ),
 LAST_TRX AS (
         SELECT cft_id
@@ -8,16 +8,16 @@ LAST_TRX AS (
 ),
 AGG_TRX_DT1 AS (
         SELECT cft_id
-        FROM corpcard_trx_temp_dt1
+        FROM {corpcard_trx_temp_dt1}
 ),
 AGG_TRX_DT0 AS (
         SELECT cft_id
-        FROM corpcard_trx_temp_dt0
+        FROM {corpcard_trx_temp_dt0}
 
 ),
 CLIENT_OSTATOK_ALL AS (
         SELECT cft_id
-        FROM corpcard_ostatok co
+        FROM {corpcard_ostatok} co
         INNER JOIN z_ac_fin a ON co.collection_id = a.c_arc_move
         INNER JOIN z_rko r ON a.id = r.c_account
 ),
@@ -31,7 +31,7 @@ AVG_OST AS (
 ),
 TRX_VID_WITH_LAG AS (
         SELECT *
-        FROM corpcard_trx_temp_dt1 tv
+        FROM {corpcard_trx_temp_dt1} tv
 ),
 TRX_VID_WITH_DIFF AS (
         SELECT *
@@ -43,7 +43,7 @@ AVG_VID AS (
 ),
 TRX_POST_WITH_LAG AS (
         SELECT *
-        FROM corpcard_trx_temp_dt0 tp
+        FROM {corpcard_trx_temp_dt0} tp
 ),
 TRX_POST_WITH_DIFF AS (
         SELECT *
@@ -55,12 +55,12 @@ AVG_POST AS (
 ),
 ACTIVE_CLIENTS AS (
         SELECT c.id AS cft_id
-        FROM z_rko r 
-        INNER JOIN z_product p ON p.id = r.id
-        INNER JOIN z_client c ON c.id = r.c_client
-        INNER JOIN z_branch b ON b.id = p.c_filial
-        INNER JOIN z_ac_fin a ON a.id = r.c_account
-        INNER JOIN z_rko_types rt ON rt.id = r.c_rko_type
+        FROM {z_rko} r 
+        INNER JOIN {z_product} p ON p.id = r.id
+        INNER JOIN {z_client} c ON c.id = r.c_client
+        INNER JOIN {z_branch} b ON b.id = p.c_filial
+        INNER JOIN {z_ac_fin} a ON a.id = r.c_account
+        INNER JOIN {z_rko_types} rt ON rt.id = r.c_rko_type
 ),
 DISTINCT_CLIENTS AS (
         SELECT DISTINCT cft_id
