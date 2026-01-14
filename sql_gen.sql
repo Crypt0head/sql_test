@@ -106,19 +106,50 @@ SELECT load_day, stage, sort_order, quantity FROM (
 ) t ORDER BY load_day, sort_order;
 
 WITH 
-base AS (SELECT n, RANDOM() AS r_region, RANDOM() AS r_will_visit, RANDOM() AS r_responded, RANDOM() AS r_purchased, RANDOM() AS r_num_offered,
-        CASE WHEN RANDOM() < 0.45 THEN 'credit' ELSE 'other' END AS segment FROM generate_series(1, 3000) AS n),
-s1 AS (SELECT *, CASE WHEN r_region < 0.2 THEN 'Центральный' WHEN r_region < 0.4 THEN 'Северо-Западный' WHEN r_region < 0.6 THEN 'Сибирский' WHEN r_region < 0.8 THEN 'Приволжский' ELSE 'Южный' END AS rf,
-        CASE WHEN segment = 'credit' THEN CASE WHEN r_num_offered < 0.15 THEN 0 WHEN r_num_offered < 0.7 THEN 1 WHEN r_num_offered < 0.9 THEN 2 ELSE 3 END
-             ELSE CASE WHEN r_num_offered < 0.25 THEN 0 WHEN r_num_offered < 0.75 THEN 1 WHEN r_num_offered < 0.93 THEN 2 ELSE 3 END END AS num_ksp_offered,
-        CASE WHEN segment = 'credit' THEN 0.68 ELSE 0.28 END AS p_visit, CASE WHEN segment = 'credit' THEN 0.55 ELSE 0.30 END AS p_response,
-        CASE WHEN segment = 'credit' THEN 0.37 ELSE 0.17 END AS p_purchase FROM base),
+base AS (
+    SELECT 
+        n, 
+        RANDOM() AS r_region, 
+        RANDOM() AS r_will_visit, 
+        RANDOM() AS r_responded, 
+        RANDOM() AS r_purchased, 
+        RANDOM() AS r_num_offered,
+        CASE WHEN RANDOM() < 0.45 THEN 'credit' ELSE 'other' END AS segment 
+    FROM generate_series(1, 3000) AS n
+),
+s1 AS (
+    SELECT *,
+        -- Новое распределение регионов:
+        -- Центральный: 37%, Северо-Западный: 18%, Сибирский: 15%, Приволжский: 17%, Южный: 13%
+        CASE 
+            WHEN r_region < 0.37 THEN 'Центральный'
+            WHEN r_region < 0.55 THEN 'Северо-Западный'
+            WHEN r_region < 0.70 THEN 'Сибирский'
+            WHEN r_region < 0.87 THEN 'Приволжский'
+            ELSE 'Южный'
+        END AS rf,
+        CASE WHEN segment = 'credit' 
+             THEN CASE WHEN r_num_offered < 0.15 THEN 0 WHEN r_num_offered < 0.7 THEN 1 WHEN r_num_offered < 0.9 THEN 2 ELSE 3 END
+             ELSE CASE WHEN r_num_offered < 0.25 THEN 0 WHEN r_num_offered < 0.75 THEN 1 WHEN r_num_offered < 0.93 THEN 2 ELSE 3 END 
+        END AS num_ksp_offered,
+        CASE WHEN segment = 'credit' THEN 0.68 ELSE 0.28 END AS p_visit, 
+        CASE WHEN segment = 'credit' THEN 0.55 ELSE 0.30 END AS p_response,
+        CASE WHEN segment = 'credit' THEN 0.37 ELSE 0.17 END AS p_purchase 
+    FROM base
+),
 s2 AS (SELECT *, CASE WHEN r_will_visit < p_visit THEN 1 ELSE 0 END AS visited FROM s1),
 s3 AS (SELECT *, CASE WHEN visited = 1 AND num_ksp_offered > 0 AND r_responded < p_response THEN 1 ELSE 0 END AS responded FROM s2),
 s4 AS (SELECT *, CASE WHEN responded = 1 AND r_purchased < (p_purchase / p_response) THEN 1 ELSE 0 END AS purchased FROM s3)
-SELECT rf AS region, COUNT(*) AS total_count, SUM(visited) AS visits, SUM(purchased) AS purchases,
+
+SELECT 
+    rf AS region, 
+    COUNT(*) AS total_count, 
+    SUM(visited) AS visits, 
+    SUM(purchased) AS purchases,
     ROUND(100.0 * SUM(purchased)::NUMERIC / NULLIF(SUM(visited), 0), 1) AS cr_pct
-FROM s4 GROUP BY rf ORDER BY total_count DESC;
+FROM s4 
+GROUP BY rf 
+ORDER BY total_count DESC;
 
 WITH 
 base AS (SELECT n, RANDOM() AS r_channel FROM generate_series(1, 3000) AS n),
