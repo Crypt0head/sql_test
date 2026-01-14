@@ -161,37 +161,82 @@ s4 AS (SELECT *, CASE WHEN responded = 1 AND r_purchased < (p_purchase / p_respo
 s5 AS (SELECT *, CASE WHEN purchased = 1 THEN LEAST(CASE WHEN r_num_purchased < 0.84 THEN 1 ELSE 2 END, num_ksp_offered) ELSE 0 END AS num_ksp_purchased FROM s4),
 s6 AS (SELECT *, CASE WHEN num_ksp_purchased = 0 THEN 0 WHEN num_ksp_purchased = 1 THEN CASE WHEN r_return < p_return THEN 1 ELSE 0 END
                       ELSE CASE WHEN r_return < POWER(1-p_return, 2) THEN 0 WHEN r_return < POWER(1-p_return, 2) + 2*p_return*(1-p_return) THEN 1 ELSE 2 END END AS num_ksp_returned_cooling FROM s5),
+
+-- Полный каталог КСП (15 позиций)
 ksp_catalog AS (
-    SELECT * FROM (VALUES (1,'Страхование жизни заемщика',5,1),(2,'Защита от потери работы',3,1),(3,'Страхование титула',4,1),(4,'Страхование квартиры',3,2),
-        (5,'Страхование дома',1,1),(6,'Страхование от несчастных случаев',2,1),(7,'Страхование путешественников',1,2),(8,'ДМС',1,2),
-        (9,'Доктор онлайн/телемедицина',1,2),(10,'Защита карт и счетов',1,4),(11,'Страхование держателей кредитных карт',1,1),
-        (12,'КАСКО',1,1),(13,'ОСАГО',1,1),(14,'Фарма-страхование',1,1),(15,'Юр./мед. поддержка',1,1)
+    SELECT * FROM (VALUES 
+        (1, 'Страхование жизни заемщика', 5, 1),
+        (2, 'Защита от потери работы', 3, 1),
+        (3, 'Страхование титула', 4, 1),
+        (4, 'Страхование квартиры', 3, 2),
+        (5, 'Страхование дома', 1, 1),
+        (6, 'Страхование от несчастных случаев', 2, 1),
+        (7, 'Страхование путешественников', 1, 2),
+        (8, 'ДМС', 1, 2),
+        (9, 'Доктор онлайн/телемедицина', 1, 2),
+        (10, 'Защита карт и счетов', 1, 4),
+        (11, 'Страхование держателей кредитных карт', 1, 1),
+        (12, 'КАСКО', 1, 1),
+        (13, 'ОСАГО', 1, 1),
+        (14, 'Фарма-страхование', 1, 1),
+        (15, 'Юр./мед. поддержка', 1, 1)
     ) AS t(ksp_id, ksp_name, weight_credit, weight_other)
 ),
+
+-- Распределяем КСП с добавлением случайности к весам (чтобы все КСП имели шанс)
 expanded AS (
-    SELECT d.client_id, d.segment, d.is_deposit_client, d.num_ksp_purchased, d.num_ksp_returned_cooling, k.ksp_name,
-        ROW_NUMBER() OVER (PARTITION BY d.n ORDER BY (CASE WHEN d.segment = 'credit' THEN k.weight_credit ELSE k.weight_other END) DESC, RANDOM()) AS rn
-    FROM s6 d CROSS JOIN ksp_catalog k WHERE d.num_ksp_offered > 0
+    SELECT 
+        d.n, d.client_id, d.segment, d.is_deposit_client, 
+        d.num_ksp_offered, d.num_ksp_purchased, d.num_ksp_returned_cooling,
+        k.ksp_id, k.ksp_name,
+        -- Добавляем случайность: вес * случайное число от 0.5 до 1.5
+        ROW_NUMBER() OVER (
+            PARTITION BY d.n 
+            ORDER BY 
+                (CASE WHEN d.segment = 'credit' THEN k.weight_credit ELSE k.weight_other END) 
+                * (0.5 + RANDOM()) DESC
+        ) AS rn
+    FROM s6 d 
+    CROSS JOIN ksp_catalog k 
+    WHERE d.num_ksp_offered > 0
 ),
-exp_filtered AS (SELECT * FROM expanded WHERE rn <= 3),
+
+-- Фильтруем только те КСП, которые "предложены" клиенту
+exp_filtered AS (
+    SELECT * FROM expanded WHERE rn <= num_ksp_offered
+),
+
+-- Базы клиентов по сегментам
 bases AS (
-    SELECT COUNT(DISTINCT client_id) AS total_clients,
+    SELECT 
+        COUNT(DISTINCT client_id) AS total_clients,
         COUNT(DISTINCT CASE WHEN segment = 'credit' THEN client_id END) AS credit_clients,
         COUNT(DISTINCT CASE WHEN is_deposit_client = 1 THEN client_id END) AS deposit_clients,
         GREATEST(COUNT(DISTINCT CASE WHEN segment = 'other' AND is_deposit_client = 0 THEN client_id END), 1) AS other_clients
     FROM s6
 ),
+
+-- Метрики по КСП (только те, что были предложены)
 metrics AS (
-    SELECT ksp_name, COUNT(DISTINCT client_id) AS clients_all,
+    SELECT 
+        ksp_name,
+        COUNT(DISTINCT client_id) AS clients_all,
         COUNT(DISTINCT CASE WHEN segment = 'credit' THEN client_id END) AS clients_credit,
         COUNT(DISTINCT CASE WHEN is_deposit_client = 1 THEN client_id END) AS clients_deposit,
         COUNT(DISTINCT CASE WHEN segment = 'other' AND is_deposit_client = 0 THEN client_id END) AS clients_other,
         SUM(CASE WHEN rn <= num_ksp_returned_cooling THEN 1 ELSE 0 END) AS returns_total
-    FROM exp_filtered GROUP BY ksp_name
+    FROM exp_filtered 
+    GROUP BY ksp_name
 )
-SELECT m.ksp_name,
-    ROUND(100.0 * m.clients_credit::NUMERIC / b.credit_clients, 1) AS penetration_credit_pct,
-    ROUND(100.0 * m.clients_deposit::NUMERIC / NULLIF(b.deposit_clients, 0), 1) AS penetration_deposit_pct,
-    ROUND(100.0 * m.clients_other::NUMERIC / b.other_clients, 1) AS penetration_other_pct,
-    m.returns_total
-FROM metrics m CROSS JOIN bases b ORDER BY m.ksp_name;
+
+-- Финальный SELECT с LEFT JOIN чтобы показать ВСЕ КСП из каталога
+SELECT 
+    k.ksp_name,
+    COALESCE(ROUND(100.0 * m.clients_credit::NUMERIC / b.credit_clients, 1), 0) AS penetration_credit_pct,
+    COALESCE(ROUND(100.0 * m.clients_deposit::NUMERIC / NULLIF(b.deposit_clients, 0), 1), 0) AS penetration_deposit_pct,
+    COALESCE(ROUND(100.0 * m.clients_other::NUMERIC / b.other_clients, 1), 0) AS penetration_other_pct,
+    COALESCE(m.returns_total, 0) AS returns_total
+FROM ksp_catalog k
+LEFT JOIN metrics m ON k.ksp_name = m.ksp_name
+CROSS JOIN bases b
+ORDER BY k.ksp_id;
