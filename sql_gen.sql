@@ -51,15 +51,15 @@ s5 AS (SELECT *, CASE WHEN purchased = 1 THEN LEAST(CASE WHEN r_num_purchased < 
 s6 AS (SELECT *, CASE WHEN num_ksp_purchased = 0 THEN 0 WHEN num_ksp_purchased = 1 THEN CASE WHEN r_return < p_return THEN 1 ELSE 0 END
                       ELSE CASE WHEN r_return < POWER(1-p_return, 2) THEN 0 WHEN r_return < POWER(1-p_return, 2) + 2*p_return*(1-p_return) THEN 1 ELSE 2 END END AS num_ksp_returned_cooling FROM s5)
 SELECT 
-    primary_product,
-    ROUND(AVG(num_ksp_offered)::NUMERIC, 2) AS avg_offered,
-    ROUND(AVG(num_ksp_purchased)::NUMERIC, 2) AS avg_purchased,
-    ROUND(100.0 * AVG(purchased)::NUMERIC, 1) AS cr_purchase_pct,
-    SUM(num_ksp_returned_cooling)::INT AS returns_count,
-    ROUND(100.0 * SUM(num_ksp_returned_cooling)::NUMERIC / NULLIF(SUM(num_ksp_purchased), 0), 1) AS return_rate_pct
+    primary_product AS "Основной продукт",
+    ROUND(AVG(num_ksp_offered)::NUMERIC, 2) AS "Проникновение предложенных КСП",
+    ROUND(AVG(num_ksp_purchased)::NUMERIC, 2) AS "Проникновение продаж КСП",
+    ROUND(100.0 * AVG(purchased)::NUMERIC, 1) AS "CR покупка %",
+    SUM(num_ksp_returned_cooling)::INT AS "Возвраты (шт.)",
+    ROUND(100.0 * SUM(num_ksp_returned_cooling)::NUMERIC / NULLIF(SUM(num_ksp_purchased), 0), 1) AS "Доля возвратов %"
 FROM s6
 GROUP BY primary_product
-ORDER BY cr_purchase_pct DESC;
+ORDER BY "CR покупка %" DESC;
 
 WITH 
 base AS (SELECT n, TIMESTAMP '2025-09-01' + (FLOOR(RANDOM() * 71)::INT || ' days')::INTERVAL AS load_date,
