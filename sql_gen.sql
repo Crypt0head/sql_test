@@ -271,3 +271,295 @@ FROM ksp_catalog k
 LEFT JOIN metrics m ON k.ksp_name = m.ksp_name
 CROSS JOIN bases b
 ORDER BY k.ksp_id;
+
+/* ============================================
+   ЦВЕТОВАЯ СХЕМА: ТЁМНО-ЗЕЛЁНЫЙ / ЖЁЛТЫЙ / БЕЛЫЙ
+   ============================================ */
+
+/* Основные цвета */
+:root {
+  --primary-green: #1a472a;      /* Тёмно-зелёный */
+  --secondary-green: #2d5a3d;    /* Зелёный светлее */
+  --accent-yellow: #ffd700;      /* Золотисто-жёлтый */
+  --light-yellow: #fff8dc;       /* Светло-жёлтый */
+  --white: #ffffff;
+  --light-gray: #f5f5f5;
+  --text-dark: #1a472a;
+  --text-light: #ffffff;
+}
+
+/* Фон дашборда */
+.dashboard-content {
+  background: linear-gradient(180deg, #f5f5f5 0%, #e8efe8 100%);
+}
+
+/* Шапка дашборда */
+.dashboard-header {
+  background: var(--primary-green) !important;
+}
+
+.dashboard-header .header-title {
+  color: var(--white) !important;
+}
+
+/* Карточки графиков */
+.dashboard-component-chart-holder {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(26, 71, 42, 0.1);
+  border: 1px solid rgba(26, 71, 42, 0.1);
+  border-top: 4px solid var(--primary-green);
+  transition: all 0.3s ease;
+}
+
+.dashboard-component-chart-holder:hover {
+  box-shadow: 0 4px 20px rgba(26, 71, 42, 0.15);
+  border-top-color: var(--accent-yellow);
+}
+
+/* Заголовки графиков */
+.header-title {
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--primary-green) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================
+   BIG NUMBER (KPI)
+   ============================================ */
+
+.big-number .header-line {
+  font-size: 48px !important;
+  font-weight: 700;
+  color: var(--primary-green) !important;
+}
+
+.big-number .subheader-line {
+  font-size: 14px;
+  color: var(--secondary-green) !important;
+  font-weight: 500;
+}
+
+/* Акцентный KPI (например CR%) */
+.big-number-total .header-line {
+  color: var(--primary-green) !important;
+}
+
+/* ============================================
+   ТАБЛИЦЫ
+   ============================================ */
+
+.table-container table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-container th {
+  background: var(--primary-green) !important;
+  color: var(--white) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  padding: 14px 16px !important;
+  border-bottom: 3px solid var(--accent-yellow) !important;
+}
+
+.table-container td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  color: var(--text-dark) !important;
+  background: var(--white) !important;
+}
+
+.table-container tr:nth-child(even) td {
+  background: var(--light-gray) !important;
+}
+
+.table-container tr:hover td {
+  background: var(--light-yellow) !important;
+}
+
+/* Cell Bars в таблицах */
+.cell-bar {
+  background: linear-gradient(90deg, var(--primary-green) 0%, var(--secondary-green) 100%) !important;
+}
+
+/* ============================================
+   ВОРОНКА (FUNNEL)
+   ============================================ */
+
+.funnel .nv-bar:nth-child(1) { fill: var(--primary-green) !important; }
+.funnel .nv-bar:nth-child(2) { fill: var(--secondary-green) !important; }
+.funnel .nv-bar:nth-child(3) { fill: #4a7c59 !important; }
+.funnel .nv-bar:nth-child(4) { fill: var(--accent-yellow) !important; }
+
+/* ECharts Funnel */
+.echarts-for-react .funnel-item:nth-child(1) { fill: var(--primary-green) !important; }
+
+/* ============================================
+   BAR CHARTS
+   ============================================ */
+
+/* Цвета для Bar Chart */
+.nvd3 .nv-bar {
+  rx: 4;
+  ry: 4;
+}
+
+/* ECharts Bar */
+.echarts-for-react rect[fill] {
+  rx: 4;
+  ry: 4;
+}
+
+/* Легенда */
+.nvd3 .nv-legend-text {
+  fill: var(--text-dark) !important;
+}
+
+/* Оси */
+.nvd3 .nv-axis line,
+.nvd3 .nv-axis path {
+  stroke: #ccc !important;
+}
+
+.nvd3 .nv-axis text {
+  fill: var(--text-dark) !important;
+}
+
+/* ============================================
+   PIE CHARTS
+   ============================================ */
+
+.pie-chart .nv-slice {
+  stroke: var(--white) !important;
+  stroke-width: 2px;
+}
+
+/* ============================================
+   ФИЛЬТРЫ
+   ============================================ */
+
+.filter-box {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(26, 71, 42, 0.1);
+  border-left: 4px solid var(--primary-green);
+}
+
+.Select-control {
+  border-color: var(--secondary-green) !important;
+}
+
+.Select-control:hover {
+  border-color: var(--primary-green) !important;
+}
+
+.Select-option.is-selected {
+  background: var(--primary-green) !important;
+  color: var(--white) !important;
+}
+
+.Select-option.is-focused {
+  background: var(--light-yellow) !important;
+}
+
+/* ============================================
+   MARKDOWN ЗАГОЛОВКИ
+   ============================================ */
+
+.dashboard-markdown h1,
+.dashboard-markdown h2 {
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--primary-green) !important;
+  border-bottom: 3px solid var(--accent-yellow);
+  padding-bottom: 8px;
+  margin: 20px 0 16px 0;
+}
+
+.dashboard-markdown h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dashboard-markdown h3 {
+  color: var(--secondary-green) !important;
+  font-size: 14px;
+}
+
+/* ============================================
+   КНОПКИ И ИНТЕРАКТИВ
+   ============================================ */
+
+.btn-primary {
+  background: var(--primary-green) !important;
+  border-color: var(--primary-green) !important;
+}
+
+.btn-primary:hover {
+  background: var(--accent-yellow) !important;
+  border-color: var(--accent-yellow) !important;
+  color: var(--primary-green) !important;
+}
+
+/* ============================================
+   ОТСТУПЫ И СЕТКА
+   ============================================ */
+
+.grid-row {
+  margin-bottom: 16px;
+}
+
+.dragdroppable {
+  padding: 8px;
+}
+
+.chart-container {
+  border: none !important;
+}
+
+/* ============================================
+   ТУЛТИПЫ
+   ============================================ */
+
+.nvtooltip {
+  background: var(--primary-green) !important;
+  color: var(--white) !important;
+  border-radius: 8px !important;
+  border: 2px solid var(--accent-yellow) !important;
+}
+
+.nvtooltip h3 {
+  background: var(--accent-yellow) !important;
+  color: var(--primary-green) !important;
+}
+
+/* ============================================
+   SCROLL И ПОЛОСЫ ПРОКРУТКИ
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-gray);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-green);
+}
