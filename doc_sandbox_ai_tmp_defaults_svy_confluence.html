@@ -1,0 +1,136 @@
+<h1>Документация по таблице sandbox_ai.tmp_defaults_svy</h1>
+
+<h2>Общие сведения</h2>
+<table>
+<tbody>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td><strong>Полное имя таблицы</strong></td><td><code>sandbox_ai.tmp_defaults_svy</code></td></tr>
+<tr><td><strong>Источник данных</strong></td><td>Источник дефолтов</td></tr>
+<tr><td><strong>Назначение</strong></td><td>Хранение данных обо всех дефолтах клиентов банка</td></tr>
+<tr><td><strong>Описание</strong></td><td>Содержит историю дефолтов клиентов с 2009 года: причину, даты начала/выздоровления/окончания, последовательность этапов дефолта, признаки списания и бессрочности</td></tr>
+<tr><td><strong>Гранулярность</strong></td><td>Одна строка = один дефолт одного клиента</td></tr>
+<tr><td><strong>Ожидаемый период данных</strong></td><td>2009&ndash;2025 гг.</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Описание полей</h2>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Поле</th><th>Тип</th><th>Обязательность</th><th>Описание</th></tr>
+<tr><td>1</td><td><code>inn</code></td><td>VARCHAR(12)</td><td>Да</td><td>ИНН клиента. 10 цифр для юридических лиц, 12 цифр для ИП/КФХ</td></tr>
+<tr><td>2</td><td><code>default_reason</code></td><td>VARCHAR</td><td>Да</td><td>Причина дефолта. Значения в формате кодов: <code>default_90</code>, <code>def_reserve</code> и т.д.</td></tr>
+<tr><td>3</td><td><code>start_date</code></td><td>DATE</td><td>Да</td><td>Дата начала дефолта. Формат: ДД.ММ.ГГГГ</td></tr>
+<tr><td>4</td><td><code>cure_date</code></td><td>DATE</td><td>Нет</td><td>Дата выздоровления компании (выхода из дефолта). Пусто, если клиент ещё в дефолте</td></tr>
+<tr><td>5</td><td><code>finish_date</code></td><td>DATE</td><td>Нет</td><td>Дата окончания (закрытия) дефолта. Может быть позже cure_date. Пусто, если дефолт не закрыт</td></tr>
+<tr><td>6</td><td><code>sequence_of_defaults</code></td><td>VARCHAR</td><td>Да</td><td>Последовательность этапов дефолта (номера шагов через <code>;</code>). Пример: <code>1;2;3</code></td></tr>
+<tr><td>7</td><td><code>sequence_of_dates</code></td><td>VARCHAR</td><td>Да</td><td>Даты, соответствующие каждому шагу из <code>sequence_of_defaults</code> (через <code>;</code>). Количество дат должно совпадать с количеством шагов</td></tr>
+<tr><td>8</td><td><code>writeoff</code></td><td>INTEGER (0/1)</td><td>Да</td><td>Признак списания безнадёжной задолженности. 1 = долг списан, 0 = долг не списан</td></tr>
+<tr><td>9</td><td><code>unlimited_default</code></td><td>INTEGER (0/1)</td><td>Да</td><td>Признак бессрочного дефолта. 1 = клиент до сих пор в дефолте, 0 = дефолт завершён</td></tr>
+<tr><td>10</td><td><code>reasons_on_last_date_month</code></td><td>VARCHAR</td><td>Нет</td><td>Причина дефолта на последнюю отчётную дату. Может отличаться от первоначальной <code>default_reason</code></td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Справочник причин дефолта</h2>
+<p>Полный перечень причин не утверждён. Известные на текущий момент значения:</p>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Предполагаемая расшифровка</th></tr>
+<tr><td><code>default_90</code></td><td>Просрочка свыше 90 дней (стандартный триггер дефолта по Basel)</td></tr>
+<tr><td><code>def_reserve</code></td><td>Формирование резерва на возможные потери</td></tr>
+<tr><td><code>def_bankrupt</code></td><td>Банкротство клиента</td></tr>
+<tr><td><code>def_sign_bankrupt</code></td><td>Признаки банкротства (предбанкротное состояние)</td></tr>
+<tr><td><code>def_restructure</code></td><td>Реструктуризация задолженности</td></tr>
+<tr><td><code>def_cross</code></td><td>Кросс-дефолт (дефолт по одному обязательству влечёт дефолт по другим)</td></tr>
+<tr><td><code>def_judgement</code></td><td>Судебное решение о взыскании</td></tr>
+</tbody>
+</table>
+<ac:structured-macro ac:name="note">
+<ac:rich-text-body><p><strong>Важно:</strong> перечень неполный. При обнаружении новых значений необходимо уточнить расшифровку у владельца данных.</p></ac:rich-text-body>
+</ac:structured-macro>
+
+<hr/>
+
+<h2>Ключи и связи</h2>
+<table>
+<tbody>
+<tr><th>Тип</th><th>Поле(я)</th><th>Описание</th></tr>
+<tr><td>Идентификатор клиента</td><td><code>inn</code></td><td>ИНН клиента. Для связи с другими источниками (H2O, CRM)</td></tr>
+<tr><td>Бизнес-ключ записи</td><td><code>inn</code> + <code>start_date</code></td><td>Предположительно, пара ИНН + дата начала уникально идентифицирует дефолт</td></tr>
+</tbody>
+</table>
+
+<h3>Особенности гранулярности</h3>
+<ul>
+<li>У одного клиента (ИНН) может быть <strong>несколько</strong> дефолтов в разные периоды.</li>
+<li>Поля <code>sequence_of_defaults</code> и <code>sequence_of_dates</code> описывают этапы <strong>внутри одного дефолта</strong>.</li>
+<li>Количество элементов в <code>sequence_of_defaults</code> должно совпадать с количеством дат в <code>sequence_of_dates</code>.</li>
+</ul>
+
+<hr/>
+
+<h2>Логика дат дефолта</h2>
+<ac:structured-macro ac:name="code">
+<ac:parameter ac:name="language">text</ac:parameter>
+<ac:plain-text-body><![CDATA[start_date          cure_date          finish_date
+    |                   |                   |
+    v                   v                   v
+[Начало дефолта] -> [Выздоровление] -> [Закрытие дефолта]]]></ac:plain-text-body>
+</ac:structured-macro>
+<ul>
+<li><code>start_date</code> &lt;= <code>cure_date</code> &lt;= <code>finish_date</code></li>
+<li>Если <code>unlimited_default = 1</code>, то <code>cure_date</code> и <code>finish_date</code> пусты (клиент ещё в дефолте).</li>
+<li>Если <code>unlimited_default = 0</code>, то <code>cure_date</code> и <code>finish_date</code> ожидаемо заполнены.</li>
+<li><code>finish_date</code> может быть позже <code>cure_date</code> &mdash; между выздоровлением и формальным закрытием может пройти время.</li>
+</ul>
+
+<hr/>
+
+<h2>Правила валидации данных</h2>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Проверка</th><th>Критичность</th><th>Описание</th></tr>
+<tr><td>1</td><td>Полные дубликаты строк</td><td>Высокая</td><td>Полностью идентичные строки &mdash; признак ошибки ETL/загрузки</td></tr>
+<tr><td>2</td><td>Обязательные поля не NULL</td><td>Высокая</td><td><code>inn</code>, <code>default_reason</code>, <code>start_date</code> не должны быть пустыми</td></tr>
+<tr><td>3</td><td>Формат ИНН</td><td>Высокая</td><td>Только цифры; 10 знаков для юрлиц, 12 для ИП/КФХ</td></tr>
+<tr><td>4</td><td>Даты в диапазоне</td><td>Средняя</td><td><code>start_date</code>, <code>cure_date</code>, <code>finish_date</code> в пределах 01.01.2009 &ndash; 31.12.2025</td></tr>
+<tr><td>5</td><td>cure_date &gt;= start_date</td><td>Высокая</td><td>Дата выздоровления не может быть раньше начала дефолта</td></tr>
+<tr><td>6</td><td>finish_date &gt;= cure_date</td><td>Высокая</td><td>Дата закрытия не может быть раньше выздоровления</td></tr>
+<tr><td>7</td><td>unlimited_default=1 &rarr; даты пусты</td><td>Средняя</td><td>Бессрочный дефолт не должен иметь cure_date и finish_date</td></tr>
+<tr><td>8</td><td>unlimited_default=0 &rarr; cure_date заполнена</td><td>Средняя</td><td>Закрытый дефолт должен иметь дату выздоровления</td></tr>
+<tr><td>9</td><td>Длина sequence_of_defaults = длина sequence_of_dates</td><td>Средняя</td><td>Количество шагов должно совпадать с количеством дат</td></tr>
+<tr><td>10</td><td>writeoff и unlimited_default</td><td>Низкая</td><td>writeoff=1 при unlimited_default=0 &mdash; нетипично</td></tr>
+<tr><td>11</td><td>Дубликаты inn + start_date</td><td>Средняя</td><td>Два дефолта с одной датой начала у одного клиента &mdash; подозрительно</td></tr>
+<tr><td>12</td><td>default_reason из справочника</td><td>Средняя</td><td>Значения должны быть из известного перечня причин</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Скрипт автоматической проверки</h2>
+<p>Для автоматической проверки качества данных используется скрипт <code>check_defaults.py</code> (расположен в папке <code>проверки/</code>).</p>
+<p><strong>Запуск:</strong></p>
+<ac:structured-macro ac:name="code">
+<ac:parameter ac:name="language">bash</ac:parameter>
+<ac:plain-text-body><![CDATA[python проверки/check_defaults.py]]></ac:plain-text-body>
+</ac:structured-macro>
+<p><strong>Настройки</strong> задаются в начале скрипта: путь к файлу, кодировка, разделитель, известные причины дефолта.</p>
+<p><strong>Результат</strong> выводится в консоль и сохраняется в файл <code>report_defaults.txt</code>.</p>
+
+<hr/>
+
+<h2>Открытые вопросы</h2>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Вопрос</th><th>Статус</th></tr>
+<tr><td>1</td><td>Полный перечень и расшифровка значений <code>default_reason</code></td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>2</td><td>Подтвердить, что <code>writeoff</code> &mdash; это признак списания (0/1)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>3</td><td>Подтвердить, что <code>unlimited_default</code> &mdash; это признак бессрочного дефолта (0/1)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>4</td><td>Что именно означает <code>reasons_on_last_date_month</code> &mdash; причина на дату отчёта или на конец месяца?</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>5</td><td>Является ли пара <code>inn</code> + <code>start_date</code> уникальным ключом записи?</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>6</td><td>Допустимо ли <code>writeoff=1</code> при <code>unlimited_default=0</code> (списание закрытого дефолта)?</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+</tbody>
+</table>

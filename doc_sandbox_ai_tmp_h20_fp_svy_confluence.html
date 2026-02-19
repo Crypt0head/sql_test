@@ -1,0 +1,146 @@
+<h1>Документация по таблице sandbox_ai.tmp_h20_fp_svy</h1>
+
+<h2>Общие сведения</h2>
+<table>
+<tbody>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td><strong>Полное имя таблицы</strong></td><td><code>sandbox_ai.tmp_h20_fp_svy</code></td></tr>
+<tr><td><strong>Источник данных</strong></td><td>Система H2O</td></tr>
+<tr><td><strong>Назначение</strong></td><td>Хранение данных о факторах проблемности (ФП) клиентов банка</td></tr>
+<tr><td><strong>Описание</strong></td><td>Когда у клиентов возникают трудности (финансовые, операционные и др.), в данный источник заносятся записи с указанием конкретного фактора проблемности, даты выявления и атрибутов клиента</td></tr>
+<tr><td><strong>Гранулярность</strong></td><td>Одна строка = один фактор проблемности одного клиента</td></tr>
+<tr><td><strong>Ожидаемый период данных</strong></td><td>2023&ndash;2025 гг.</td></tr>
+<tr><td><strong>Примерный объём</strong></td><td>~125 000 строк</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Описание полей</h2>
+<table>
+<tbody>
+<tr><th>№</th><th>Поле</th><th>Тип</th><th>Обязательность</th><th>Описание</th></tr>
+<tr><td>1</td><td><code>inn</code></td><td>VARCHAR(12)</td><td>Да</td><td>ИНН клиента. 10 цифр для юридических лиц, 12 цифр для ИП/КФХ</td></tr>
+<tr><td>2</td><td><code>client_name</code></td><td>VARCHAR</td><td>Да</td><td>Наименование компании клиента (включая организационно-правовую форму), например: ООО &quot;Ромашка&quot;</td></tr>
+<tr><td>3</td><td><code>cdi_id</code></td><td>INTEGER</td><td>Да</td><td>Идентификатор клиента во внутренних источниках банка. Используется для сопоставления одного и того же клиента в разных системах</td></tr>
+<tr><td>4</td><td><code>legal_form</code></td><td>VARCHAR</td><td>Да</td><td>Организационно-правовая форма компании клиента</td></tr>
+<tr><td>5</td><td><code>rf</code></td><td>VARCHAR</td><td>Да</td><td>Региональный филиал банка, за которым закреплён клиент</td></tr>
+<tr><td>6</td><td><code>segment</code></td><td>VARCHAR</td><td>Да</td><td>Сегмент бизнеса клиента по обороту</td></tr>
+<tr><td>7</td><td><code>mon_type</code></td><td>VARCHAR</td><td>Нет</td><td>Вид мониторинга клиента. Допустимо NULL</td></tr>
+<tr><td>8</td><td><code>h20_fp_id</code></td><td>INTEGER</td><td>Да</td><td>Идентификатор карточки фактора проблемности в системе H2O</td></tr>
+<tr><td>9</td><td><code>crm_fp_id</code></td><td>VARCHAR</td><td>Нет</td><td>Идентификатор карточки фактора проблемности в системе CRM</td></tr>
+<tr><td>10</td><td><code>ref_book_fp_id</code></td><td>INTEGER</td><td>Да</td><td>Идентификатор фактора проблемности в справочнике факторов</td></tr>
+<tr><td>11</td><td><code>fp_start_date</code></td><td>DATE</td><td>Да</td><td>Дата выявления фактора проблемности. Формат: ДД.ММ.ГГГГ</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Справочники допустимых значений</h2>
+
+<h3>legal_form &mdash; организационно-правовая форма</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Расшифровка</th></tr>
+<tr><td>ООО</td><td>Общество с ограниченной ответственностью</td></tr>
+<tr><td>АО</td><td>Акционерное общество</td></tr>
+<tr><td>ПАО</td><td>Публичное акционерное общество</td></tr>
+<tr><td>НАО</td><td>Непубличное акционерное общество</td></tr>
+<tr><td>ЗАО</td><td>Закрытое акционерное общество</td></tr>
+<tr><td>ИП</td><td>Индивидуальный предприниматель</td></tr>
+<tr><td>ГУП</td><td>Государственное унитарное предприятие</td></tr>
+<tr><td>МУП</td><td>Муниципальное унитарное предприятие</td></tr>
+<tr><td>КФХ</td><td>Крестьянское (фермерское) хозяйство</td></tr>
+</tbody>
+</table>
+
+<h3>segment &mdash; сегмент бизнеса</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Расшифровка</th></tr>
+<tr><td>ДМкб</td><td>Микробизнес</td></tr>
+<tr><td>ДМБ</td><td>Малый бизнес</td></tr>
+<tr><td>ДМ</td><td>&mdash; (уточнить у владельца данных)</td></tr>
+<tr><td>ДСБ</td><td>Средний бизнес</td></tr>
+<tr><td>ДКБ</td><td>Крупный бизнес</td></tr>
+<tr><td>ДРПА</td><td>&mdash; (уточнить у владельца данных)</td></tr>
+<tr><td>Не подлежит сегментации</td><td>Клиент не подлежит сегментации</td></tr>
+</tbody>
+</table>
+
+<h3>mon_type &mdash; вид мониторинга</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Описание</th></tr>
+<tr><td>Стандартный</td><td>Стандартный мониторинг</td></tr>
+<tr><td>Упрощенный</td><td>Упрощённый мониторинг</td></tr>
+<tr><td>Индивидуальный</td><td>Индивидуальный мониторинг</td></tr>
+<tr><td>NULL</td><td>Тип мониторинга не определён</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Ключи и связи</h2>
+<table>
+<tbody>
+<tr><th>Тип</th><th>Поле(я)</th><th>Описание</th></tr>
+<tr><td>Бизнес-ключ записи</td><td><code>h20_fp_id</code></td><td>Уникальный идентификатор карточки ФП в системе H2O. Должен быть уникальным в пределах таблицы</td></tr>
+<tr><td>Идентификатор клиента</td><td><code>inn</code>, <code>cdi_id</code></td><td>Одному ИНН должен соответствовать ровно один cdi_id. Связь с другими системами банка &mdash; через cdi_id</td></tr>
+<tr><td>Связь со справочником ФП</td><td><code>ref_book_fp_id</code></td><td>Ссылка на справочник факторов проблемности</td></tr>
+<tr><td>Связь с CRM</td><td><code>crm_fp_id</code></td><td>Идентификатор карточки ФП в системе CRM</td></tr>
+</tbody>
+</table>
+
+<h3>Особенности гранулярности</h3>
+<ul>
+<li>У одного клиента (ИНН) может быть <strong>несколько</strong> факторов проблемности (несколько строк с одним ИНН).</li>
+<li>Одна и та же пара <code>inn</code> + <code>ref_book_fp_id</code> повторно &mdash; подозрительна и требует проверки (один и тот же фактор у одного клиента дважды).</li>
+</ul>
+
+<hr/>
+
+<h2>Правила валидации данных</h2>
+<table>
+<tbody>
+<tr><th>№</th><th>Проверка</th><th>Критичность</th><th>Описание</th></tr>
+<tr><td>1</td><td>Полные дубликаты строк</td><td>Высокая</td><td>Полностью идентичные строки &mdash; признак ошибки ETL/загрузки</td></tr>
+<tr><td>2</td><td>Уникальность <code>h20_fp_id</code></td><td>Высокая</td><td>ID карточки ФП должен быть уникальным</td></tr>
+<tr><td>3</td><td>Уникальность <code>crm_fp_id</code></td><td>Высокая</td><td>ID карточки CRM должен быть уникальным</td></tr>
+<tr><td>4</td><td>Обязательные поля не NULL</td><td>Высокая</td><td>Поля <code>inn</code>, <code>h20_fp_id</code>, <code>fp_start_date</code>, <code>ref_book_fp_id</code> не должны быть пустыми</td></tr>
+<tr><td>5</td><td>Формат ИНН</td><td>Высокая</td><td>Только цифры; 10 знаков для юрлиц, 12 для ИП/КФХ</td></tr>
+<tr><td>6</td><td>Период дат</td><td>Средняя</td><td><code>fp_start_date</code> должна лежать в пределах 01.01.2023 &ndash; 31.12.2025</td></tr>
+<tr><td>7</td><td>legal_form соответствует справочнику</td><td>Средняя</td><td>Значения только из допустимого перечня</td></tr>
+<tr><td>8</td><td>segment соответствует справочнику</td><td>Средняя</td><td>Значения только из допустимого перечня</td></tr>
+<tr><td>9</td><td>legal_form совпадает с client_name</td><td>Низкая</td><td>Оргформа в поле legal_form должна совпадать с началом поля client_name</td></tr>
+<tr><td>10</td><td>legal_form vs длина ИНН</td><td>Средняя</td><td>ИП/КФХ &mdash; 12 цифр ИНН, остальные &mdash; 10 цифр</td></tr>
+<tr><td>11</td><td>Один ИНН = один cdi_id</td><td>Средняя</td><td>Одному ИНН не должно соответствовать несколько cdi_id</td></tr>
+<tr><td>12</td><td>Сегмент vs оргформа</td><td>Низкая</td><td>ИП/КФХ в сегменте ДКБ/ДСБ &mdash; подозрительное сочетание</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Скрипт автоматической проверки</h2>
+<p>Для автоматической проверки качества данных используется скрипт <code>check_h20.py</code> (расположен в папке <code>проверки/</code>).</p>
+<p><strong>Запуск:</strong></p>
+<ac:structured-macro ac:name="code">
+<ac:parameter ac:name="language">bash</ac:parameter>
+<ac:plain-text-body><![CDATA[python проверки/check_h20.py]]></ac:plain-text-body>
+</ac:structured-macro>
+<p><strong>Настройки</strong> задаются в начале скрипта: путь к файлу, кодировка, разделитель, допустимые перечни значений.</p>
+<p><strong>Результат</strong> выводится в консоль и сохраняется в файл <code>report_h20.txt</code>.</p>
+
+<hr/>
+
+<h2>Открытые вопросы</h2>
+<table>
+<tbody>
+<tr><th>№</th><th>Вопрос</th><th>Статус</th></tr>
+<tr><td>1</td><td>Расшифровка сегмента &laquo;ДМ&raquo;</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>2</td><td>Расшифровка сегмента &laquo;ДРПА&raquo;</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>3</td><td>Допустимо ли NULL в поле <code>mon_type</code> или это дефект данных</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить у владельца данных</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>4</td><td>Полный справочник факторов проблемности (расшифровка <code>ref_book_fp_id</code>)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Запросить справочник</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>5</td><td>Полный перечень региональных филиалов (<code>rf</code>)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Запросить актуальный справочник</ac:parameter></ac:structured-macro></td></tr>
+</tbody>
+</table>

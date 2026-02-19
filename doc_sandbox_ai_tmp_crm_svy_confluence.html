@@ -1,0 +1,201 @@
+<h1>Документация по таблице sandbox_ai.tmp_crm_svy</h1>
+
+<h2>Общие сведения</h2>
+<table>
+<tbody>
+<tr><th>Параметр</th><th>Значение</th></tr>
+<tr><td><strong>Полное имя таблицы</strong></td><td><code>sandbox_ai.tmp_crm_svy</code></td></tr>
+<tr><td><strong>Источник данных</strong></td><td>ЕЦП.CRM &mdash; мастер-система факторов проблемности</td></tr>
+<tr><td><strong>Назначение</strong></td><td>Централизованное хранение информации обо всех ФП и СФП клиентов банка</td></tr>
+<tr><td><strong>Описание</strong></td><td>В систему стекается информация из различных источников (H2O, CRM, АБС, Diasoft, ППРБ). Содержит данные о ФП/СФП, связанных кредитных договорах, сценариях урегулирования и реквизитах клиентов</td></tr>
+<tr><td><strong>Гранулярность</strong></td><td>Одна строка = один ФП/СФП, привязанный к конкретному договору и клиенту</td></tr>
+<tr><td><strong>Примерный объём</strong></td><td>~1 500 000 строк</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Описание полей</h2>
+
+<h3>Блок 1: Фактор проблемности (ФП/СФП)</h3>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Поле</th><th>Тип</th><th>Обязат.</th><th>Описание</th></tr>
+<tr><td>1</td><td><code>ROW_ID</code></td><td>VARCHAR</td><td>Да</td><td>Уникальный ID фактора проблемности в системе CRM</td></tr>
+<tr><td>2</td><td><code>NUMBER_FP_SFP</code></td><td>VARCHAR</td><td>Да</td><td>Номер ФП/СФП</td></tr>
+<tr><td>3</td><td><code>VAL</code></td><td>VARCHAR</td><td>Да</td><td>Система-источник, откуда пришла информация о ФП/СФП</td></tr>
+<tr><td>4</td><td><code>VAL_1</code></td><td>VARCHAR</td><td>Да</td><td>Статус ФП/СФП (Открыт, Закрыт и др.)</td></tr>
+<tr><td>5</td><td><code>TYPE_FP</code></td><td>VARCHAR</td><td>Да</td><td>Тип: ФП или СФП</td></tr>
+<tr><td>6</td><td><code>IDENTIFICATION_DATE</code></td><td>DATE</td><td>Да</td><td>Дата выявления ФП/СФП</td></tr>
+<tr><td>7</td><td><code>DATE_END_FP_SFP</code></td><td>DATE</td><td>Нет</td><td>Дата снятия ФП/СФП с контроля</td></tr>
+<tr><td>8</td><td><code>DECISION_UOB</code></td><td>VARCHAR</td><td>Нет</td><td>Основания для закрытия (Решение УЛ, Решение УОБ, Иное)</td></tr>
+<tr><td>9</td><td><code>DEFOLT</code></td><td>VARCHAR (Y/N)</td><td>Да</td><td>Признак дефолта клиента</td></tr>
+<tr><td>10</td><td><code>FACTOR_COMMENT</code></td><td>TEXT</td><td>Нет</td><td>Комментарий по сути фактора</td></tr>
+<tr><td>11</td><td><code>COMMENT_TEXT</code></td><td>TEXT</td><td>Нет</td><td>Результат рассмотрения на УОБ</td></tr>
+<tr><td>12</td><td><code>SUSPENSION_ISSUE</code></td><td>VARCHAR (Y/N)</td><td>Нет</td><td>Признак приостановления выдачи</td></tr>
+<tr><td>13</td><td><code>APPROVED</code></td><td>VARCHAR (Y/N)</td><td>Нет</td><td>Признак подтверждения ФП</td></tr>
+<tr><td>14</td><td><code>DISABLED</code></td><td>VARCHAR (Y/N)</td><td>Нет</td><td>Признак отклонения ФП</td></tr>
+</tbody>
+</table>
+
+<h3>Блок 2: Сценарий урегулирования</h3>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Поле</th><th>Тип</th><th>Обязат.</th><th>Описание</th></tr>
+<tr><td>15</td><td><code>SCRIPT</code></td><td>VARCHAR</td><td>Нет</td><td>Сценарий урегулирования</td></tr>
+<tr><td>16</td><td><code>DESC_TEXT</code></td><td>TEXT</td><td>Нет</td><td>Результат урегулирования (комментарий)</td></tr>
+<tr><td>17</td><td><code>DESC_TEXT_1</code></td><td>TEXT</td><td>Нет</td><td>Результат урегулирования по сценарию</td></tr>
+<tr><td>18</td><td><code>END_DATE_SCR_PLAN</code></td><td>DATE</td><td>Нет</td><td>Плановая дата окончания сценария</td></tr>
+<tr><td>19</td><td><code>END_DATE_SCR_FCT</code></td><td>DATE</td><td>Нет</td><td>Фактическая дата окончания сценария</td></tr>
+<tr><td>20</td><td><code>FIRST_END_DATE_EVENT</code></td><td>DATE</td><td>Нет</td><td>Первоначальная дата окончания мероприятия</td></tr>
+<tr><td>21</td><td><code>END_EVENT_DATE_FACT</code></td><td>DATE</td><td>Нет</td><td>Фактическая дата окончания мероприятия</td></tr>
+<tr><td>22</td><td><code>NEW_PLAN_END_DATE_EVT</code></td><td>DATE</td><td>Нет</td><td>Новая плановая дата окончания мероприятия</td></tr>
+</tbody>
+</table>
+
+<h3>Блок 3: Договор (сделка)</h3>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Поле</th><th>Тип</th><th>Обязат.</th><th>Описание</th></tr>
+<tr><td>23</td><td><code>AGREEMENT_NUM</code></td><td>VARCHAR</td><td>Да</td><td>Номер кредитного договора</td></tr>
+<tr><td>24</td><td><code>MORTGAGE_NUM</code></td><td>VARCHAR</td><td>Нет</td><td>Номер договора залога</td></tr>
+<tr><td>25</td><td><code>ROW_ID_1</code></td><td>VARCHAR</td><td>Да</td><td>ID сделки в CRM</td></tr>
+<tr><td>26</td><td><code>AGREEMENT_NUM_1</code></td><td>VARCHAR</td><td>Да</td><td>Номер договора (из карточки сделки)</td></tr>
+<tr><td>27</td><td><code>AGREEMENT_OPEN_DT</code></td><td>DATE</td><td>Да</td><td>Дата открытия договора</td></tr>
+<tr><td>28</td><td><code>AGREEMENT_CLOSE_DT</code></td><td>DATE</td><td>Нет</td><td>Дата закрытия договора</td></tr>
+<tr><td>29</td><td><code>AGR_OPEN_DT_FLG</code></td><td>VARCHAR (Y/N)</td><td>Да</td><td>Признак договора с открытой датой</td></tr>
+<tr><td>30</td><td><code>APPROVED_SUM</code></td><td>DECIMAL</td><td>Да</td><td>Сумма по договору</td></tr>
+<tr><td>31</td><td><code>CURCY_CD</code></td><td>VARCHAR</td><td>Да</td><td>Валюта (RUB, USD, EUR, CNY)</td></tr>
+<tr><td>32</td><td><code>NAME</code></td><td>VARCHAR</td><td>Да</td><td>Банковский продукт по договору</td></tr>
+<tr><td>33</td><td><code>VAL_2</code></td><td>VARCHAR</td><td>Да</td><td>Стадия сделки</td></tr>
+</tbody>
+</table>
+
+<h3>Блок 4: Организация (клиент)</h3>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Поле</th><th>Тип</th><th>Обязат.</th><th>Описание</th></tr>
+<tr><td>34</td><td><code>ROW_ID_2</code></td><td>VARCHAR</td><td>Да</td><td>ID организации в CRM</td></tr>
+<tr><td>35</td><td><code>X_INN</code></td><td>VARCHAR(12)</td><td>Да</td><td>ИНН (10 цифр &mdash; юрлицо, 12 &mdash; ИП)</td></tr>
+<tr><td>36</td><td><code>X_KPP</code></td><td>VARCHAR(9)</td><td>Да</td><td>КПП (9 цифр)</td></tr>
+<tr><td>37</td><td><code>X_OGRN</code></td><td>VARCHAR(15)</td><td>Да</td><td>ОГРН (13 цифр &mdash; юрлицо, 15 &mdash; ИП)</td></tr>
+<tr><td>38</td><td><code>NAME_1</code></td><td>VARCHAR</td><td>Да</td><td>Наименование организации</td></tr>
+<tr><td>39</td><td><code>SIC</code></td><td>VARCHAR</td><td>Да</td><td>Фактический ОКВЭД</td></tr>
+<tr><td>40</td><td><code>STATUS</code></td><td>VARCHAR</td><td>Да</td><td>Статус компании (внешний, СПАРК)</td></tr>
+<tr><td>41</td><td><code>VAL_3</code></td><td>VARCHAR</td><td>Да</td><td>Статус компании (внутренний источник банка)</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Справочники допустимых значений</h2>
+
+<h3>VAL &mdash; система-источник</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Описание</th></tr>
+<tr><td>H2O</td><td>Система H2O</td></tr>
+<tr><td>CRM</td><td>CRM-система</td></tr>
+<tr><td>АБС</td><td>Автоматизированная банковская система</td></tr>
+<tr><td>Diasoft</td><td>Система Diasoft</td></tr>
+<tr><td>ППРБ</td><td>Прочие подразделения работы с бизнесом</td></tr>
+</tbody>
+</table>
+
+<h3>VAL_1 &mdash; статус ФП/СФП</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Описание</th></tr>
+<tr><td>Открыт</td><td>ФП активен, на контроле</td></tr>
+<tr><td>Закрыт</td><td>ФП снят с контроля</td></tr>
+<tr><td>В работе</td><td>ФП в процессе урегулирования</td></tr>
+<tr><td>На согласовании</td><td>ФП на стадии согласования</td></tr>
+</tbody>
+</table>
+
+<h3>TYPE_FP &mdash; тип</h3>
+<table>
+<tbody>
+<tr><th>Значение</th><th>Описание</th></tr>
+<tr><td>ФП</td><td>Фактор проблемности</td></tr>
+<tr><td>СФП</td><td>Существенный фактор проблемности</td></tr>
+</tbody>
+</table>
+
+<ac:structured-macro ac:name="note">
+<ac:rich-text-body><p><strong>Важно:</strong> перечни неполные. При обнаружении новых значений уточните расшифровку у владельца данных.</p></ac:rich-text-body>
+</ac:structured-macro>
+
+<hr/>
+
+<h2>Ключи и связи</h2>
+<table>
+<tbody>
+<tr><th>Тип</th><th>Поле(я)</th><th>Описание</th></tr>
+<tr><td>Первичный ключ ФП</td><td><code>ROW_ID</code></td><td>Уникальный ID фактора проблемности</td></tr>
+<tr><td>ID сделки</td><td><code>ROW_ID_1</code></td><td>Связь с карточкой сделки в CRM</td></tr>
+<tr><td>ID организации</td><td><code>ROW_ID_2</code></td><td>Связь с карточкой организации в CRM</td></tr>
+<tr><td>ИНН клиента</td><td><code>X_INN</code></td><td>Связь с другими источниками (H2O, дефолты)</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Правила валидации данных</h2>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Проверка</th><th>Критичность</th><th>Описание</th></tr>
+<tr><td>1</td><td>Полные дубликаты строк</td><td>Высокая</td><td>Признак ошибки ETL</td></tr>
+<tr><td>2</td><td>Уникальность ROW_ID</td><td>Высокая</td><td>ID ФП должен быть уникальным</td></tr>
+<tr><td>3</td><td>Обязательные поля не NULL</td><td>Высокая</td><td>ROW_ID, X_INN, IDENTIFICATION_DATE, TYPE_FP, VAL_1</td></tr>
+<tr><td>4</td><td>Формат ИНН</td><td>Высокая</td><td>Только цифры; 10/12 знаков</td></tr>
+<tr><td>5</td><td>Формат КПП</td><td>Средняя</td><td>Только цифры; 9 знаков</td></tr>
+<tr><td>6</td><td>Формат ОГРН</td><td>Средняя</td><td>Только цифры; 13/15 знаков</td></tr>
+<tr><td>7</td><td>Все даты &mdash; корректный формат</td><td>Средняя</td><td>9 полей с датами</td></tr>
+<tr><td>8</td><td>APPROVED_SUM &gt; 0</td><td>Средняя</td><td>Сумма по договору положительна</td></tr>
+<tr><td>9</td><td>Закрыт &rarr; DATE_END_FP_SFP заполнена</td><td>Средняя</td><td>У закрытого ФП должна быть дата снятия</td></tr>
+<tr><td>10</td><td>Открыт &rarr; DATE_END_FP_SFP пуста</td><td>Средняя</td><td>У открытого ФП не должно быть даты снятия</td></tr>
+<tr><td>11</td><td>DATE_END_FP_SFP &gt;= IDENTIFICATION_DATE</td><td>Высокая</td><td>Снятие не раньше выявления</td></tr>
+<tr><td>12</td><td>AGREEMENT_CLOSE_DT &gt;= AGREEMENT_OPEN_DT</td><td>Высокая</td><td>Закрытие договора не раньше открытия</td></tr>
+<tr><td>13</td><td>APPROVED=Y и DISABLED=Y</td><td>Высокая</td><td>Взаимоисключающие признаки</td></tr>
+<tr><td>14</td><td>STATUS vs VAL_3</td><td>Низкая</td><td>Внешний и внутренний статусы не противоречат</td></tr>
+</tbody>
+</table>
+
+<hr/>
+
+<h2>Особенности при работе с данными</h2>
+<ul>
+<li><strong>Объём 1.5 млн строк</strong> &mdash; скрипт проверок оптимизирован через векторизованные операции pandas (без iterrows).</li>
+<li><strong>Множественные записи по одному ИНН</strong> &mdash; нормально: у клиента может быть много ФП/СФП по разным договорам.</li>
+<li><strong>Текстовые поля</strong> (COMMENT_TEXT, DESC_TEXT, FACTOR_COMMENT и др.) &mdash; могут быть пустыми, содержат свободный текст.</li>
+<li><strong>Даты</strong> &mdash; 9 полей с датами; многие из них заполняются только при определённых условиях.</li>
+</ul>
+
+<hr/>
+
+<h2>Скрипт автоматической проверки</h2>
+<p>Скрипт <code>check_crm.py</code> (папка <code>проверки/</code>).</p>
+<p><strong>Запуск:</strong></p>
+<ac:structured-macro ac:name="code">
+<ac:parameter ac:name="language">bash</ac:parameter>
+<ac:plain-text-body><![CDATA[python проверки/check_crm.py]]></ac:plain-text-body>
+</ac:structured-macro>
+<p><strong>Результат</strong> &mdash; в консоль и в файл <code>report_crm.txt</code>.</p>
+
+<hr/>
+
+<h2>Открытые вопросы</h2>
+<table>
+<tbody>
+<tr><th>&#8470;</th><th>Вопрос</th><th>Статус</th></tr>
+<tr><td>1</td><td>Полный перечень значений VAL (система-источник)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>2</td><td>Полный перечень значений VAL_1 (статусы ФП)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>3</td><td>Полный перечень значений DECISION_UOB</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>4</td><td>Полный перечень значений SCRIPT (сценарии)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>5</td><td>Полный перечень значений VAL_2 (стадии сделки)</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>6</td><td>Полный перечень значений STATUS и VAL_3</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>7</td><td>Могут ли APPROVED и DISABLED быть одновременно Y?</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+<tr><td>8</td><td>Что означает SUSPENSION_ISSUE = Y на практике?</td><td><ac:structured-macro ac:name="status"><ac:parameter ac:name="colour">Yellow</ac:parameter><ac:parameter ac:name="title">Уточнить</ac:parameter></ac:structured-macro></td></tr>
+</tbody>
+</table>
