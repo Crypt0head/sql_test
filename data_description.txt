@@ -7,7 +7,7 @@
                 Одна строка = один клиент (ИНН) за один отчётный период.
 
 СТРОК:          ~93 000 (5 000 клиентов × до 20 месяцев)
-КОЛОНОК:        30
+КОЛОНОК:        31
 КОДИРОВКА:      UTF-8 с BOM (utf-8-sig)
 РАЗДЕЛИТЕЛЬ:    запятая (,)
 
@@ -32,24 +32,25 @@
 10  vsp_contract             text      ВСП, где заключён договор
 11  vsp_code                 text      Код ВСП (доп. офис)
 12  tariff                   text      Тариф: Индивидуальный / Стандартный
-13  trade_points_count       int       Кол-во торговых точек (1–100)
-14  terminals_count          int       Кол-во терминалов
-15  aur                      numeric   АУР (адм.-управл. расходы), ₽
-16  amortization             numeric   Амортизация оборудования, ₽
-17  operations_count         int       Кол-во транзакций за месяц
-18  operations_sum           numeric   Сумма операций (оборот), ₽
-19  avg_acquiring_pct        numeric   Средний % по эквайрингу
-20  commission_from_ops      numeric   Комиссия (% с операций), ₽
-21  commission_monthly_fee   numeric   Комиссия (фикс. руб./мес), ₽
-22  commission_acquiring     numeric   Комиссия эквайринга (общая), ₽
-23  noi_acquiring            numeric   ЧОД эквайринга, ₽
-24  noi_total                numeric   ЧОД общий (по клиенту), ₽
-25  fin_result               numeric   Финрез, ₽
-26  fin_result_segment       text      Финрез сегмент
-27  segment                  text      Сегмент клиента
-28  seasonality              text      Сезонность (Y / N)
-29  months_inefficiency      int       Месяцев неэффективности (0–4)
-30  client_products          text      Продукты клиента (Product1–10)
+13  mcc_code                 int       MCC-код (Merchant Category Code)
+14  trade_points_count       int       Кол-во торговых точек (1–100)
+15  terminals_count          int       Кол-во терминалов
+16  aur                      numeric   АУР (адм.-управл. расходы), ₽
+17  amortization             numeric   Амортизация оборудования, ₽
+18  operations_count         int       Кол-во транзакций за месяц
+19  operations_sum           numeric   Сумма операций (оборот), ₽
+20  avg_acquiring_pct        numeric   Средний % по эквайрингу
+21  commission_from_ops      numeric   Комиссия (% с операций), ₽
+22  commission_monthly_fee   numeric   Комиссия (фикс. руб./мес), ₽
+23  commission_acquiring     numeric   Комиссия эквайринга (общая), ₽
+24  noi_acquiring            numeric   ЧОД эквайринга, ₽
+25  noi_total                numeric   ЧОД общий (по клиенту), ₽
+26  fin_result               numeric   Финрез, ₽
+27  fin_result_segment       text      Финрез сегмент
+28  segment                  text      Сегмент клиента
+29  seasonality              text      Сезонность (Y / N)
+30  months_inefficiency      int       Месяцев неэффективности (0–4)
+31  client_products          text      Продукты клиента (Product1–10)
 
 ================================================================================
   СПРАВОЧНИКИ ЗНАЧЕНИЙ
@@ -64,6 +65,9 @@
                        0..20 000   → Доходный
                        −10 000..0  → Пограничный
                        < −10 000   → Убыточный
+
+  mcc_code:            60 различных кодов (5411, 5422, 5441, ...
+                       4111, 4112, 4121, 4131 и др.)
 
   segment:             ДМкБ, ДМСБ, ДКБ
 
@@ -100,6 +104,7 @@
       vsp_contract           text,
       vsp_code               text,
       tariff                 text,
+      mcc_code               int,
       trade_points_count     int,
       terminals_count        int,
       aur                    numeric(12,2),
