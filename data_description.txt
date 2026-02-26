@@ -1,0 +1,136 @@
+================================================================================
+  ОПИСАНИЕ ТАБЛИЦЫ: clients_acquiring.csv
+  Дашборд эквайринга АО «Россельхозбанк»
+================================================================================
+
+ГРАНУЛЯРНОСТЬ:  ИНН × Месяц
+                Одна строка = один клиент (ИНН) за один отчётный период.
+
+СТРОК:          ~93 000 (5 000 клиентов × до 20 месяцев)
+КОЛОНОК:        30
+КОДИРОВКА:      UTF-8 с BOM (utf-8-sig)
+РАЗДЕЛИТЕЛЬ:    запятая (,)
+
+Имена колонок — латиница, snake_case, без спецсимволов.
+Совместимы с PostgreSQL / Greenplum без кавычек.
+
+================================================================================
+  АТРИБУТЫ (в порядке колонок)
+================================================================================
+
+#   Колонка                  Тип       Описание (рус.)
+--- ------------------------ --------- ------------------------------------------
+ 1  period                   date      Отчётный месяц (1-е число)
+ 2  inn                      bigint    ИНН клиента
+ 3  ogrn                     bigint    ОГРН клиента
+ 4  cdi_id                   bigint    Внутренний CDI ID банка
+ 5  client_name              text      Наименование клиента
+ 6  contract_number          text      Номер договора эквайринга
+ 7  contract_start_date      date      Дата регистрации договора
+ 8  contract_end_date        date      Дата закрытия договора (NULL у ~95%)
+ 9  branch                   text      Региональный филиал (РФ)
+10  vsp_contract             text      ВСП, где заключён договор
+11  vsp_code                 text      Код ВСП (доп. офис)
+12  tariff                   text      Тариф: Индивидуальный / Стандартный
+13  trade_points_count       int       Кол-во торговых точек (1–100)
+14  terminals_count          int       Кол-во терминалов
+15  aur                      numeric   АУР (адм.-управл. расходы), ₽
+16  amortization             numeric   Амортизация оборудования, ₽
+17  operations_count         int       Кол-во транзакций за месяц
+18  operations_sum           numeric   Сумма операций (оборот), ₽
+19  avg_acquiring_pct        numeric   Средний % по эквайрингу
+20  commission_from_ops      numeric   Комиссия (% с операций), ₽
+21  commission_monthly_fee   numeric   Комиссия (фикс. руб./мес), ₽
+22  commission_acquiring     numeric   Комиссия эквайринга (общая), ₽
+23  noi_acquiring            numeric   ЧОД эквайринга, ₽
+24  noi_total                numeric   ЧОД общий (по клиенту), ₽
+25  fin_result               numeric   Финрез, ₽
+26  fin_result_segment       text      Финрез сегмент
+27  segment                  text      Сегмент клиента
+28  seasonality              text      Сезонность (Y / N)
+29  months_inefficiency      int       Месяцев неэффективности (0–4)
+30  client_products          text      Продукты клиента (Product1–10)
+
+================================================================================
+  СПРАВОЧНИКИ ЗНАЧЕНИЙ
+================================================================================
+
+  branch:              Москва, Санкт-Петербург, Новосибирск,
+                       Краснодар, Екатеринбург, Ростов-на-Дону
+
+  tariff:              Индивидуальный (60%), Стандартный (40%)
+
+  fin_result_segment:  >= 20 000   → Высокодоходный
+                       0..20 000   → Доходный
+                       −10 000..0  → Пограничный
+                       < −10 000   → Убыточный
+
+  segment:             ДМкБ, ДМСБ, ДКБ
+
+  seasonality:         Y — сезонный бизнес (30%), N — нет (70%)
+
+  trade_points_count:  1–100 (убывающее распределение,
+                       ~1% имеют 100 точек, ~25% — до 5)
+
+  months_inefficiency: 0 — 44%, 1 — 20%, 2 — 21%, 3 — 12%, 4 — 3%
+
+================================================================================
+  ФОРМУЛЫ
+================================================================================
+
+  commission_acquiring = commission_from_ops + commission_monthly_fee
+  noi_acquiring        = commission_acquiring − IRF
+  noi_total            = noi_acquiring + прочие доходы/расходы
+  fin_result           = noi_acquiring − aur − amortization
+
+================================================================================
+  DDL ДЛЯ GREENPLUM / POSTGRESQL
+================================================================================
+
+  CREATE TABLE clients_acquiring (
+      period                 date,
+      inn                    bigint,
+      ogrn                   bigint,
+      cdi_id                 bigint,
+      client_name            text,
+      contract_number        text,
+      contract_start_date    date,
+      contract_end_date      date,
+      branch                 text,
+      vsp_contract           text,
+      vsp_code               text,
+      tariff                 text,
+      trade_points_count     int,
+      terminals_count        int,
+      aur                    numeric(12,2),
+      amortization           numeric(12,2),
+      operations_count       int,
+      operations_sum         numeric(14,2),
+      avg_acquiring_pct      numeric(6,4),
+      commission_from_ops    numeric(12,2),
+      commission_monthly_fee numeric(12,2),
+      commission_acquiring   numeric(12,2),
+      noi_acquiring          numeric(12,2),
+      noi_total              numeric(12,2),
+      fin_result             numeric(12,2),
+      fin_result_segment     text,
+      segment                text,
+      seasonality            text,
+      months_inefficiency    int,
+      client_products        text
+  );
+
+================================================================================
+  ФИЛЬТРЫ ДЛЯ ДАШБОРДА (SUPERSET)
+================================================================================
+
+  Фильтр                   Колонка              Тип фильтра
+  ------------------------- -------------------- ---------------------
+  Период                    period               Диапазон дат
+  Филиал (РФ)               branch               Мультивыбор
+  Наименование клиента      client_name          Текстовый поиск
+  ИНН клиента               inn                  Текстовый ввод
+  Тариф                     tariff               Мультивыбор
+  Финрез сегмент            fin_result_segment   Мультивыбор
+
+================================================================================
