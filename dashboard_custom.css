@@ -49,19 +49,22 @@ body,
    3. ПАНЕЛЬ ФИЛЬТРОВ
    --------------------------------------------------------------------------- */
 
+.css-lmih2o,
 .dt-global-filter {
   background: #1D8341 !important;
 }
 
-.dt-global-filter .ant-form-item-label > label,
+.css-lmih2o .ant-form-item-label > label,
+.css-lmih2o label,
 .dt-global-filter label {
   color: rgba(255, 255, 255, 0.85) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
 }
 
-.dt-global-filter .ant-select-selector,
-.dt-global-filter .ant-select {
+.css-lmih2o .ant-select-selector,
+.css-lmih2o .ant-select,
+.dt-global-filter .ant-select-selector {
   background: rgba(255, 255, 255, 0.10) !important;
   border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 8px !important;
@@ -69,17 +72,17 @@ body,
   font-size: 13px !important;
 }
 
-.dt-global-filter .ant-select-selection-placeholder {
+.css-lmih2o .ant-select-selection-placeholder {
   color: rgba(255, 255, 255, 0.50) !important;
 }
 
-.dt-global-filter .ant-select-arrow {
+.css-lmih2o .ant-select-arrow {
   color: rgba(255, 255, 255, 0.60) !important;
 }
 
-.dt-global-filter .ant-select-selector:hover,
-.dt-global-filter .ant-select-focused .ant-select-selector,
-.dt-global-filter .ant-select-selector:focus-within {
+.css-lmih2o .ant-select-selector:hover,
+.css-lmih2o .ant-select-focused .ant-select-selector,
+.css-lmih2o .ant-select-selector:focus-within {
   border-color: #FFCB08 !important;
   box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.20) !important;
 }
@@ -136,20 +139,34 @@ body,
   background: #FFFFFF !important;
 }
 
-.big_number_total .header-line {
+/* KPI лейбл */
+.big_number_total .header-line,
+.superset-legacy-chart-big-number .header-line {
+  display: block !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   color: #6E6E6E !important;
 }
 
+/* KPI значение — явно тёмный текст */
+.big_number_total svg text,
+.superset-legacy-chart-big-number svg text {
+  fill: #333333 !important;
+}
+
+/* Подзаголовок / тренд KPI */
+.big_number_total .no-trendline,
+.superset-legacy-chart-big-number .no-trendline {
+  color: #333333 !important;
+}
+
 /* ---------------------------------------------------------------------------
-   5. СКРЫТЬ ЗАГОЛОВКИ ГРАФИКОВ
+   5. СКРЫТЬ ЗАГОЛОВКИ ГРАФИКОВ (НЕ трогать Big Number)
    --------------------------------------------------------------------------- */
 
-.chart-slice .header-line,
-.dashboard-chart .header-line,
-.slice_container > .header-line,
-.dashboard-component-chart-holder .header-line {
+/* Скрыть заголовок у графиков и таблиц, НЕ у Big Number */
+.echarts_timeseries_line .header-line,
+.superset-chart-table .header-line {
   display: none !important;
 }
 
