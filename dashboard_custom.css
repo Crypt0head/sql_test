@@ -23,33 +23,31 @@ body,
    2. ШАПКА
    --------------------------------------------------------------------------- */
 
-.dashboard-header-container {
+.dashboard-header-container,
+.css-jfn13n {
+  background: #1D8341 !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 100 !important;
   border-bottom: none !important;
 }
 
-/* Только плашка с названием — зелёная, как фильтры */
-.css-jfn13n {
-  background: #1D8341 !important;
-}
-
-.dashboard-header-container .header-title .dynamic-title,
-.css-jfn13n .dynamic-title {
+/* Название дашборда — белое */
+.css-jfn13n .dynamic-title,
+.css-jfn13n span,
+.css-jfn13n input {
+  color: #FFFFFF !important;
   font-size: 22px !important;
   font-weight: 700 !important;
-  color: #FFFFFF !important;
 }
 
-/* Иконки и кнопки в шапке — белые */
-.dashboard-header-container .anticon,
+/* Кнопки и иконки ТОЛЬКО внутри .css-jfn13n (зелёная плашка) */
 .css-jfn13n .anticon,
-.dashboard-header-container .header-controls button,
 .css-jfn13n button {
   color: #FFFFFF !important;
 }
 
+/* Draft и "..." — НЕ делаем белыми, оставляем дефолтный цвет */
 .dashboard-header-container .editable-title input {
   color: #FFFFFF !important;
 }
@@ -72,36 +70,53 @@ body,
   background: #1D8341 !important;
 }
 
-/* Весь текст в фильтрах — белый */
-.css-1bl3vr5,
-.css-14pwj7q,
-.css-lmih2o {
-  color: #FFFFFF !important;
-}
-
+/* Лейблы фильтров (названия: Период, Филиал и т.д.) — белые */
+.css-1bl3vr5 > label,
+.css-14pwj7q > label,
+.css-lmih2o > label,
 .css-1bl3vr5 label,
-.css-14pwj7q label,
-.css-lmih2o label,
-.css-1bl3vr5 span,
-.css-14pwj7q span,
-.css-1bl3vr5 h4,
-.css-14pwj7q h4,
-.css-1bl3vr5 .ant-tabs-tab,
-.css-14pwj7q .ant-tabs-tab {
+.css-14pwj7q label {
   color: #FFFFFF !important;
   font-size: 14px !important;
   font-weight: 700 !important;
 }
 
-/* Поля фильтров */
+/* Заголовок "Filters" и табы — белые */
+.css-1bl3vr5 > h4,
+.css-14pwj7q > h4,
+.css-1bl3vr5 .ant-tabs-tab,
+.css-14pwj7q .ant-tabs-tab,
+.css-1bl3vr5 > span,
+.css-14pwj7q > span {
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
+/* Выбранные значения в дропдаунах — тёмный текст на светлом фоне поля */
+.css-1bl3vr5 .ant-select-selection-item,
+.css-14pwj7q .ant-select-selection-item,
+.css-lmih2o .ant-select-selection-item {
+  color: #333333 !important;
+}
+
+/* Текст "X options" внутри селекта — тоже тёмный */
+.css-1bl3vr5 .ant-select-selection-overflow-item span,
+.css-14pwj7q .ant-select-selection-overflow-item span {
+  color: #333333 !important;
+}
+
+/* Поля фильтров — белый фон, тёмный текст */
 .css-1bl3vr5 .ant-select-selector,
 .css-1bl3vr5 .ant-select,
 .css-14pwj7q .ant-select-selector,
-.css-14pwj7q .ant-select {
-  background: rgba(255, 255, 255, 0.10) !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+.css-14pwj7q .ant-select,
+.css-lmih2o .ant-select-selector,
+.css-lmih2o .ant-select {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 8px !important;
-  color: #FFFFFF !important;
+  color: #333333 !important;
   font-size: 13px !important;
 }
 
@@ -251,17 +266,16 @@ body,
 /* Скрыть заголовок у графиков и таблиц, НЕ у Big Number */
 .echarts_timeseries_line .header-line,
 .dashboard-chart-id-106 .header-line,
-.dashboard-chart-id-106 .css-159ymuc,
 .dashboard-chart-id-107 .header-line,
 .dashboard-chart-id-108 .header-line,
 .superset-chart-table .header-line {
   display: none !important;
 }
 
-/* Скрыть заголовок графика по классу и по структуре */
+/* Скрыть заголовок графика id-106 */
+.dashboard-chart-id-106 .css-159ymuc,
 .dashboard-chart-id-106 .slice_container > span:first-child,
-.dashboard-chart-id-106 .slice_container > div:first-child > span,
-.css-159ymuc {
+.dashboard-chart-id-106 .slice_container > div:first-child > span {
   display: none !important;
 }
 
