@@ -23,14 +23,16 @@ body,
    2. ШАПКА
    --------------------------------------------------------------------------- */
 
-.dashboard-header-container,
-.css-jfn13n {
-  background: #1D8341 !important;
+.dashboard-header-container {
   position: sticky !important;
   top: 0 !important;
   z-index: 100 !important;
   border-bottom: none !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* Только плашка с названием — зелёная, как фильтры */
+.css-jfn13n {
+  background: #1D8341 !important;
 }
 
 .dashboard-header-container .header-title .dynamic-title,
@@ -70,10 +72,22 @@ body,
   background: #1D8341 !important;
 }
 
-/* Лейблы фильтров */
+/* Весь текст в фильтрах — белый */
+.css-1bl3vr5,
+.css-14pwj7q,
+.css-lmih2o {
+  color: #FFFFFF !important;
+}
+
 .css-1bl3vr5 label,
 .css-14pwj7q label,
-.css-lmih2o label {
+.css-lmih2o label,
+.css-1bl3vr5 span,
+.css-14pwj7q span,
+.css-1bl3vr5 h4,
+.css-14pwj7q h4,
+.css-1bl3vr5 .ant-tabs-tab,
+.css-14pwj7q .ant-tabs-tab {
   color: #FFFFFF !important;
   font-size: 14px !important;
   font-weight: 700 !important;
@@ -215,7 +229,9 @@ body,
 .dashboard-chart-id-101 .header-line::after {
   content: " ▲" !important;
   color: #1D8341 !important;
-  font-size: 16px !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
 }
 
 /* ▼ Красный треугольник для отрицательных KPI */
@@ -223,7 +239,9 @@ body,
 .dashboard-chart-id-102 .header-line::after {
   content: " ▼" !important;
   color: #B00020 !important;
-  font-size: 16px !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
 }
 
 /* ---------------------------------------------------------------------------
