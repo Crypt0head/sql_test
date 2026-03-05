@@ -57,9 +57,9 @@ body,
 .css-lmih2o .ant-form-item-label > label,
 .css-lmih2o label,
 .dt-global-filter label {
-  color: rgba(255, 255, 255, 0.85) !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
 }
 
 .css-lmih2o .ant-select-selector,
@@ -124,8 +124,8 @@ body,
   background: #FFFFFF !important;
   border-radius: 14px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-  overflow: hidden !important;
-  border-top: 3px solid #E0E0E0 !important;
+  overflow: visible !important;
+  border-top: 5px solid #1D8341 !important;
   transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
 }
 
@@ -143,21 +143,39 @@ body,
 .big_number_total .header-line,
 .superset-legacy-chart-big-number .header-line {
   display: block !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: #6E6E6E !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: #333333 !important;
 }
 
-/* KPI значение — явно тёмный текст */
+/* KPI значение — крупный чёрный текст */
 .big_number_total svg text,
 .superset-legacy-chart-big-number svg text {
-  fill: #333333 !important;
+  fill: #000000 !important;
+  font-size: 36px !important;
+  font-weight: 600 !important;
 }
 
 /* Подзаголовок / тренд KPI */
 .big_number_total .no-trendline,
 .superset-legacy-chart-big-number .no-trendline {
   color: #333333 !important;
+}
+
+/* ▲ Зелёный треугольник для положительных KPI */
+.dashboard-chart-id-98 .big_number_total::after,
+.dashboard-chart-id-101 .big_number_total::after {
+  content: " ▲";
+  color: #1D8341 !important;
+  font-size: 18px !important;
+}
+
+/* ▼ Красный треугольник для отрицательных KPI */
+.dashboard-chart-id-99 .big_number_total::after,
+.dashboard-chart-id-102 .big_number_total::after {
+  content: " ▼";
+  color: #B00020 !important;
+  font-size: 18px !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -179,11 +197,12 @@ body,
 .dashboard-component-header span {
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: #333333 !important;
+  color: #1D8341 !important;
 }
 
 .dashboard-component-divider {
-  border-color: #E0E0E0 !important;
+  border-color: #1D8341 !important;
+  border-width: 2px !important;
 }
 
 /* ---------------------------------------------------------------------------
