@@ -55,11 +55,12 @@ body,
   color: #FFFFFF !important;
 }
 
-/* Кнопка "Edit dashboard" — белый текст */
+/* Кнопка "Edit dashboard" — белый текст, прозрачный фон */
 .dashboard-header-container .action-button,
 .dashboard-header-container .superset-button-secondary,
 .css-3jweij {
   color: #FFFFFF !important;
+  background: transparent !important;
   border-color: rgba(255, 255, 255, 0.50) !important;
 }
 
@@ -68,13 +69,15 @@ body,
   color: #FFFFFF !important;
 }
 
-/* Кнопка "..." (Menu actions trigger) — белый */
+/* Кнопка "..." (Menu actions trigger) — прозрачный фон, белая иконка */
 .dashboard-header-container .superset-button-tertiary,
 .dashboard-header-container .ant-dropdown-trigger,
 .css-a5sgrq,
 .css-17x4a00 button {
   color: #FFFFFF !important;
-  border-color: rgba(255, 255, 255, 0.50) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .dashboard-header-container .anticon,
@@ -82,10 +85,16 @@ body,
   color: #FFFFFF !important;
 }
 
-/* Скрыть Draft, автор, дата */
+/* Скрыть Draft, автор, дата, иконку избранного */
 .dashboard-header-container .metadata-text,
 .dashboard-header-container .metadata-icon,
-.dashboard-header-container .fave-unfave-icon {
+.dashboard-header-container .fave-unfave-icon,
+.css-138eycr,
+.dashboard-header-container .ant-tag,
+.css-fvixtm,
+.css-a2xt09,
+.css-1giwgg4,
+.css-ly6tylo {
   display: none !important;
 }
 
