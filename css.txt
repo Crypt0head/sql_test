@@ -1,0 +1,450 @@
+/* =============================================================================
+   ДАШБОРД «ЭКВАЙРИНГОВЫЙ ПОРТФЕЛЬ»
+   Apache Superset 5.0 — Custom CSS
+   Версия 1.0 | 05.03.2026
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И ФОН
+   --------------------------------------------------------------------------- */
+
+:root {
+  --bank-green:       #1D8341;
+  --bank-green-light: #A6CE38;
+  --bank-yellow:      #FFCB08;
+  --bank-olive:       #7A9E2E;
+  --bg-dashboard:     #F2F2F2;
+  --bg-card:          #FFFFFF;
+  --text-primary:     #333333;
+  --text-secondary:   #6E6E6E;
+  --border-color:     #E0E0E0;
+  --positive:         #1D8341;
+  --negative:         #B00020;
+  --hover-row:        #E8F5E9;
+  --table-stripe:     #F5F5F5;
+  --card-radius:      14px;
+  --card-shadow:      0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body,
+.dashboard {
+  background-color: var(--bg-dashboard) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  color: var(--text-primary) !important;
+}
+
+.dashboard-content {
+  background-color: var(--bg-dashboard) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   2. ТИПОГРАФИКА
+   --------------------------------------------------------------------------- */
+
+.header-title,
+.dashboard-component-header .header-medium,
+.dashboard-component-header {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+}
+
+.big_number_total .header-line {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+}
+
+.big_number_total .kpi-value,
+.big_number_total text,
+.superset-legacy-chart-big-number text[font-size] {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 500 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   3. ШАПКА
+   --------------------------------------------------------------------------- */
+
+.dashboard-header-container {
+  background: var(--bg-card) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+.dashboard-header-container .header-title .dynamic-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+/* Скрыть Draft, автор, дата */
+.dashboard-header-container .metadata-text,
+.dashboard-header-container .metadata-icon,
+.dashboard-header-container .fave-unfave-icon {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   4. ПАНЕЛЬ ФИЛЬТРОВ (sidebar)
+   --------------------------------------------------------------------------- */
+
+.dt-global-filter {
+  background: var(--bank-green) !important;
+}
+
+/* Логотип сверху — зарезервировано место, если добавить через before */
+.dt-global-filter::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 60px;
+  background: url('/static/assets/images/bank_logo.png') no-repeat center center;
+  background-size: contain;
+  margin-bottom: 16px;
+}
+
+/* Лейблы фильтров */
+.dt-global-filter .ant-form-item-label > label,
+.dt-global-filter label {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+/* Поля фильтров */
+.dt-global-filter .ant-select-selector,
+.dt-global-filter .ant-select {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 13px !important;
+}
+
+.dt-global-filter .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.dt-global-filter .ant-select-arrow {
+  color: rgba(255, 255, 255, 0.60) !important;
+}
+
+/* Hover / Focus полей — жёлтая обводка */
+.dt-global-filter .ant-select-selector:hover,
+.dt-global-filter .ant-select-focused .ant-select-selector,
+.dt-global-filter .ant-select-selector:focus-within {
+  border-color: var(--bank-yellow) !important;
+  box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.20) !important;
+}
+
+/* Кнопка Apply */
+.filter-apply-button,
+.filter-apply-button .ant-btn,
+.dt-global-filter [class*="filter-apply"] {
+  background: #FFFFFF !important;
+  color: var(--bank-green) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  transition: box-shadow 140ms ease-out !important;
+}
+
+.filter-apply-button:hover,
+.filter-apply-button .ant-btn:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Кнопка Clear All */
+.filter-clear-all-button,
+.filter-clear-all-button .ant-btn,
+.dt-global-filter [class*="filter-clear"] {
+  background: transparent !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-radius: 8px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+}
+
+.filter-clear-all-button:hover,
+.filter-clear-all-button .ant-btn:hover {
+  border-color: rgba(255, 255, 255, 0.60) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   5. KPI-КАРТОЧКИ (Big Number)
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-chart-holder:has(.superset-legacy-chart-big-number),
+.dashboard-component-chart-holder:has(.big_number_total) {
+  background: var(--bg-card) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  border-top: 3px solid var(--border-color) !important;
+  overflow: hidden !important;
+  transition: transform 140ms ease-out,
+              border-color 140ms ease-out,
+              box-shadow 140ms ease-out !important;
+}
+
+.dashboard-component-chart-holder:has(.superset-legacy-chart-big-number):hover,
+.dashboard-component-chart-holder:has(.big_number_total):hover {
+  border-top-color: var(--bank-yellow) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* Fallback без :has() — таргетим через сам класс чарта */
+.superset-legacy-chart-big-number {
+  background: var(--bg-card) !important;
+  border-radius: var(--card-radius) !important;
+}
+
+/* KPI значение — Inter 32px 500 */
+.big_number_total svg text[style*="fontSize"],
+.big_number_total .number-cell,
+.superset-legacy-chart-big-number .header-line + div {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 500 !important;
+}
+
+/* KPI лейбл — PT Sans 12px 500 */
+.big_number_total .header-line,
+.superset-legacy-chart-big-number .slice_container > div:first-child {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+  color: var(--text-secondary) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   6. СЕКЦИИ-РАЗДЕЛИТЕЛИ / ЗАГОЛОВКИ СЕКЦИЙ
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+}
+
+.dashboard-component-divider {
+  border-color: var(--border-color) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   7. ГРАФИК (ECharts Area / Line)
+   --------------------------------------------------------------------------- */
+
+/* Контейнер графика */
+.dashboard-component-chart-holder:has(.echarts_timeseries_line) {
+  background: var(--bg-card) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  padding: 16px !important;
+}
+
+/*
+   ПРИМЕЧАНИЕ: цвета серий ECharts (canvas) нельзя изменить через CSS.
+   Настройте в конфигурации чарта Superset:
+     - ЧОД:       #1D8341
+     - Фин. рез.: #7A9E2E
+   Также в настройках чарта:
+     - Убрать заголовок графика (Show Title → off)
+     - Сетка: только горизонтальные линии (Y Axis → Show Grid Lines: on, X Axis → off)
+     - Легенда: снизу по центру (Legend Orientation: horizontal, Legend Position: bottom)
+*/
+
+/* Скрыть названия всех графиков/чартов */
+.chart-slice .header-line,
+.dashboard-chart .header-line,
+.slice_container > .header-line,
+.dashboard-component-chart-holder .header-line {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   8. ТАБЛИЦЫ
+   --------------------------------------------------------------------------- */
+
+/* Контейнер таблицы */
+.dashboard-component-chart-holder:has(.superset-chart-table) {
+  background: var(--bg-card) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  overflow: hidden !important;
+}
+
+/* Заголовок таблицы — тёмно-зелёный фон, белый текст */
+.superset-chart-table .table th,
+.superset-chart-table thead th {
+  background: var(--bank-green) !important;
+  color: #FFFFFF !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+}
+
+/* Ячейки — текст */
+.superset-chart-table .table td {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: var(--text-primary) !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Зебра — чередование строк */
+.superset-chart-table .table tbody tr:nth-child(odd) {
+  background: #FFFFFF !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(even) {
+  background: var(--table-stripe) !important;
+}
+
+/* Hover строки */
+.superset-chart-table .table tbody tr:hover {
+  background: var(--hover-row) !important;
+}
+
+/* Числовые ячейки — Inter, вправо */
+.superset-chart-table .table td.dt-is-null,
+.superset-chart-table .table td[class*="right"],
+.superset-chart-table .table td:nth-child(n+3) {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-variant-numeric: tabular-nums !important;
+  text-align: right !important;
+}
+
+/* Скрыть выбор количества строк */
+.superset-chart-table .dt-select-page-size,
+.superset-chart-table .dt-controls .form-inline,
+.superset-chart-table .row .col-sm-6:has(.dt-select-page-size) {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   9. РЕКОМЕНДАЦИИ ПРОДУКТОВ — ЧИПЫ
+   --------------------------------------------------------------------------- */
+
+/* client_products → зелёная обводка */
+.superset-chart-table .ant-tag[class*="client"],
+.superset-chart-table td:nth-last-child(2) .ant-tag {
+  background: #FFFFFF !important;
+  border: 1.5px solid var(--bank-green) !important;
+  color: var(--bank-green) !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+/* recommended_products → жёлтая обводка */
+.superset-chart-table .ant-tag[class*="recommend"],
+.superset-chart-table td:last-child .ant-tag {
+  background: #FFFFFF !important;
+  border: 1.5px solid var(--bank-yellow) !important;
+  color: var(--text-primary) !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   10. ОБЩИЕ ЭЛЕМЕНТЫ КАРТОЧЕК (chart-holder, если :has() не поддерживается)
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-chart-holder {
+  background: var(--bg-card) !important;
+  border-radius: var(--card-radius) !important;
+  box-shadow: var(--card-shadow) !important;
+  overflow: hidden !important;
+}
+
+/* ---------------------------------------------------------------------------
+   11. НАВБАР
+   --------------------------------------------------------------------------- */
+
+.main-nav {
+  background: var(--bg-card) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+.main-nav .navbar-brand {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-weight: 700 !important;
+  color: var(--bank-green) !important;
+}
+
+/* Поиск в навбаре — hover жёлтый */
+.main-nav input[type="text"]:focus,
+.main-nav .form-control:focus {
+  border-color: var(--bank-yellow) !important;
+  box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.20) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   12. КНОПКИ SUPERSET (общие)
+   --------------------------------------------------------------------------- */
+
+.superset-button-primary {
+  background: var(--bank-green) !important;
+  border-color: var(--bank-green) !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-primary:hover {
+  background: #166d35 !important;
+  border-color: #166d35 !important;
+}
+
+.superset-button-secondary {
+  background: transparent !important;
+  border: 1px solid var(--bank-green) !important;
+  color: var(--bank-green) !important;
+  border-radius: 8px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   13. СКРОЛЛБАРЫ
+   --------------------------------------------------------------------------- */
+
+.dashboard-content ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dashboard-content ::-webkit-scrollbar-track {
+  background: var(--bg-dashboard);
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
