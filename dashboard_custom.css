@@ -23,19 +23,33 @@ body,
    2. ШАПКА
    --------------------------------------------------------------------------- */
 
-.dashboard-header-container {
-  background: #FFFFFF !important;
+.dashboard-header-container,
+.css-jfn13n {
+  background: #1D8341 !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 100 !important;
-  border-bottom: 1px solid #E0E0E0 !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10) !important;
 }
 
-.dashboard-header-container .header-title .dynamic-title {
+.dashboard-header-container .header-title .dynamic-title,
+.css-jfn13n .dynamic-title {
   font-size: 22px !important;
   font-weight: 700 !important;
-  color: #333333 !important;
+  color: #FFFFFF !important;
+}
+
+/* Иконки и кнопки в шапке — белые */
+.dashboard-header-container .anticon,
+.css-jfn13n .anticon,
+.dashboard-header-container .header-controls button,
+.css-jfn13n button {
+  color: #FFFFFF !important;
+}
+
+.dashboard-header-container .editable-title input {
+  color: #FFFFFF !important;
 }
 
 /* Скрыть Draft, автор, дата */
@@ -49,28 +63,27 @@ body,
    3. ПАНЕЛЬ ФИЛЬТРОВ (sidebar)
    --------------------------------------------------------------------------- */
 
-/* Несколько вариантов селектора — emotion-хэш может меняться */
+/* Фон фильтров */
 .css-lmih2o,
-.dt-global-filter,
-div[class*="FilterBar"],
-.dashboard .ant-layout-sider,
-.dashboard aside {
+.css-1bl3vr5,
+.css-14pwj7q {
   background: #1D8341 !important;
 }
 
-.css-lmih2o label,
-.dt-global-filter label,
-.dashboard aside label,
-.dashboard .ant-layout-sider label {
+/* Лейблы фильтров */
+.css-1bl3vr5 label,
+.css-14pwj7q label,
+.css-lmih2o label {
   color: #FFFFFF !important;
   font-size: 14px !important;
   font-weight: 700 !important;
 }
 
-.css-lmih2o .ant-select-selector,
-.css-lmih2o .ant-select,
-.dashboard aside .ant-select-selector,
-.dashboard aside .ant-select {
+/* Поля фильтров */
+.css-1bl3vr5 .ant-select-selector,
+.css-1bl3vr5 .ant-select,
+.css-14pwj7q .ant-select-selector,
+.css-14pwj7q .ant-select {
   background: rgba(255, 255, 255, 0.10) !important;
   border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 8px !important;
@@ -78,17 +91,20 @@ div[class*="FilterBar"],
   font-size: 13px !important;
 }
 
-.css-lmih2o .ant-select-selection-placeholder {
+.css-1bl3vr5 .ant-select-selection-placeholder,
+.css-14pwj7q .ant-select-selection-placeholder {
   color: rgba(255, 255, 255, 0.50) !important;
 }
 
-.css-lmih2o .ant-select-arrow {
+.css-1bl3vr5 .ant-select-arrow,
+.css-14pwj7q .ant-select-arrow {
   color: rgba(255, 255, 255, 0.60) !important;
 }
 
-.css-lmih2o .ant-select-selector:hover,
-.css-lmih2o .ant-select-focused .ant-select-selector,
-.css-lmih2o .ant-select-selector:focus-within {
+.css-1bl3vr5 .ant-select-selector:hover,
+.css-1bl3vr5 .ant-select-focused .ant-select-selector,
+.css-14pwj7q .ant-select-selector:hover,
+.css-14pwj7q .ant-select-focused .ant-select-selector {
   border-color: #FFCB08 !important;
   box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.20) !important;
 }
@@ -166,13 +182,12 @@ div[class*="FilterBar"],
   min-height: 80px !important;
 }
 
-/* KPI лейбл */
+/* KPI значение — не трогать font-size (инлайн 166px от Superset) */
 .big_number_total .header-line,
 .superset-legacy-chart-big-number .header-line {
-  display: block !important;
-  font-size: 13px !important;
+  display: flex !important;
+  color: #000000 !important;
   font-weight: 600 !important;
-  color: #333333 !important;
 }
 
 /* KPI значение — крупный чёрный текст */
@@ -218,14 +233,17 @@ div[class*="FilterBar"],
 /* Скрыть заголовок у графиков и таблиц, НЕ у Big Number */
 .echarts_timeseries_line .header-line,
 .dashboard-chart-id-106 .header-line,
+.dashboard-chart-id-106 .css-159ymuc,
 .dashboard-chart-id-107 .header-line,
 .dashboard-chart-id-108 .header-line,
 .superset-chart-table .header-line {
   display: none !important;
 }
 
-/* На случай если заголовок рендерится вне header-line */
-.echarts_timeseries_line .slice_container > span:first-child {
+/* Скрыть заголовок графика по классу и по структуре */
+.dashboard-chart-id-106 .slice_container > span:first-child,
+.dashboard-chart-id-106 .slice_container > div:first-child > span,
+.css-159ymuc {
   display: none !important;
 }
 
@@ -250,15 +268,17 @@ div[class*="FilterBar"],
 }
 
 /* Разделители — зелёные */
-.dashboard-component-divider {
+.dashboard-component-divider,
+.css-lu0hy9h {
   border-color: #1D8341 !important;
   border-width: 2px !important;
   opacity: 1 !important;
 }
 
-.dashboard-component-divider hr {
+.dashboard-component-divider hr,
+.css-lu0hy9h hr {
   border-color: #1D8341 !important;
-  border-width: 2px !important;
+  border-top: 3px solid #1D8341 !important;
 }
 
 /* ---------------------------------------------------------------------------
