@@ -46,17 +46,22 @@ body,
 }
 
 /* ---------------------------------------------------------------------------
-   3. ПАНЕЛЬ ФИЛЬТРОВ
+   3. ПАНЕЛЬ ФИЛЬТРОВ (sidebar)
    --------------------------------------------------------------------------- */
 
+/* Несколько вариантов селектора — emotion-хэш может меняться */
 .css-lmih2o,
-.dt-global-filter {
+.dt-global-filter,
+div[class*="FilterBar"],
+.dashboard .ant-layout-sider,
+.dashboard aside {
   background: #1D8341 !important;
 }
 
-.css-lmih2o .ant-form-item-label > label,
 .css-lmih2o label,
-.dt-global-filter label {
+.dt-global-filter label,
+.dashboard aside label,
+.dashboard .ant-layout-sider label {
   color: #FFFFFF !important;
   font-size: 14px !important;
   font-weight: 700 !important;
@@ -64,7 +69,8 @@ body,
 
 .css-lmih2o .ant-select-selector,
 .css-lmih2o .ant-select,
-.dt-global-filter .ant-select-selector {
+.dashboard aside .ant-select-selector,
+.dashboard aside .ant-select {
   background: rgba(255, 255, 255, 0.10) !important;
   border: 1px solid rgba(255, 255, 255, 0.20) !important;
   border-radius: 8px !important;
@@ -137,6 +143,27 @@ body,
 
 .superset-legacy-chart-big-number {
   background: #FFFFFF !important;
+  min-height: 120px !important;
+  height: 100% !important;
+}
+
+/* Растянуть внутренний контейнер Big Number */
+.big_number_total {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total .chart-container,
+.superset-legacy-chart-big-number .chart-container {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total svg,
+.superset-legacy-chart-big-number svg {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 80px !important;
 }
 
 /* KPI лейбл */
@@ -152,7 +179,6 @@ body,
 .big_number_total svg text,
 .superset-legacy-chart-big-number svg text {
   fill: #000000 !important;
-  font-size: 36px !important;
   font-weight: 600 !important;
 }
 
@@ -162,20 +188,27 @@ body,
   color: #333333 !important;
 }
 
+/* Контейнер слайса — растянуть */
+.superset-legacy-chart-big-number .slice_container {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
 /* ▲ Зелёный треугольник для положительных KPI */
-.dashboard-chart-id-98 .big_number_total::after,
-.dashboard-chart-id-101 .big_number_total::after {
-  content: " ▲";
+.dashboard-chart-id-98 .header-line::after,
+.dashboard-chart-id-101 .header-line::after {
+  content: " ▲" !important;
   color: #1D8341 !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
 }
 
 /* ▼ Красный треугольник для отрицательных KPI */
-.dashboard-chart-id-99 .big_number_total::after,
-.dashboard-chart-id-102 .big_number_total::after {
-  content: " ▼";
+.dashboard-chart-id-99 .header-line::after,
+.dashboard-chart-id-102 .header-line::after {
+  content: " ▼" !important;
   color: #B00020 !important;
-  font-size: 18px !important;
+  font-size: 16px !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -184,7 +217,15 @@ body,
 
 /* Скрыть заголовок у графиков и таблиц, НЕ у Big Number */
 .echarts_timeseries_line .header-line,
+.dashboard-chart-id-106 .header-line,
+.dashboard-chart-id-107 .header-line,
+.dashboard-chart-id-108 .header-line,
 .superset-chart-table .header-line {
+  display: none !important;
+}
+
+/* На случай если заголовок рендерится вне header-line */
+.echarts_timeseries_line .slice_container > span:first-child {
   display: none !important;
 }
 
@@ -192,15 +233,30 @@ body,
    6. ЗАГОЛОВКИ СЕКЦИЙ
    --------------------------------------------------------------------------- */
 
+/* Вся строка заголовка секции — зелёный фон */
+.dashboard-component-header {
+  background: #1D8341 !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+}
+
 .dashboard-component-header .header-medium,
 .dashboard-component-header h2,
 .dashboard-component-header span {
   font-size: 18px !important;
   font-weight: 700 !important;
-  color: #1D8341 !important;
+  color: #FFFFFF !important;
 }
 
+/* Разделители — зелёные */
 .dashboard-component-divider {
+  border-color: #1D8341 !important;
+  border-width: 2px !important;
+  opacity: 1 !important;
+}
+
+.dashboard-component-divider hr {
   border-color: #1D8341 !important;
   border-width: 2px !important;
 }
