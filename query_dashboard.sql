@@ -1,3 +1,13 @@
+WITH src AS (
+    SELECT
+        t.*,
+        LEAST(GREATEST(t.trade_points_count, 1), 3) AS tp_adj,
+        GREATEST(
+            LEAST(GREATEST(t.terminals_count, 1), 4),
+            LEAST(GREATEST(t.trade_points_count, 1), 3)
+        ) AS term_adj
+    FROM tmp_test_equaring_synth_svy t
+)
 SELECT
     t.period                    AS "Период",
     t.inn                       AS "ИНН",
@@ -10,6 +20,13 @@ SELECT
     t.branch                    AS "Филиал",
 
     CASE MOD(ABS(t.cdi_id), 4)
+        WHEN 0 THEN 'Алтайский РФ'
+        WHEN 1 THEN 'Башкирский РФ'
+        WHEN 2 THEN 'Воронежский РФ'
+        WHEN 3 THEN 'Камчатский РФ'
+    END                         AS "РФ",
+
+    CASE MOD(ABS(t.cdi_id), 4)
         WHEN 0 THEN 'г.Славгород'
         WHEN 1 THEN 'г.Камень-на-Оби'
         WHEN 2 THEN 'г.Бийск'
@@ -19,14 +36,14 @@ SELECT
     t.vsp_code                  AS "Код ВСП",
     t.tariff                    AS "Тариф",
     t.mcc_code                  AS "MCC-код",
-    t.trade_points_count        AS "Кол-во торговых точек",
-    t.terminals_count           AS "Кол-во терминалов",
-    t.aur::numeric(12,0)                                                    AS "АУР",
+    t.tp_adj                    AS "Кол-во торговых точек",
+    t.term_adj                  AS "Кол-во терминалов",
+    (t.term_adj * 1926)::numeric(12,0)                                      AS "АУР",
     t.amortization::numeric(12,0)                                           AS "Амортизация",
     t.operations_count          AS "Кол-во операций",
     t.operations_sum::numeric(14,0)                                         AS "Сумма операций",
     ROUND(t.avg_acquiring_pct::numeric, 2)                                  AS "Средний процент эквайринга",
-    ROUND((t.commission_from_ops / NULLIF(t.operations_sum, 0) * 100)::numeric, 2) AS "Комиссия с операции (%)",
+    t.commission_from_ops::numeric(12,0)                                    AS "Комиссия с операции (руб.)",
     t.commission_monthly_fee::numeric(12,0)                                 AS "Комиссия (руб./месяц)",
     t.commission_acquiring::numeric(12,0)                                   AS "Комиссия эквайринга (общая)",
     t.noi_acquiring::numeric(12,0)                                          AS "ЧОД эквайринга",
@@ -54,7 +71,7 @@ SELECT
         ELSE '-'
     END                         AS "Подсегмент",
 
-    t.segment                   AS "ССП",
+    REPLACE(t.segment, 'ДМкБ', 'ДМ') AS "ССП",
 
     CASE
         WHEN t.seasonality = 'Y' THEN
@@ -112,4 +129,4 @@ SELECT
         ', '
     ) AS "Рекомендуемые продукты"
 
-FROM tmp_test_equaring_synth_svy t
+FROM src t
