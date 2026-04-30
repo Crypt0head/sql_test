@@ -1,0 +1,62 @@
+Отчет 71 (по фото 1)
+
+Назначение (по структуре SQL):
+- Выгрузка договорного среза по эквайрингу с деталями по филиалу/подразделению,
+  клиенту, договору, тарифу и признаку e-commerce.
+- Есть форматирование для печатного отчета (DECODE + выделение первой строки в группе).
+
+Что видно в SELECT:
+- BRN / BRN_NAME (через DECODE и выделение первой строки аналитикой ROW_NUMBER/COUNT OVER).
+- AQ_CLASS (через GET_SYS_CONST('ACQ_CLASS', a.acq_class)).
+- AGC, AGR, AGR_NUMBER, ABS_AGR_ID.
+- AGR_BRN, AGR_BRN_NAME.
+- ACQ_TAR_DESC (описание тарифа).
+- D_VALID_FROM, D_VALID_TO, D_INS.
+- N_CMP, C_CMP_NAME, C_INN.
+- D_MRC (минимальная дата из MERCHANTS/AGR_TERMS).
+- ECOMM (агрегированный признак e-commerce).
+
+Источники/джойны (видимые на фото):
+- AGREEMENTS A
+- BRANCHES B
+- COMPANIES C
+- BRANCHES BA
+- Подзапрос T:
+  - AGR_TERMS T
+  - MERCHANTS M
+  - расчет:
+    - ECOMM = SUM(DECODE(M.CF_E_COMMERCE, 'Y', 1, 0))
+    - D_MRC = MIN(T.D_INS)
+  - группировка по T.N_AGR
+- Подзапрос AAT:
+  - ACQ_AGR_TARIFF AT
+  - ACQ_TARIFF T
+  - фильтр актуальности тарифа:
+    - AT.VALID_FROM <= TRUNC(SYSDATE)
+    - (AT.VALID_TO IS NULL OR AT.VALID_TO >= TRUNC(SYSDATE))
+
+Ключевые условия/фильтры:
+- A.N_CMP_PROVIDER = B.N_CMP
+- A.N_CMP_CLIENT  = C.N_CMP
+- A.N_AGR         = T.N_AGR
+- A.N_AGR         = AAT.N_AGR(+)
+- A.N_BANK        = BA.N_BANK(+)
+- A.N_BRN         = BA.N_BRN(+)
+- A.N_AGR <> GET_SYS_PARAM('ACQ_AGR_TEST')
+- A.ACQ_CLASS IN ('CA','SA','PA','QP')
+- Параметрические фильтры:
+  - FN_BANK, FN_BRN, FAGR_BRN
+  - D_BEG, D_END (через D_VALID_FROM/TO)
+  - F_CMP_NAME, FC_AGR_NUM, FACQ_CLASS
+  - FC_ECOMM
+  - FACQ_TAR_ID
+
+Технические особенности:
+- Сильно "репортный" SQL Oracle-стиля: DECODE, NVL, GET_SYS_PARAM/GET_SYS_CONST.
+- Часть логики завязана на системную дату (TRUNC(SYSDATE)) для тарифа.
+
+Риски расхождений с витриной техлида:
+- Отличается периметр классов договоров (здесь CA/SA/PA/QP, в DAG часто SA).
+- Проверка тарифа на "текущую дату", а не на отчетный период.
+- В отчете есть репортные фильтры и форматирование, которых в витрине может не быть.
+- Используются legacy-таблицы и бизнес-параметры, не 1:1 с логикой DAG.
