@@ -1,0 +1,90 @@
+Отчет 547 (по фото 4-5)
+
+Назначение (по структуре SQL):
+- Итоговый финансовый отчет по эквайрингу на уровне договора/клиента:
+  количество операций, оборот, комиссия, INT, аренда, количество POS, и производные проценты.
+
+Общая структура:
+- WITH-блок из нескольких CTE:
+  - ST: транзакционные агрегаты из STAT_POS_TRX.
+  - AM: периметр активных договоров/ТСП за период.
+  - AR: аренда (rent) из MRC_POS_RENT.
+  - AG: количество POS (COUNT DISTINCT serial) из POS_TERMINALS.
+  - T/AC: финальная сборка и расчет итоговых метрик.
+
+CTE ST (видимая логика):
+- SELECT N_AGR,
+         SUM(N_QTY_TRX) N_QTY_TRX,
+         SUM(N_AMT_TRX) N_AMT_TRX,
+         SUM(N_AMT_TAX) N_AMT_TAX,
+         SUM(N_AMT_FEE) N_AMT_FEE
+- FROM STAT_POS_TRX
+- WHERE D_STAT BETWEEN :D_BEG AND :D_END
+  AND N_AGR IS NOT NULL
+- GROUP BY N_AGR
+
+CTE AM (видимая логика):
+- Источники: AGREEMENTS A, AGR_TERMS T, MERCHANTS M.
+- Берет договорные/клиентские поля: CMP_BRN, ABS_AGR_ID, N_AGR, D_VALID_FROM/TO, N_CMP, C_NMRC.
+- Использует ROW_NUMBER() по C_NMRC/N_AGR (для дедупа на уровне ТСП).
+- Фильтры:
+  - A.N_AGR = T.N_AGR
+  - T.C_NMRC = M.C_NMRC
+  - A.N_AGR <> GET_SYS_PARAM('ACQ_AGR_TEST')
+  - A.ACQ_CLASS IN ('SA')  (по фото виден минимум SA)
+  - M.ACQ_CLASS = 'SV'
+  - Опциональные фильтры по MPOS/COMP/E-COMM/MRC_GROUP
+  - Периодная валидность договора:
+    - D_VALID_FROM <= LAST_DAY(:D_END)
+    - D_VALID_TO IS NULL OR D_VALID_TO >= :D_BEG
+
+CTE AR (аренда):
+- Источник MRC_POS_RENT.
+- SUM(N_AMT) по C_NMRC за период :D_BEG..:D_END.
+- Join на AM по C_NMRC, берется RN=1.
+- Группировка до N_AGR.
+
+CTE AG (количество POS):
+- Источник POS_TERMINALS.
+- COUNT(DISTINCT C_POS_SERIAL) как COUNT_POS.
+- Терминал считается действующим в периоде, если:
+  - D_TER_INSTALL < LAST_DAY(:D_END)+1
+  - D_TER_CLOSE IS NULL OR D_TER_CLOSE >= :D_BEG
+- Join на AM по C_NMRC.
+- Группировка до уровня договора/клиента.
+
+Финальная сборка (AC/T) и метрики:
+- NVL(ST.N_QTY_TRX, 0)  -> N_QTY_TRX
+- NVL(ST.N_AMT_TRX, 0)  -> N_AMT_TRX
+- NVL(ST.N_AMT_TAX, 0)  -> N_AMT_TAX
+- NVL(ST.N_AMT_FEE, 0)  -> N_AMT_FEE
+- NVL(AR.RENT, 0)       -> RENT
+- N_AMT_FIN = N_AMT_TAX + N_AMT_FEE + CASE ... (по фото виден дополнительный CASE-терм)
+- Вывод в формате TO_CHAR с масками.
+- Производные проценты:
+  - PRC_TAX = ROUND(SUM(N_AMT_TAX) / SUM(DECODE(N_AMT_TRX,0,1,N_AMT_TRX)) * 100, 2)
+  - PRC_FEE = ROUND(SUM(N_AMT_FEE) / SUM(DECODE(N_AMT_TRX,0,1,N_AMT_TRX)) * 100, 2)
+
+Поля в финальном SELECT (видимые):
+- CMP/BRN (через DECODE + ROLLUP форматирование)
+- ABS_AGR_ID
+- C_CMP_NAME
+- C_INN
+- QTY_TRX
+- AMT_TRX
+- AMT_TAX
+- RENT
+- AMT_FEE
+- AMT_FIN
+- PRC_TAX
+- PRC_FEE
+- COUNT_POS
+- D_VALID_FROM
+- D_VALID_TO
+
+Риски расхождений с витриной техлида:
+- Источник фактов другой: STAT_POS_TRX вместо слоя trx/raw_trx/agg_trx.
+- Доп. компонент RENT и логика N_AMT_FIN могут отсутствовать/быть иными в витрине DAG.
+- Возможны разные правила "активности" по договору/терминалу.
+- Используется Oracle-логика и параметрические фильтры legacy-отчетности.
+- Могут быть разные правила включения e-commerce/MPOS/test-договоров.

@@ -1,0 +1,52 @@
+Отчет 503 (по фото 2)
+
+Назначение (по структуре SQL):
+- Инвентаризационная/техническая выгрузка по POS-устройствам и терминалам.
+- Содержит статусы устройства, тип, серийный номер, привязку к ТСП, владельцу и банку/FIID.
+
+Что видно в SELECT:
+- PREPARE_DATE (формат TO_CHAR(..., 'DD/MM/YYYY')).
+- P.FIID и F.C_FIID_DESC.
+- S.DEV_STAT (статус устройства).
+- DEV_TYPE / DEV_TYPE_GRP (через GET_DEV_TYPE, GET_SYS_CONST).
+- TERM_ID, DEV_SERIAL.
+- CMP_NAME (с REPLACE по спецсимволам).
+- HH_MRC, LOAD_DATE.
+- POS_VERSION.
+- LAST_TRX_DATE.
+- HOST_TYPE (DECODE: 'B' -> Base24, 'S' -> SWISTA).
+- MRC_ADDRESS_RUS.
+- OWNER / PROTOCOL (через GET_SYS_CONST и признаки POS_OWNER/POS_PROTOCOL).
+- C_INN, C_OGRN, M.N_MCC.
+
+Источники/джойны (видимые на фото):
+- POS_DEVICES P
+- POS_DEV_STAT S
+- BASE24_FIIDS F
+- MERCHANTS M
+- POS_TERMINALS T
+- COMPANIES C
+
+Связи:
+- P.DEV_STAT_ID = S.DEV_STAT_ID
+- P.FIID = F.C_FIID(+)
+- P.NMRC = M.C_NMRC(+)
+- P.TERM_ID = T.C_NTER(+)
+- M.N_CMP = C.N_CMP(+)
+
+Параметрические фильтры (видимые):
+- FC_FIID
+- FC_STAT (включая особую логику по -1 и DEV_STAT_ID)
+- FC_TYPE (DEV_TYPE_GRP)
+- FC_PLACE
+- FC_TERM_ID
+- FC_TEST (с условием по "REZERVNYI TERMINAL%")
+
+Технические особенности:
+- Oracle-стиль: DECODE/NVL/GET_SYS_CONST/TO_CHAR.
+- Результат ориентирован на технический мониторинг устройств, а не на финансовые KPI.
+
+Риски расхождений с витриной техлида:
+- Это "устройственный" отчет, а не договорно-финансовый факт.
+- Периметр строится по POS_DEVICES/POS_TERMINALS, а в DAG метрики часто идут через trx/trx_acq.
+- Фильтры FC_TEST/резервные терминалы могут заметно менять количество терминалов.

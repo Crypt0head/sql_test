@@ -1,0 +1,55 @@
+Отчет 214 (по фото 3)
+
+Назначение (по структуре SQL):
+- Список ТСП/договоров в заданном периметре с классификацией договора
+  (СБП vs торговый эквайринг), ИНН клиента и базовыми реквизитами.
+
+Что видно в SELECT:
+- DISTINCT M.N_CMP (клиент).
+- C.C_INN.
+- CF_TSP_PRIORITY (через DECODE по TSP PRIORITY / VIP / Standart).
+- M.C_NMRC (ТСП/торговая точка).
+- M.D_INS (дата создания/подключения ТСП, формат DD/MM/YYYY HH24:MI:SS).
+- M.N_MCC.
+- F.C_FIID_DESC.
+- CASE по классу договора:
+  - WHEN AG.ACQ_CLASS = 'QP' THEN 'Договор СБП'
+  - ELSE 'Договор Торгового эквайринга'
+- END AGR_CLASS.
+- AG.C_AGR_NUMBER.
+- AG.ABS_AGR_ID.
+- AG.N_AGR.
+
+Источники/джойны (видимые на фото):
+- MERCHANTS M
+- BASE24_FIIDS F
+- AGR_TERMS A
+- AGREEMENTS AG
+- COMPANIES C
+
+Связи:
+- M.C_FIID = F.C_FIID
+- M.N_CMP = C.N_CMP
+- AG.N_AGR = A.N_AGR
+- A.C_NMRC = M.C_NMRC
+
+Ключевые фильтры:
+- M.N_MCC = 6010
+- M.CF_E_COMMERCE = 'N'
+- M.ACQ_CLASS = 'SV'
+- M.N_CMP > 0
+- Перекрытие договора с отчетным месяцем (&D_REP):
+  - AG.D_VALID_FROM < ADD_MONTHS(&D_REP, 1)
+  - (AG.D_VALID_TO IS NULL OR AG.D_VALID_TO > &D_REP)
+- Перекрытие AGR_TERMS с отчетным месяцем (&D_REP):
+  - A.D_VALID_FROM < ADD_MONTHS(&D_REP, 1)
+  - (A.D_VALID_TO IS NULL OR A.D_VALID_TO > &D_REP)
+
+Технические особенности:
+- Четкий специализированный периметр (MCC=6010, e-commerce='N', acq_class='SV').
+- Используются bind-параметры SQL*Plus вида &D_REP.
+
+Риски расхождений с витриной техлида:
+- Очень узкий бизнес-периметр (не общий эквайринг).
+- В DAG могут использоваться другие классы/фильтры (например SA/S01 для транзакций).
+- Отчет опирается на MERCHANTS/AGR_TERMS, а не на транзакционный слой витрины.
