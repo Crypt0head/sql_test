@@ -50,16 +50,20 @@ select
     cast(m.id as string)                  as agr_id,
     cast(m.c_tariff_plan as string)       as c_tariff_plan,
     cast(tp.c_name as string)             as tariff_plan_name,
+    cast(tp.c_code as string)             as tariff_plan_code,
     cast(tt.c_tariff as string)           as tariff_id,
+    cast(tt.c_rule as string)             as tariff_rule,
     cast(tt.c_vid_comiss as string)       as vid_comiss_id,
     cast(vc.c_name as string)             as vid_comiss_name,
     cast(tf.id as string)                 as tariff_fix_id,
-    cast(tf.c_name as string)             as tariff_fix_name,
-    cast(tf.c_summa as decimal(18,2))     as fix_summa
+    cast(tf.c_summa as decimal(18,2))     as fix_summa,
+    cast(tc.id as string)                 as tariff_calc_id,
+    cast(tc.c_name as string)             as tariff_calc_name
 from ods.scd1_z_r2_ip_merchants m
 left join ods.scd1_z_r2_tariff_plan  tp on cast(tp.id as string) = cast(m.c_tariff_plan as string)
 left join ods.scd1_z_r2_tariff_tune  tt on cast(tt.c_tariff_plan as string) = cast(m.c_tariff_plan as string)
 left join ods.scd1_z_r2_tariff_fix   tf on cast(tf.id as string) = cast(tt.c_tariff as string)
+left join ods.scd1_z_r2_tariff_calc  tc on cast(tc.id as string) = cast(tt.c_tariff as string)
 left join ods.scd1_z_r2_vid_comiss   vc on cast(vc.id as string) = cast(tt.c_vid_comiss as string)
 where cast(m.id as string) = '{target_agr_id}'
 order by tt.c_tariff
