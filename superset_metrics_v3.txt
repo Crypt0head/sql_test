@@ -12,7 +12,7 @@ COUNT(
 2) Клиенты с положительным ФР
 COUNT(
   DISTINCT CASE
-    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) > 0
+    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) > 0
          AND NULLIF(TRIM(agr_id), '') IS NOT NULL
     THEN TRIM(agr_id)
     ELSE NULL
@@ -22,7 +22,7 @@ COUNT(
 3) Клиенты с отрицательным/нулевым ФР
 COUNT(
   DISTINCT CASE
-    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) <= 0
+    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) <= 0
          AND NULLIF(TRIM(agr_id), '') IS NOT NULL
     THEN TRIM(agr_id)
     ELSE NULL
@@ -30,13 +30,13 @@ COUNT(
 )
 
 4) ФР итог
-SUM(COALESCE(CAST(NULLIF(fin_result_num, '') AS NUMERIC), 0))
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0))
 
 5) ФР положительный
 SUM(
   CASE
-    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) > 0
-    THEN CAST(NULLIF(fin_result_num, '') AS NUMERIC)
+    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) > 0
+    THEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0)
     ELSE 0
   END
 )
@@ -44,23 +44,23 @@ SUM(
 6) ФР отрицательный (включая 0)
 SUM(
   CASE
-    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) <= 0
-    THEN CAST(NULLIF(fin_result_num, '') AS NUMERIC)
+    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) <= 0
+    THEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0)
     ELSE 0
   END
 )
 
 7) Терминалы всего
-SUM(COALESCE(CAST(NULLIF(term_cnt, '') AS NUMERIC), 0))
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
 
 8) Терминалы активные
-SUM(COALESCE(CAST(NULLIF(active_terms, '') AS NUMERIC), 0))
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
 
 9) Терминалы неактивные
 SUM(
   GREATEST(
-    COALESCE(CAST(NULLIF(term_cnt, '') AS NUMERIC), 0)
-    - COALESCE(CAST(NULLIF(active_terms, '') AS NUMERIC), 0),
+    COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0)
+    - COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0),
     0
   )
 )
