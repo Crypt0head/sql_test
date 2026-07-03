@@ -1,4 +1,7 @@
 Dataset: sbx_da.tmp_shestopalov_acq_datamart_q1_v3
+Набор ниже сделан так, чтобы карточки сходились в 0:
+- клиенты: positive + negative = total
+- терминалы: active + inactive = total
 
 1) Клиенты всего
 COUNT(
@@ -19,10 +22,18 @@ COUNT(
   END
 )
 
-3) Клиенты с отрицательным/нулевым ФР
+3) Клиенты с отрицательным/нулевым ФР (аддитивно: всего - положительные)
 COUNT(
   DISTINCT CASE
-    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) <= 0
+    WHEN NULLIF(TRIM(agr_id), '') IS NOT NULL
+    THEN TRIM(agr_id)
+    ELSE NULL
+  END
+)
+-
+COUNT(
+  DISTINCT CASE
+    WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result_num AS TEXT)), '') AS NUMERIC), 0) > 0
          AND NULLIF(TRIM(agr_id), '') IS NOT NULL
     THEN TRIM(agr_id)
     ELSE NULL
@@ -56,11 +67,7 @@ SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
 8) Терминалы активные
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
 
-9) Терминалы неактивные
-SUM(
-  GREATEST(
-    COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0)
-    - COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0),
-    0
-  )
-)
+9) Терминалы неактивные (аддитивно: всего - активные)
+COALESCE(SUM(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC)), 0)
+-
+COALESCE(SUM(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC)), 0)
