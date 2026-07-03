@@ -1,0 +1,66 @@
+Dataset: sbx_da.tmp_shestopalov_acq_datamart_q1_v3
+
+1) Клиенты всего
+COUNT(
+  DISTINCT CASE
+    WHEN NULLIF(TRIM(agr_id), '') IS NOT NULL
+    THEN TRIM(agr_id)
+    ELSE NULL
+  END
+)
+
+2) Клиенты с положительным ФР
+COUNT(
+  DISTINCT CASE
+    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) > 0
+         AND NULLIF(TRIM(agr_id), '') IS NOT NULL
+    THEN TRIM(agr_id)
+    ELSE NULL
+  END
+)
+
+3) Клиенты с отрицательным/нулевым ФР
+COUNT(
+  DISTINCT CASE
+    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) <= 0
+         AND NULLIF(TRIM(agr_id), '') IS NOT NULL
+    THEN TRIM(agr_id)
+    ELSE NULL
+  END
+)
+
+4) ФР итог
+SUM(COALESCE(CAST(NULLIF(fin_result_num, '') AS NUMERIC), 0))
+
+5) ФР положительный
+SUM(
+  CASE
+    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) > 0
+    THEN CAST(NULLIF(fin_result_num, '') AS NUMERIC)
+    ELSE 0
+  END
+)
+
+6) ФР отрицательный (включая 0)
+SUM(
+  CASE
+    WHEN CAST(NULLIF(fin_result_num, '') AS NUMERIC) <= 0
+    THEN CAST(NULLIF(fin_result_num, '') AS NUMERIC)
+    ELSE 0
+  END
+)
+
+7) Терминалы всего
+SUM(COALESCE(CAST(NULLIF(term_cnt, '') AS NUMERIC), 0))
+
+8) Терминалы активные
+SUM(COALESCE(CAST(NULLIF(active_terms, '') AS NUMERIC), 0))
+
+9) Терминалы неактивные
+SUM(
+  GREATEST(
+    COALESCE(CAST(NULLIF(term_cnt, '') AS NUMERIC), 0)
+    - COALESCE(CAST(NULLIF(active_terms, '') AS NUMERIC), 0),
+    0
+  )
+)
