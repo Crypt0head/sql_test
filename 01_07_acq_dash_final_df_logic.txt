@@ -1,0 +1,472 @@
+01_07_acq_dash.ipynb - подробная логика сборки final_df
+======================================================
+
+Документ описывает:
+1) как тетрадка строит final_df по месяцам;
+2) из каких таблиц и по каким условиям берутся данные;
+3) где и почему возникают тяжелые места по производительности.
+
+
+------------------------------------------------------------
+0. Общая цель тетрадки
+------------------------------------------------------------
+
+Тетрадка считает витрину эквайринга за период Jan-Jun 2026:
+- помесячно строит final_df (один месяц = один срез);
+- объединяет месяцы в final_df_period_df;
+- сравнивает Jan-Apr с Excel-референсом;
+- May-Jun помечает как no_excel_reference;
+- сохраняет CSV/Excel;
+- поддерживает checkpoint по месяцам (чтобы при падении kernel не терять уже посчитанные месяцы).
+
+
+------------------------------------------------------------
+1. Конфиг и режимы выполнения
+------------------------------------------------------------
+
+Период:
+- period_start = '2026-01-01'
+- period_end   = '2026-06-01'
+- period_months = date_range(freq='MS')
+
+Ключевые флаги:
+- use_fast_flat_08b_map = True
+  Используется быстрый "плоский" map тарифного плана в месячную комиссию.
+
+- preload_tariff_fix_flat_map = True
+  Пробует один раз заранее загрузить всю карту tariff_plan -> commission_monthly_fix.
+
+- use_legacy_commission_monthly_only = False
+  Текущий режим комиссий:
+  actual (section 09) -> 08b plan fallback -> legacy fallback.
+
+- section09_chunk_threshold = 1800
+- section09_chunk_size = 800
+  Controlled batching для тяжелого шага 09_actual_tariff_by_agr.
+
+Отказоустойчивость:
+- monthly_checkpoint_dir = .../checkpoints_final_df_2026_01_2026_06
+- monthly_run_state_path = .../run_state.json
+
+
+------------------------------------------------------------
+2. Основные источники данных (Озеро/справочники)
+------------------------------------------------------------
+
+Блок периметра и договоров:
+- ods_alpha.scd1_agreements
+- ods_alpha.scd1_companies
+- ods_alpha.scd1_agr_terms
+
+OCRМ/CDI/CFT:
+- ocrm_ul.s_org_ext
+- cdiul.ext_id_org
+
+Операционные метрики:
+- ods_alpha.scd1_merchants
+- ods_alpha.scd1_pos_terminals
+- sandbox_ai.shestopalov_terminal_amortization_oneoff
+
+Транзакционные метрики:
+- ods_alpha.scd1_base24_fiids
+- ods_alpha.scd1_trx
+- ods_alpha.scd1_trx_acq
+- ods_alpha.scd1_trx_int
+
+R2 и тарифы:
+- ods.scd1_z_r2_ip_merchants
+- ods.scd1_z_cl_corp
+- ods.scd1_z_depart
+- ods.scd1_z_branch
+- ods.scd1_z_r2_tariff_plan
+- ods.scd1_z_r2_tariff_tune
+- ods.scd1_z_r2_tariff_fix
+
+
+------------------------------------------------------------
+3. Метод выполнения запросов (важно для диагностики)
+------------------------------------------------------------
+
+Все SQL идут через _run_impala_fetch(step_name, sql, mem_limit, heartbeat, run_probe):
+
+1) Перед тяжелым SQL выполняется быстрый probe:
+   select 1 as probe_ping
+   Цель: отличить "очередь/кластер" от "медленный план SQL".
+
+2) Для каждого шага печатается heartbeat:
+   "still running (Xs)"
+
+3) После завершения:
+   "done (elapsed, rows)"
+
+Это позволяет видеть, где именно шаг зависает: в ожидании ресурсов или в скане/джойнах/сортировке.
+
+
+------------------------------------------------------------
+4. Пайплайн compute_final_df_for_month(report_month)
+------------------------------------------------------------
+
+Ниже шаги 01-10 внутри функции.
+
+
+4.1 Section 01 - SA perimeter
+-----------------------------
+Цель:
+- получить базовый список договоров/клиентов SA за месяц.
+
+Источник:
+- ods_alpha.scd1_agreements a
+- ods_alpha.scd1_companies c
+- exists по ods_alpha.scd1_agr_terms t
+
+Join и условия:
+- c.n_cmp = a.n_cmp_client
+- upper(trim(a.acq_class)) = 'SA'
+- a.d_valid_from <= month_end
+- a.d_valid_to is null or a.d_valid_to >= month_start
+- флаги удаления = 0
+- c.c_inn is not null
+- exists term с:
+  - t.n_agr = a.n_agr
+  - term период пересекает месяц
+  - upper(trim(t.cf_ter_type)) = 'P'
+  - t не удален
+
+Выход:
+- n_agr, agr_id(abs_agr_id), n_cmp_client, contract_number, d_valid_from/to, inn, company_name
+
+
+4.2 Section 02 - CDI mapping
+----------------------------
+Цель:
+- по inn привязать cdi_id + ssp_ocrm.
+
+Источник:
+- ocrm_ul.s_org_ext (берется актуальная запись row_number по inn)
+- cdiul.ext_id_org (source system like OCRM%)
+
+Условия:
+- inn in scope inn_values из section 01
+- x_removed_flg = N, x_duplicate_flg = N
+- dedup по inn (берется rn=1)
+
+Выход:
+- inn, ssp_ocrm/x_area_resp_norm, cdi_id
+
+
+4.3 Section 03 - CFT mapping
+----------------------------
+Цель:
+- по cdi_id получить cft_id.
+
+Источник:
+- cdiul.ext_id_org
+
+Условия:
+- party_id in cdi scope
+- source system like CFT%
+
+Выход:
+- cdi_id -> cft_id
+
+
+4.4 Section 04 - Operational metrics (hybrid)
+---------------------------------------------
+Цель:
+- посчитать retl_cnt, term_cnt, amortization на уровне n_agr.
+
+Логика:
+- 547-like путь (основной);
+- fallback_old путь только для n_agr, где в 547-like нет данных.
+
+Источники:
+- ods_alpha.scd1_agreements/companies/agr_terms (периметр SA)
+- ods_alpha.scd1_merchants
+- ods_alpha.scd1_pos_terminals
+- sandbox_ai.shestopalov_terminal_amortization_oneoff
+
+Ключевые фильтры:
+- исключение резервных терминалов по c_mrc_name
+- периоды установки/закрытия терминалов пересекают месяц
+- удаления ods_deleted_flg <> 1
+- в try-ветке дополнительно фильтр m.acq_class <> 'SV'
+  (при ошибке есть fallback без этого фильтра)
+
+Агрегаты:
+- retl_cnt: count distinct c_nmrc
+- term_cnt: count distinct c_pos_serial (или c_nter в old)
+- amortization: sum(amortization_monthly) по уникальным терминалам
+
+
+4.5 Section 05 - Transaction metrics
+------------------------------------
+Цель:
+- trx_cnt, trx_sum, commission_from_ops, int_component, active_terms.
+
+Источники:
+- agreements/companies/agr_terms (периметр SA)
+- ods_alpha.scd1_base24_fiids (группа RSHB)
+- ods_alpha.scd1_trx
+- ods_alpha.scd1_trx_acq
+- ods_alpha.scd1_trx_int
+
+Ключевые условия по trx:
+- d_trx_orig в рамках месяца [month_start, month_end+1)
+- c_trx_class='SA'
+- c_trx_type='S01'
+- cf_trx_stat <> 'R'
+- c_nter is not null
+
+Метод:
+- ta связывает trx с n_agr
+- trx_int агрегируется отдельно по n_trx
+- итоговый trx_agg на n_agr
+- active_term_cnt и active_terms считают активные терминалы по n_amt_src > 1
+
+
+4.6 Section 06 - R2 legacy attrs
+--------------------------------
+Цель:
+- подтянуть R2-атрибуты по cft_id:
+  r2_id, c_tariff_plan, ogrn, vsp_name, vsp_code, filial_rf, tariff_name_legacy.
+
+Источники:
+- ods.scd1_z_r2_ip_merchants
+- ods.scd1_z_cl_corp
+- ods.scd1_z_depart
+- ods.scd1_z_branch
+- ods.scd1_z_r2_tariff_plan
+
+Условия:
+- c_cl_org in cft scope
+- merchant не удален
+- row_number partition by cft_id с приоритетом наиболее заполненных полей
+
+Важно:
+- commission_monthly_legacy в section 06 сейчас = NULL
+  (в SQL: cast(null as decimal(18,2))).
+- Лог: "06_r2_legacy_commission_map: skipped (moved to section 09 actual plan scope)"
+
+
+4.7 Section 07 - Base merge
+---------------------------
+Цель:
+- собрать единый base_df из section 01 + map + metrics.
+
+Merge-порядок:
+- sa_df
+- + cdi_map_df по inn
+- + cft_map_df по cdi_id
+- + r2_df по cft_id
+- + fallback профили r2/cft (filial/vsp)
+- + cmp_df по n_agr
+- + active_term_df по n_cmp_client
+- + trx_df по n_agr
+
+Нормализация:
+- filial_rf, ssp_ocrm нормализуются.
+
+
+4.8 Section 08 - agr fallback
+-----------------------------
+Цель:
+- если agr_id пустой, подставить r2_id.
+
+Логика:
+- agr_id_source='sa' по умолчанию
+- если agr_id пуст и r2_id не пуст -> agr_id = r2_id, source='r2_fallback'
+
+
+4.9 Section 08b - tariff_fix_map
+--------------------------------
+Цель:
+- иметь карту c_tariff_plan -> commission_monthly_fix для fallback.
+
+Источник:
+- ods.scd1_z_r2_tariff_tune tt
+- left join ods.scd1_z_r2_tariff_fix tf on tt.c_tariff=tf.id
+- group by c_tariff_plan, max(tf.c_summa)
+
+Режимы:
+- preloaded_flat_map (из начала тетрадки),
+- runtime_cached_flat_map,
+- rebuilt_flat_map (если preload не удался),
+- legacy_full_map.
+
+Выход:
+- tariff_fix_map_df (dedup по c_tariff_plan, max commission_monthly_fix)
+
+
+4.10 Section 09 - actual tariff by agr + actual commission
+----------------------------------------------------------
+Это основной "тяжелый" участок.
+
+Шаг 09a:
+- Берется base_agr_scope из base_df['agr_id_key'].
+- Если размер > threshold, запускается chunked режим:
+  09_actual_tariff_by_agr_chunk_X_of_Y
+  иначе single-shot.
+
+SQL 09a:
+CTE agr_actual:
+- из ods_alpha.scd1_agreements
+- фильтр abs_agr_id in scope
+- acq_class='SA'
+- период валидности: d_valid_from<=month_end, d_valid_to>=month_end
+- row_number по agr_id (берется самая новая версия)
+
+CTE merchant_one:
+- из ods.scd1_z_r2_ip_merchants
+- id in scope
+- не удален
+- row_number по id, order by c_tariff_plan desc
+
+Итог:
+- agr_id, n_agr_actual, contract_number_acq, dates, c_tariff_plan, tariff_name_actual
+- + merge с base_agr_keys_df (inner) для сохранения исходного скоупа.
+
+Шаг 09b:
+- actual_plan_scope = уникальные c_tariff_plan из actual_tariff_df.
+- Если есть готовый tariff_fix_map_df, берется быстрый source:
+  commission_map_source='08b_cached_scope_filter'
+- Иначе SQL по tt/tf:
+  commission_map_source='09_sql_scope'
+
+SQL 09b (если нужен):
+- ods.scd1_z_r2_tariff_tune tt
+- left join ods.scd1_z_r2_tariff_fix tf
+- where c_tariff_plan in actual_plan_scope
+- group by c_tariff_plan, max(c_summa)
+
+Диагностические метрики section 09:
+- section09_debug_by_month:
+  agr_scope_count, actual_tariff_rows, actual_plan_scope_count,
+  actual_tariff_fetch_mode, actual_tariff_elapsed_sec, commission_map_elapsed_sec, commission_map_source.
+- section09_fill_debug_by_month:
+  actual_fill_pct, plan_fallback_fill_pct, legacy_fill_pct, zero_final_pct.
+
+
+4.11 Section 10 - formulas and final_df
+---------------------------------------
+1) Merge actual tariff payload в base_df по agr_id_key.
+2) tariff_name:
+   tariff_name_actual, иначе tariff_name_legacy.
+3) tariff_source:
+   'agr_id_actual' если actual есть, иначе 'legacy_cft'.
+4) tariff_short:
+   через build_tariff_short(...).
+
+Комиссия в месяц:
+- если use_legacy_commission_monthly_only=True:
+  commission_monthly = commission_monthly_legacy
+- иначе:
+  commission_monthly =
+    commission_monthly_actual
+    -> fallback plan_map_08b (по c_tariff_plan)
+    -> fallback commission_monthly_legacy
+
+Дальше формулы:
+- commission_total = commission_from_ops + commission_monthly
+- aur = retl_cnt * 1926
+- chod = commission_total + int_component
+- fin_result = chod - aur - amortization
+
+Финальный набор колонок:
+- report_month, snapshot_month_start,
+- inn/company/agreement fields,
+- org fields (cdi/cft/vsp/filial/ogrn),
+- tariff fields,
+- metrics (retl_cnt, term_cnt, active_terms, trx_cnt/sum, commissions, chod, fin_result).
+
+
+------------------------------------------------------------
+5. Как собирается период Jan-Jun и что сохраняется
+------------------------------------------------------------
+
+Помесячный цикл:
+- Для каждого report_month проверяется checkpoint:
+  - final_df_YYYY_MM.parquet (или csv)
+  - monthly_compare_YYYY_MM.csv
+- Если checkpoint валиден:
+  месяц загружается, пересчет не делается.
+- Если checkpoint битый/пустой:
+  месяц пересчитывается и сохраняется заново.
+
+run_state.json:
+- period_start / period_end
+- completed_months
+- months[YYYY-MM]:
+  paths, format, rows, timestamp.
+
+После цикла:
+- final_df_period_df = concat(final_df_by_month)
+- monthly_compare_df = concat(monthly_compare_parts)
+- QC проверки по полноте месяцев и метрик
+- Экспорт:
+  - final_df_period_2026_01_2026_06.csv
+  - final_df_compare_2026_01_2026_06.xlsx
+
+
+------------------------------------------------------------
+6. Почему запрос может быть тяжелым (для обсуждения с senior)
+------------------------------------------------------------
+
+Главный кандидат:
+- Section 09a (09_actual_tariff_by_agr), особенно при большом agr_scope.
+
+Причины тяжести:
+1) Большой IN(scope) по agr_id.
+2) row_number() в agr_actual и merchant_one (сортировка/шардинг).
+3) cast(...) в join/filter ключах.
+4) SCD-таблицы с историей (agreements, ip_merchants).
+
+Вторичные тяжелые шаги:
+- Section 04: много CTE, distinct/group by, fallback-ветка, joins по terminal/merchant.
+- Section 05: цепочка trx -> trx_acq -> trx_int + агрегации.
+- Section 06: row_number по cft и joins к справочникам R2.
+
+Признаки, что тяжесть в плане SQL, а не в очереди:
+- queue probe быстрый,
+- heartbeat "still running ... [hint: slow plan/scan likely]",
+- особенно долго идут шаги 09a/04/05 на больших месяцах.
+
+
+------------------------------------------------------------
+7. Краткая карта зависимости полей final_df
+------------------------------------------------------------
+
+Ключи и происхождение:
+- inn/company_name/contract/dates: section 01
+- cdi_id/ssp_ocrm: section 02
+- cft_id: section 03
+- ogrn/vsp/filial/tariff_name_legacy/c_tariff_plan: section 06
+- retl_cnt/term_cnt/amortization: section 04
+- trx_cnt/trx_sum/commission_from_ops/int_component/active_terms: section 05
+- agr_id fallback: section 08
+- tariff_name_actual/commission_monthly_actual: section 09
+- commission_monthly (final): section 10 (actual -> 08b -> legacy)
+- commission_total/chod/fin_result: section 10 формулы
+
+
+------------------------------------------------------------
+8. Что показать senior-программисту в первую очередь
+------------------------------------------------------------
+
+1) SQL секции 09a и логи:
+   - agr_scope_count
+   - actual_tariff_fetch_mode (single_shot/chunked_N)
+   - elapsed_09a
+
+2) fill-rates секции 09:
+   - actual_fill_pct
+   - plan_fallback_fill_pct
+   - zero_final_pct
+
+3) section_timing_df по месяцу:
+   понять, какая секция самая дорогая.
+
+4) run_state/checkpoints:
+   подтверждение, что после падения kernel повторно считаются только недостающие месяцы.
+
+
+Конец документа.
