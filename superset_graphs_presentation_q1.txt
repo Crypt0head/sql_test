@@ -1,0 +1,126 @@
+Superset graphs SQL (presentation layout)
+Source table: sbx_da.tmp_shestopalov_acq_datamart_q1
+
+How to use:
+1) Copy needed query into SQL Lab and save as virtual dataset, or use logic in Custom SQL metrics.
+2) Replace {{month_start}} with first day of selected month (example: 2026-06-01) if you run in SQL Lab.
+3) In dashboard mode, month filtering should be done by snapshot_month_start.
+
+------------------------------------------------------------------------------
+0) Optional calculated column for branch filter (replace NULL/<NULL> with label)
+------------------------------------------------------------------------------
+Use in Dataset -> Calculated column:
+
+COALESCE(
+  NULLIF(NULLIF(BTRIM(CAST(filial_rf AS TEXT)), ''), '<NULL>'),
+  'Нет информации'
+)
+
+If your dataset uses branch_rf instead of filial_rf, use branch_rf in expression.
+
+------------------------------------------------------------------------------
+1) Clients block
+------------------------------------------------------------------------------
+WITH base AS (
+    SELECT
+        CAST(snapshot_month_start AS DATE) AS snapshot_month_start_dt,
+        NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_key,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) AS trx_cnt_num,
+        CAST(NULLIF(BTRIM(CAST(d_valid_from AS TEXT)), '') AS DATE) AS d_valid_from_dt,
+        CAST(NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') AS DATE) AS d_valid_to_dt
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+),
+scope AS (
+    SELECT *
+    FROM base
+    WHERE date_trunc('month', snapshot_month_start_dt) = date_trunc('month', DATE '{{month_start}}')
+)
+SELECT
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL THEN agr_key END) AS clients_total,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND trx_cnt_num > 0 THEN agr_key END) AS clients_active,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND trx_cnt_num <= 0 THEN agr_key END) AS clients_passive,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND date_trunc('month', d_valid_from_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_new_contracts,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND d_valid_to_dt IS NOT NULL AND date_trunc('month', d_valid_to_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_terminated_contracts
+FROM scope;
+
+------------------------------------------------------------------------------
+2) Merchants and terminals block
+------------------------------------------------------------------------------
+WITH base AS (
+    SELECT
+        CAST(snapshot_month_start AS DATE) AS snapshot_month_start_dt,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) AS trx_cnt_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0) AS retl_cnt_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0) AS term_cnt_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) AS active_terms_num
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+),
+scope AS (
+    SELECT *
+    FROM base
+    WHERE date_trunc('month', snapshot_month_start_dt) = date_trunc('month', DATE '{{month_start}}')
+)
+SELECT
+    SUM(retl_cnt_num) AS merchants_total,
+    SUM(CASE WHEN trx_cnt_num > 0 THEN retl_cnt_num ELSE 0 END) AS merchants_active_proxy,
+    SUM(CASE WHEN trx_cnt_num <= 0 THEN retl_cnt_num ELSE 0 END) AS merchants_passive_proxy,
+    NULL::NUMERIC AS merchants_closed_in_period_na,
+    SUM(term_cnt_num) AS terminals_total,
+    SUM(active_terms_num) AS terminals_active,
+    SUM(term_cnt_num) - SUM(active_terms_num) AS terminals_passive,
+    NULL::NUMERIC AS terminals_disconnected_in_period_na
+FROM scope;
+
+------------------------------------------------------------------------------
+3) CHOD block (counts + sums)
+------------------------------------------------------------------------------
+WITH base AS (
+    SELECT
+        CAST(snapshot_month_start AS DATE) AS snapshot_month_start_dt,
+        NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_key,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+),
+scope AS (
+    SELECT *
+    FROM base
+    WHERE date_trunc('month', snapshot_month_start_dt) = date_trunc('month', DATE '{{month_start}}')
+),
+bucketed AS (
+    SELECT
+        CASE
+            WHEN chod_num > 0 THEN 'Клиенты с положительным ЧОД ТЭ'
+            WHEN chod_num < 0 THEN 'Клиенты с отрицательным ЧОД ТЭ'
+            ELSE 'Клиенты с 0 ЧОД ТЭ'
+        END AS chod_bucket,
+        agr_key,
+        chod_num
+    FROM scope
+    WHERE agr_key IS NOT NULL
+)
+SELECT
+    chod_bucket,
+    COUNT(DISTINCT agr_key) AS clients_cnt,
+    ROUND(SUM(chod_num) / 1000000.0, 4) AS chod_sum_mln_rub,
+    COUNT(DISTINCT CASE WHEN chod_num < 0 THEN agr_key END) AS neg_chod_clients_cnt
+FROM bucketed
+GROUP BY chod_bucket
+ORDER BY chod_bucket;
+
+------------------------------------------------------------------------------
+4) One-line custom metrics (for Big Number charts)
+------------------------------------------------------------------------------
+clients_total:
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+
+clients_active:
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+
+terminals_total:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+terminals_active:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
+
+chod_sum_total:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0))
