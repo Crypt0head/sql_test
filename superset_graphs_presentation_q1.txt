@@ -123,6 +123,12 @@ COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL THE
 -
 COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
+clients_new_contracts:
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND d_valid_from IS NOT NULL AND date_trunc('month', CAST(NULLIF(BTRIM(CAST(d_valid_from AS TEXT)), '') AS DATE)) = date_trunc('month', CAST(snapshot_month_start AS DATE)) THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+
+clients_terminated_contracts:
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND d_valid_to IS NOT NULL AND date_trunc('month', CAST(NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') AS DATE)) = date_trunc('month', CAST(snapshot_month_start AS DATE)) THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+
 terminals_total:
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
 
