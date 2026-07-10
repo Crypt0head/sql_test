@@ -155,3 +155,112 @@ SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
 
 chod_sum_total:
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0))
+
+------------------------------------------------------------------------------
+5) Virtual dataset for 3x4 CHOD table (single-month dashboard mode)
+------------------------------------------------------------------------------
+Dataset name (recommended): vd_chod_clients_by_month
+
+SQL for virtual dataset:
+
+WITH base AS (
+    SELECT
+        CAST(snapshot_month_start AS DATE) AS snapshot_month_start,
+        NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_id_key,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+    WHERE NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL
+),
+by_client_month AS (
+    SELECT
+        snapshot_month_start,
+        agr_id_key,
+        SUM(chod_num) AS chod_sum
+    FROM base
+    GROUP BY snapshot_month_start, agr_id_key
+)
+SELECT
+    snapshot_month_start,
+    CASE
+        WHEN chod_sum > 0 THEN 'Клиенты с положительным ЧОД ТЭ'
+        WHEN chod_sum < 0 THEN 'Клиенты с отрицательным ЧОД ТЭ'
+        ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    agr_id_key,
+    chod_sum,
+    CAST(NULL AS NUMERIC) AS total_chod_placeholder
+FROM by_client_month;
+
+------------------------------------------------------------------------------
+6) Table chart config for the 3x4 layout
+------------------------------------------------------------------------------
+Chart type: Table (not Pivot)
+Source dataset: vd_chod_clients_by_month
+
+Group by:
+- client_bucket
+
+Metrics:
+- COUNT(DISTINCT agr_id_key)                  -- Количество клиентов
+- SUM(chod_sum)                               -- Сумма ЧОД
+- MAX(total_chod_placeholder)                 -- Заглушка (NULL)
+
+Column labels:
+- client_bucket -> Категория клиентов
+- COUNT_DISTINCT(agr_id_key) -> Количество клиентов
+- SUM(chod_sum) -> Сумма ЧОД
+- MAX(total_chod_placeholder) -> Общий ЧОД клиентов (заглушка)
+
+------------------------------------------------------------------------------
+7) Connect Month filter (single month)
+------------------------------------------------------------------------------
+Dashboard native filter:
+- Filter field: snapshot_month_start
+- Filter mode: single value (one month)
+- Scope: apply to this table chart
+
+Important:
+- Use snapshot_month_start as the only month filter for this chart.
+- Avoid report_month IN (...) for this chart.
+
+------------------------------------------------------------------------------
+8) Sanity-check query (clients and CHOD convergence)
+------------------------------------------------------------------------------
+Replace {{month_start}} with first day of month (example: 2026-04-01)
+
+WITH base AS (
+    SELECT
+        CAST(snapshot_month_start AS DATE) AS snapshot_month_start,
+        NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_id_key,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+    WHERE NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL
+      AND date_trunc('month', CAST(snapshot_month_start AS DATE)) = date_trunc('month', DATE '{{month_start}}')
+),
+by_client_month AS (
+    SELECT
+        snapshot_month_start,
+        agr_id_key,
+        SUM(chod_num) AS chod_sum
+    FROM base
+    GROUP BY snapshot_month_start, agr_id_key
+),
+bucketed AS (
+    SELECT
+        CASE
+            WHEN chod_sum > 0 THEN 'pos'
+            WHEN chod_sum < 0 THEN 'neg'
+            ELSE 'zero'
+        END AS bucket,
+        agr_id_key,
+        chod_sum
+    FROM by_client_month
+)
+SELECT
+    (SELECT COUNT(*) FROM by_client_month) AS expected_clients_total,
+    (SELECT COALESCE(SUM(chod_sum), 0) FROM by_client_month) AS expected_chod_total,
+    (SELECT COUNT(*) FROM bucketed) AS actual_clients_total_from_buckets,
+    (SELECT COALESCE(SUM(chod_sum), 0) FROM bucketed) AS actual_chod_total_from_buckets,
+    (SELECT SUM(CASE WHEN bucket = 'pos' THEN 1 ELSE 0 END) FROM bucketed) AS pos_clients,
+    (SELECT SUM(CASE WHEN bucket = 'neg' THEN 1 ELSE 0 END) FROM bucketed) AS neg_clients,
+    (SELECT SUM(CASE WHEN bucket = 'zero' THEN 1 ELSE 0 END) FROM bucketed) AS zero_clients;
