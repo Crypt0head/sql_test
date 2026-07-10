@@ -1,10 +1,12 @@
 Superset graphs SQL (presentation layout)
 Source table: sbx_da.tmp_shestopalov_acq_datamart_q1
+Client activity rule in this file: active if active_terms > 0
 
 How to use:
 1) Copy needed query into SQL Lab and save as virtual dataset, or use logic in Custom SQL metrics.
 2) Replace {{month_start}} with first day of selected month (example: 2026-06-01) if you run in SQL Lab.
 3) In dashboard mode, month filtering should be done by snapshot_month_start.
+4) Prefer snapshot_month_start filter. Do not rely on report_month IN (...) as primary month filter.
 
 ------------------------------------------------------------------------------
 0) Optional calculated column for branch filter (replace NULL/<NULL> with label)
@@ -25,7 +27,7 @@ WITH base AS (
     SELECT
         CAST(snapshot_month_start AS DATE) AS snapshot_month_start_dt,
         NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_key,
-        COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) AS trx_cnt_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) AS active_terms_num,
         CAST(NULLIF(BTRIM(CAST(d_valid_from AS TEXT)), '') AS DATE) AS d_valid_from_dt,
         CAST(NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') AS DATE) AS d_valid_to_dt
     FROM sbx_da.tmp_shestopalov_acq_datamart_q1
@@ -37,8 +39,8 @@ scope AS (
 )
 SELECT
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL THEN agr_key END) AS clients_total,
-    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND trx_cnt_num > 0 THEN agr_key END) AS clients_active,
-    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND trx_cnt_num <= 0 THEN agr_key END) AS clients_passive,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND active_terms_num > 0 THEN agr_key END) AS clients_active,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND active_terms_num <= 0 THEN agr_key END) AS clients_passive,
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND date_trunc('month', d_valid_from_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_new_contracts,
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND d_valid_to_dt IS NOT NULL AND date_trunc('month', d_valid_to_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_terminated_contracts
 FROM scope;
@@ -49,7 +51,6 @@ FROM scope;
 WITH base AS (
     SELECT
         CAST(snapshot_month_start AS DATE) AS snapshot_month_start_dt,
-        COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) AS trx_cnt_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0) AS retl_cnt_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0) AS term_cnt_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) AS active_terms_num
@@ -62,8 +63,8 @@ scope AS (
 )
 SELECT
     SUM(retl_cnt_num) AS merchants_total,
-    SUM(CASE WHEN trx_cnt_num > 0 THEN retl_cnt_num ELSE 0 END) AS merchants_active_proxy,
-    SUM(CASE WHEN trx_cnt_num <= 0 THEN retl_cnt_num ELSE 0 END) AS merchants_passive_proxy,
+    SUM(CASE WHEN active_terms_num > 0 THEN retl_cnt_num ELSE 0 END) AS merchants_active_proxy,
+    SUM(CASE WHEN active_terms_num <= 0 THEN retl_cnt_num ELSE 0 END) AS merchants_passive_proxy,
     NULL::NUMERIC AS merchants_closed_in_period_na,
     SUM(term_cnt_num) AS terminals_total,
     SUM(active_terms_num) AS terminals_active,
@@ -114,7 +115,10 @@ clients_total:
 COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
 clients_active:
-COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+
+clients_passive:
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) <= 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
 terminals_total:
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
