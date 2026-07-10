@@ -40,7 +40,8 @@ scope AS (
 SELECT
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL THEN agr_key END) AS clients_total,
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND active_terms_num > 0 THEN agr_key END) AS clients_active,
-    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND active_terms_num <= 0 THEN agr_key END) AS clients_passive,
+    COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL THEN agr_key END)
+      - COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND active_terms_num > 0 THEN agr_key END) AS clients_passive,
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND date_trunc('month', d_valid_from_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_new_contracts,
     COUNT(DISTINCT CASE WHEN agr_key IS NOT NULL AND d_valid_to_dt IS NOT NULL AND date_trunc('month', d_valid_to_dt) = date_trunc('month', DATE '{{month_start}}') THEN agr_key END) AS clients_terminated_contracts
 FROM scope;
@@ -118,7 +119,9 @@ clients_active:
 COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
 clients_passive:
-COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) <= 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
+-
+COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0 THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
 terminals_total:
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
