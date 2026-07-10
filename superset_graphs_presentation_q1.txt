@@ -129,6 +129,19 @@ COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND
 clients_terminated_contracts:
 COUNT(DISTINCT CASE WHEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL AND d_valid_to IS NOT NULL AND date_trunc('month', CAST(NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') AS DATE)) = date_trunc('month', CAST(snapshot_month_start AS DATE)) THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') END)
 
+retail_points_total:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+retail_points_active_minus_10pct:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0)) * 0.9
+
+retail_points_passive:
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+-
+(
+  SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0)) * 0.9
+)
+
 terminals_total:
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
 
