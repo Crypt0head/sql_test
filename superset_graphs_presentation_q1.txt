@@ -264,3 +264,180 @@ SELECT
     (SELECT SUM(CASE WHEN bucket = 'pos' THEN 1 ELSE 0 END) FROM bucketed) AS pos_clients,
     (SELECT SUM(CASE WHEN bucket = 'neg' THEN 1 ELSE 0 END) FROM bucketed) AS neg_clients,
     (SELECT SUM(CASE WHEN bucket = 'zero' THEN 1 ELSE 0 END) FROM bucketed) AS zero_clients;
+
+------------------------------------------------------------------------------
+9) Unified virtual dataset for 3 charts (Month <= selected Month)
+------------------------------------------------------------------------------
+Dataset name (recommended): vd_month_upto_selected_metrics
+
+SQL for virtual dataset:
+
+WITH raw AS (
+    SELECT
+        NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), '') AS point_report_month,
+        NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') AS agr_id_key,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) AS active_terms_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(trx_sum AS TEXT)), '') AS NUMERIC), 0) AS trx_sum_num
+    FROM sbx_da.tmp_shestopalov_acq_datamart_q1
+    WHERE NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL
+      AND NULLIF(BTRIM(CAST(report_month AS TEXT)), '') IS NOT NULL
+),
+by_client_month AS (
+    SELECT
+        point_report_month,
+        agr_id_key,
+        MAX(CASE WHEN active_terms_num > 0 THEN 1 ELSE 0 END) AS is_active_client,
+        SUM(chod_num) AS chod_sum_client_month
+    FROM raw
+    WHERE point_report_month IS NOT NULL
+    GROUP BY point_report_month, agr_id_key
+),
+monthly_clients AS (
+    SELECT
+        point_report_month,
+        COUNT(*) AS total_clients_cnt,
+        SUM(is_active_client) AS active_clients_cnt,
+        COUNT(*) - SUM(is_active_client) AS passive_clients_cnt,
+        SUM(CASE WHEN chod_sum_client_month > 0 AND chod_sum_client_month <= 2500 THEN 1 ELSE 0 END) AS cohort_0_2500_cnt,
+        SUM(CASE WHEN chod_sum_client_month > 2500 THEN 1 ELSE 0 END) AS cohort_gt_2500_cnt,
+        SUM(CASE WHEN chod_sum_client_month < 0 THEN 1 ELSE 0 END) AS cohort_lt_0_cnt,
+        SUM(CASE WHEN chod_sum_client_month = 0 THEN 1 ELSE 0 END) AS cohort_eq_0_cnt
+    FROM by_client_month
+    GROUP BY point_report_month
+),
+monthly_trx AS (
+    SELECT
+        point_report_month,
+        SUM(trx_sum_num) AS trx_sum_total
+    FROM raw
+    WHERE point_report_month IS NOT NULL
+    GROUP BY point_report_month
+),
+monthly_metrics AS (
+    SELECT
+        c.point_report_month,
+        c.active_clients_cnt,
+        c.passive_clients_cnt,
+        c.cohort_0_2500_cnt,
+        c.cohort_gt_2500_cnt,
+        c.cohort_lt_0_cnt,
+        c.cohort_eq_0_cnt,
+        t.trx_sum_total
+    FROM monthly_clients c
+    LEFT JOIN monthly_trx t
+      ON t.point_report_month = c.point_report_month
+),
+selected_months AS (
+    SELECT DISTINCT point_report_month AS report_month
+    FROM monthly_metrics
+)
+SELECT
+    s.report_month,
+    m.point_report_month,
+    m.active_clients_cnt,
+    m.passive_clients_cnt,
+    m.cohort_0_2500_cnt,
+    m.cohort_gt_2500_cnt,
+    m.cohort_lt_0_cnt,
+    m.cohort_eq_0_cnt,
+    m.trx_sum_total
+FROM selected_months s
+JOIN monthly_metrics m
+  ON m.point_report_month <= s.report_month
+ORDER BY s.report_month, m.point_report_month;
+
+------------------------------------------------------------------------------
+10) Graph #1 config: Active vs Passive clients (stacked bars)
+------------------------------------------------------------------------------
+Chart type: Bar chart (stacked)
+Source dataset: vd_month_upto_selected_metrics
+
+X axis:
+- point_report_month
+
+Metrics:
+- MAX(active_clients_cnt)
+- MAX(passive_clients_cnt)
+
+Settings:
+- Stacked series: ON
+- Sort query by: point_report_month (ASC)
+- No chart-level filter on point_report_month
+
+------------------------------------------------------------------------------
+11) Graph #2 config: CHOD cohorts (stacked bars)
+------------------------------------------------------------------------------
+Chart type: Bar chart (stacked)
+Source dataset: vd_month_upto_selected_metrics
+
+X axis:
+- point_report_month
+
+Metrics:
+- MAX(cohort_0_2500_cnt)
+- MAX(cohort_gt_2500_cnt)
+- MAX(cohort_lt_0_cnt)
+- MAX(cohort_eq_0_cnt)
+
+Settings:
+- Stacked series: ON
+- Sort query by: point_report_month (ASC)
+- No chart-level filter on point_report_month
+
+------------------------------------------------------------------------------
+12) Graph #3 config: Total transaction amount by month
+------------------------------------------------------------------------------
+Chart type: Line or Bar
+Source dataset: vd_month_upto_selected_metrics
+
+X axis:
+- point_report_month
+
+Metric:
+- MAX(trx_sum_total)
+
+Settings:
+- Sort query by: point_report_month (ASC)
+- No chart-level filter on point_report_month
+
+------------------------------------------------------------------------------
+13) Native Month filter binding (single filter for all 3 charts)
+------------------------------------------------------------------------------
+Use one existing native filter "Month":
+- Filter column: report_month
+- Filter type: Select filter
+- Single value: ON
+- Scope: apply to all 3 new charts
+
+Behavior:
+- Month = 2026-01 -> charts show only 2026-01
+- Month = 2026-05 -> charts show 2026-01..2026-05
+
+------------------------------------------------------------------------------
+14) Sanity-check SQL
+------------------------------------------------------------------------------
+Replace '2026-05' with selected month.
+
+A) Expansion boundary check (must show period up to selected month):
+
+SELECT
+    report_month,
+    MIN(point_report_month) AS min_point_report_month,
+    MAX(point_report_month) AS max_point_report_month,
+    COUNT(DISTINCT point_report_month) AS point_months_cnt
+FROM vd_month_upto_selected_metrics
+WHERE report_month = '2026-05'
+GROUP BY report_month;
+
+B) Consistency check by month (activity totals vs cohort totals):
+
+SELECT
+    point_report_month,
+    MAX(active_clients_cnt) + MAX(passive_clients_cnt) AS total_clients_by_activity,
+    MAX(cohort_0_2500_cnt) + MAX(cohort_gt_2500_cnt) + MAX(cohort_lt_0_cnt) + MAX(cohort_eq_0_cnt) AS total_clients_by_cohorts,
+    MAX(trx_sum_total) AS trx_sum_total
+FROM vd_month_upto_selected_metrics
+WHERE report_month = '2026-05'
+GROUP BY point_report_month
+ORDER BY point_report_month;
