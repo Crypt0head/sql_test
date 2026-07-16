@@ -481,25 +481,11 @@ body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
 }
 
 /* Exact runtime override for current filter container hash. */
-html[data-theme="dark"] .superset-c469fh,
-html[data-theme="dark"] .superset-c469fh.open,
-body[data-theme="dark"] .superset-c469fh,
-body[data-theme="dark"] .superset-c469fh.open,
-header.top.superset-y539jf ~ div .superset-c469fh,
-header.top.superset-y539jf ~ div .superset-c469fh.open {
-  background: #292929 !important;
-  background-color: #292929 !important;
-  background-image: none !important;
-}
-
-html[data-theme="light"] .superset-c469fh,
-html[data-theme="light"] .superset-c469fh.open,
-body[data-theme="light"] .superset-c469fh,
-body[data-theme="light"] .superset-c469fh.open,
-header.top.superset-c99twh ~ div .superset-c469fh,
-header.top.superset-c99twh ~ div .superset-c469fh.open {
-  background: #EDEBDD !important;
-  background-color: #EDEBDD !important;
+.superset-c469fh,
+.superset-c469fh.open {
+  /* Neutralize hardcoded runtime rgb(20,20,20) and let themed parent show through. */
+  background: transparent !important;
+  background-color: transparent !important;
   background-image: none !important;
 }
 
