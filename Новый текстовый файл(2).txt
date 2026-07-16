@@ -120,9 +120,46 @@ header.top.superset-y539jf ~ div .title-panel {
   background: #292929 !important;
 }
 
+/* Universal runtime fallback for changing superset hash classes. */
+header.top[class*="superset-"] ~ div .dashboard-header-container,
+header.top[class*="superset-"] ~ div .header-with-actions,
+header.top[class*="superset-"] ~ div .title-panel {
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
+
+header.top[class*="superset-"][style*="dark"] ~ div .dashboard-header-container,
+header.top[class*="superset-"][style*="dark"] ~ div .header-with-actions,
+header.top[class*="superset-"][style*="dark"] ~ div .title-panel {
+  background-color: #292929 !important;
+}
+
 .header-with-actions,
 .title-panel {
-  background: inherit !important;
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
+
+html[data-theme="dark"] .header-with-actions,
+html[data-theme="dark"] .title-panel,
+body[data-theme="dark"] .header-with-actions,
+body[data-theme="dark"] .title-panel,
+[data-theme="dark"] .header-with-actions,
+[data-theme="dark"] .title-panel,
+.theme-dark .header-with-actions,
+.theme-dark .title-panel {
+  background-color: #292929 !important;
+}
+
+html[data-theme="light"] .header-with-actions,
+html[data-theme="light"] .title-panel,
+body[data-theme="light"] .header-with-actions,
+body[data-theme="light"] .title-panel,
+[data-theme="light"] .header-with-actions,
+[data-theme="light"] .title-panel,
+.theme-light .header-with-actions,
+.theme-light .title-panel {
+  background-color: #EDEBDD !important;
 }
 
 /* Dashboard title */
