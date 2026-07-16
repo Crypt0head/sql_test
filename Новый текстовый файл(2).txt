@@ -614,3 +614,150 @@ body,
 .dashboard-component-chart-holder .dashboard-chart [style*="color: #000"] {
   color: #FFFFFF !important;
 }
+
+/* ---------------------------------------------------------------------------
+   15. SUPPORTED LIGHT / DARK SWITCH (SUPERSET 6)
+   --------------------------------------------------------------------------- */
+
+/* -------------------- DARK THEME -------------------- */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .dashboard,
+html[data-theme="dark"] .dashboard-content {
+  background-color: #0B0B0B !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="dark"] .dashboard-component-chart-holder,
+html[data-theme="dark"] .superset-legacy-chart-big-number {
+  background: #141414 !important;
+}
+
+html[data-theme="dark"] .superset-va7aid,
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .superset-bfu8z5,
+html[data-theme="dark"] .superset-1r1h1ct,
+html[data-theme="dark"] .superset-14gj75u,
+html[data-theme="dark"] .superset-1nrzzhi {
+  background: #111111 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="dark"] .main-nav,
+html[data-theme="dark"] .main-nav .ant-menu,
+html[data-theme="dark"] .main-nav .ant-menu.ant-menu-horizontal,
+html[data-theme="dark"] .main-nav .ant-menu-light {
+  background: #0B0B0B !important;
+  border-bottom-color: #2A2A2A !important;
+}
+
+html[data-theme="dark"] .main-nav .ant-menu-item,
+html[data-theme="dark"] .main-nav .ant-menu-submenu-title,
+html[data-theme="dark"] .main-nav .ant-menu-title-content,
+html[data-theme="dark"] .main-nav .ant-menu-item a,
+html[data-theme="dark"] .main-nav .ant-menu-submenu-title a {
+  color: #DADADA !important;
+}
+
+/* -------------------- LIGHT THEME ------------------- */
+html[data-theme="light"] body,
+html[data-theme="light"] .dashboard,
+html[data-theme="light"] .dashboard-content {
+  background-color: #F5F7FA !important;
+  color: #1F1F1F !important;
+}
+
+/* Charts and KPI cards in light mode */
+html[data-theme="light"] .dashboard-component-chart-holder,
+html[data-theme="light"] .superset-legacy-chart-big-number {
+  background: #FFFFFF !important;
+  border-left: 1px solid #E6E6E6 !important;
+  border-right: 1px solid #E6E6E6 !important;
+  border-bottom: 1px solid #E6E6E6 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+html[data-theme="light"] .big_number_total .header-line,
+html[data-theme="light"] .superset-legacy-chart-big-number .header-line {
+  color: #111111 !important;
+}
+
+html[data-theme="light"] .big_number_total svg text,
+html[data-theme="light"] .superset-legacy-chart-big-number svg text {
+  fill: #111111 !important;
+}
+
+/* Titles / legends become dark in light mode */
+html[data-theme="light"] .dashboard-component-chart-holder .header-title,
+html[data-theme="light"] .dashboard-component-chart-holder .header-title *,
+html[data-theme="light"] .dashboard-component-chart-holder .editable-title,
+html[data-theme="light"] .dashboard-component-chart-holder .editable-title *,
+html[data-theme="light"] .dashboard-component-chart-holder .legend,
+html[data-theme="light"] .dashboard-component-chart-holder .legend *,
+html[data-theme="light"] .dashboard-component-chart-holder .nvd3 .nv-legend text,
+html[data-theme="light"] .dashboard-component-chart-holder .recharts-legend-item-text {
+  color: #111111 !important;
+  fill: #111111 !important;
+}
+
+/* Filters panel in light mode */
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .superset-bfu8z5,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-14gj75u,
+html[data-theme="light"] .superset-1nrzzhi {
+  background: #FFFFFF !important;
+  border-right: 1px solid #E6E6E6 !important;
+  color: #1F1F1F !important;
+}
+
+html[data-theme="light"] .superset-va7aid *,
+html[data-theme="light"] .superset-1r1h1ct *,
+html[data-theme="light"] .superset-14gj75u * {
+  color: #1F1F1F !important;
+}
+
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .ant-select-dropdown,
+html[data-theme="light"] .ant-select-dropdown *,
+html[data-theme="light"] .rc-virtual-list,
+html[data-theme="light"] .rc-virtual-list * {
+  background: #FFFFFF !important;
+  color: #1F1F1F !important;
+  border-color: #D9D9D9 !important;
+}
+
+/* Top menu in light mode */
+html[data-theme="light"] .main-nav,
+html[data-theme="light"] .main-nav .ant-menu,
+html[data-theme="light"] .main-nav .ant-menu.ant-menu-horizontal,
+html[data-theme="light"] .main-nav .ant-menu-light {
+  background: #FFFFFF !important;
+  border-bottom-color: #E0E0E0 !important;
+}
+
+html[data-theme="light"] .main-nav .navbar-brand,
+html[data-theme="light"] .main-nav .ant-menu-item,
+html[data-theme="light"] .main-nav .ant-menu-submenu-title,
+html[data-theme="light"] .main-nav .ant-menu-title-content,
+html[data-theme="light"] .main-nav .ant-menu-item a,
+html[data-theme="light"] .main-nav .ant-menu-submenu-title a {
+  color: #111111 !important;
+}
+
+/* Scrollbars adapt to selected theme */
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-track {
+  background: #F5F7FA !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb {
+  background: #CFCFCF !important;
+}
+
+html[data-theme="dark"] .dashboard-content ::-webkit-scrollbar-track {
+  background: #0B0B0B !important;
+}
+
+html[data-theme="dark"] .dashboard-content ::-webkit-scrollbar-thumb {
+  background: #2E2E2E !important;
+}
