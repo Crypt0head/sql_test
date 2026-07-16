@@ -482,7 +482,11 @@ body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
 
 /* Exact runtime override for current filter container hash. */
 .superset-c469fh,
-.superset-c469fh.open {
+.superset-c469fh.open,
+.superset-161gc4z,
+.superset-161gc4z.open,
+[class*="c469fh"],
+[class*="161gc4z"] {
   /* Neutralize hardcoded runtime rgb(20,20,20) and let themed parent show through. */
   background: transparent !important;
   background-color: transparent !important;
