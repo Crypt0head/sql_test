@@ -578,3 +578,25 @@ body,
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+/* ---------------------------------------------------------------------------
+   14. LEGEND + AXIS LABEL VISIBILITY (WHITE)
+   --------------------------------------------------------------------------- */
+
+/* SVG-based chart texts: legend, axis labels, ticks, values. */
+.dashboard-component-chart-holder .dashboard-chart svg text,
+.dashboard-component-chart-holder .dashboard-chart .nvd3 text,
+.dashboard-component-chart-holder .dashboard-chart .recharts-text,
+.dashboard-component-chart-holder .dashboard-chart .recharts-cartesian-axis-tick-value,
+.dashboard-component-chart-holder .dashboard-chart .recharts-legend-item-text {
+  fill: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+/* ECharts runtime HTML layers (tooltip/legend wrappers with inline black color). */
+.dashboard-component-chart-holder .dashboard-chart [style*="color: rgb(0, 0, 0)"],
+.dashboard-component-chart-holder .dashboard-chart [style*="color: rgba(0, 0, 0"],
+.dashboard-component-chart-holder .dashboard-chart [style*="color:#000"],
+.dashboard-component-chart-holder .dashboard-chart [style*="color: #000"] {
+  color: #FFFFFF !important;
+}
