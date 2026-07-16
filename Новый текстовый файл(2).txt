@@ -457,20 +457,20 @@ body,
    --------------------------------------------------------------------------- */
 
 .main-nav {
-  background: #FFFFFF !important;
-  border-bottom: 1px solid #E0E0E0 !important;
+  background: #0B0B0B !important;
+  border-bottom: 1px solid #2A2A2A !important;
 }
 
 .main-nav .navbar-brand {
   font-weight: 700 !important;
-  color: #000000 !important;
+  color: #FFFFFF !important;
 }
 
 /* Top navigation strip (Dashboards / Datasets / SQL) */
 .main-nav .ant-menu,
 .main-nav .ant-menu.ant-menu-horizontal,
 .main-nav .ant-menu-light {
-  background: #FFFFFF !important;
+  background: #0B0B0B !important;
 }
 
 .main-nav .ant-menu-item,
@@ -478,7 +478,21 @@ body,
 .main-nav .ant-menu-title-content,
 .main-nav .ant-menu-item a,
 .main-nav .ant-menu-submenu-title a {
-  color: #000000 !important;
+  color: #DADADA !important;
+}
+
+.main-nav .ant-menu-item:hover,
+.main-nav .ant-menu-submenu-title:hover,
+.main-nav .ant-menu-item a:hover,
+.main-nav .ant-menu-submenu-title a:hover {
+  color: #FFFFFF !important;
+}
+
+.main-nav .ant-menu-item-selected,
+.main-nav .ant-menu-item-active {
+  color: #FFFFFF !important;
+  background: rgba(193, 18, 31, 0.18) !important;
+  border-bottom-color: #C1121F !important;
 }
 
 .main-nav input[type="text"],
