@@ -1,0 +1,555 @@
+/* =============================================================================
+   ДАШБОРД «ЭКВАЙРИНГОВЫЙ ПОРТФЕЛЬ»
+   Apache Superset 5.0 — Custom CSS
+   Версия 2.0 | 05.03.2026
+   Без var(), без :has() — совместимо с CSSLint Superset
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   1. ГЛОБАЛЬНЫЙ ФОН И ШРИФТ
+   --------------------------------------------------------------------------- */
+
+body,
+.dashboard {
+  background-color: #FFFFFF !important;
+  color: #333333 !important;
+}
+
+.dashboard-content {
+  background-color: #FFFFFF !important;
+}
+
+/* ---------------------------------------------------------------------------
+   2. ШАПКА (зелёный фон, белый текст и кнопки)
+   --------------------------------------------------------------------------- */
+
+/* Зелёный фон на всю область шапки */
+.css-jfn13n {
+  background: #1D8341 !important;
+}
+
+.dashboard-header-container,
+.css-1wcpuu1 {
+  background: #1D8341 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  border-bottom: none !important;
+}
+
+/* строки 1–39 — ваш существующий код, не трогаем */
+
+/* строки 40–43 — БЫЛО: */
+/* .header-with-actions,               */
+/* .css-1db2tta {                       */
+/*     background: transparent;        */
+/* }                                   */
+
+/* СТАЛО: */
+.header-with-actions {
+    background: transparent !important;
+}
+
+.title-panel {
+    background: transparent !important;
+}
+
+/* строки 44 — пустая строка */
+
+/* строки 45–52 — БЫЛО: */
+/* .dynamic-title,                                      */
+/* .css-jfn13n .dynamic-title,                         */
+/* .dashboard-header-container .dynamic-title {        */
+/*     color: #FFFFFF !important;                      */
+/*     font-size: 22px !important;                     */
+/*     font-weight: 700 !important;                    */
+/* }                                                   */
+
+/* СТАЛО: */
+/* Название дашборда — белое */
+.dashboard-header-container .title-panel span.input-sizer {
+    color: #000000 !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    background: transparent !important;
+}
+
+.dashboard-header-container .title-panel input.dynamic-title-input {
+    color: #000000 !important;
+    background: transparent !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+}
+
+/* строки 53–65 — ваш существующий код про .input-sizer и Edit dashboard, не трогаем */
+
+.input-sizer {
+  color: #000000 !important;
+}
+
+/* Кнопка "Edit dashboard" — белый текст, прозрачный фон */
+.dashboard-header-container .action-button,
+.dashboard-header-container .superset-button-secondary,
+.css-3jweij {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.dashboard-header-container .action-button span,
+.css-3jweij span {
+  color: #FFFFFF !important;
+}
+
+/* Кнопка "..." (Menu actions trigger) — прозрачный фон, белая иконка */
+.dashboard-header-container .superset-button-tertiary,
+.dashboard-header-container .ant-dropdown-trigger,
+.css-a5sgrq,
+.css-17x4a00 button {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dashboard-header-container .anticon,
+.css-1jkntxi {
+  color: #FFFFFF !important;
+}
+/* Скрыть Draft, автор, дата, иконку избранного */
+.dashboard-header-container .metadata-text,
+.dashboard-header-container .metadata-icon,
+.dashboard-header-container .fave-unfave-icon,
+.dashboard-header-container .ant-tag,
+.superset-11fpo9g,
+.superset-11fhzu6,
+.superset-14dsxx4,
+.superset-kuzxg,
+.superset-1qhsoop {
+    display: none !important;
+}
+
+/* -----------------------------------------------------------
+   3. ПАНЕЛЬ ФИЛЬТРОВ (sidebar)
+----------------------------------------------------------- */
+
+/* Фон всей панели фильтров — чёрный */
+.superset-va7aid,
+.superset-1a2qin2,
+.superset-bfu8z5 {
+    background: #000000 !important;
+}
+
+/* Верхняя часть (Filters + кнопки) */
+.superset-1r1h1ct {
+    background: #000000 !important;
+}
+
+/* Тело панели с фильтрами */
+.superset-14gj75u {
+    background: #000000 !important;
+}
+
+/* Нижняя часть (Apply filters) */
+.superset-1nrzzhi {
+    background: #000000 !important;
+}
+
+/* Весь текст внутри панели — белый */
+.superset-va7aid *,
+.superset-1r1h1ct *,
+.superset-14gj75u * {
+    color: #FFFFFF !important;
+}
+
+/* Кнопки внутри панели */
+.superset-kaudsu button,
+.superset-1wdfs45 button {
+    color: #FFFFFF !important;
+    background: transparent !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Текст значений в полях фильтров — белый */
+.superset-va7aid .ant-select-selector,
+.superset-va7aid .ant-select-selection-item,
+.superset-va7aid .ant-select-selection-placeholder,
+.superset-va7aid .ant-select-item,
+.superset-va7aid .ant-select-item-option-content {
+    color: #FFFFFF !important;
+}
+
+/* Фон поля select — тёмный */
+.superset-va7aid .ant-select-selector {
+    background: #111111 !important;
+    color: #FFFFFF !important;
+    border-color: #333333 !important;
+}
+
+/* Выбранные значения (теги) внутри поля — белый текст */
+.superset-va7aid .ant-select-selection-item,
+.superset-va7aid .ant-select-selection-item-content,
+.superset-va7aid .ant-select-selector .ant-select-selection-item {
+    color: #FFFFFF !important;
+    background: #111111 !important;
+}
+
+/* Крестик удаления тега */
+.superset-va7aid .ant-select-selection-item-remove {
+    color: #FFFFFF !important;
+}
+
+/* Открытый dropdown список — чёрный фон, белый текст */
+.ant-select-dropdown,
+.ant-select-dropdown *,
+.rc-virtual-list,
+.rc-virtual-list * {
+    background: #111111 !important;
+    color: #FFFFFF !important;
+}
+
+/* Элементы списка при наведении */
+.ant-select-dropdown .ant-select-item-option-active {
+    background: #1E1E1E !important;
+    color: #FFFFFF !important;
+}
+
+/* Выбранный элемент в dropdown */
+.ant-select-dropdown .ant-select-item-option-selected {
+    background: #B00020 !important;
+    color: #FFFFFF !important;
+}
+
+/* Поле поиска внутри dropdown */
+.ant-select-dropdown input {
+    color: #FFFFFF !important;
+    background: #111111 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   4. KPI-КАРТОЧКИ (Big Number)
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-chart-holder {
+  background: #FFFFFF !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  overflow: visible !important;
+  border-top: 5px solid #1D8341 !important;
+  transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
+}
+
+.dashboard-component-chart-holder:hover {
+  border-top-color: #B00020 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 16px rgba(176, 0, 32, 0.25) !important;
+}
+
+.superset-legacy-chart-big-number {
+  background: #FFFFFF !important;
+  min-height: 120px !important;
+  height: 100% !important;
+}
+
+/* Растянуть внутренний контейнер Big Number */
+.big_number_total {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total .chart-container,
+.superset-legacy-chart-big-number .chart-container {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total svg,
+.superset-legacy-chart-big-number svg {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 80px !important;
+}
+
+/* KPI значение — не трогать font-size (инлайн 166px от Superset) */
+.big_number_total .header-line,
+.superset-legacy-chart-big-number .header-line {
+  display: flex !important;
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* KPI значение — крупный чёрный текст */
+.big_number_total svg text,
+.superset-legacy-chart-big-number svg text {
+  fill: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* Подзаголовок / тренд KPI */
+.big_number_total .no-trendline,
+.superset-legacy-chart-big-number .no-trendline {
+  color: #333333 !important;
+}
+
+/* Контейнер слайса — растянуть */
+.superset-legacy-chart-big-number .slice_container {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* ▲ Зелёный треугольник для положительных KPI */
+.dashboard-chart-id-98 .header-line::after,
+.dashboard-chart-id-101 .header-line::after {
+  content: " ▲" !important;
+  color: #1D8341 !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* ▼ Красный треугольник для отрицательных KPI */
+.dashboard-chart-id-99 .header-line::after,
+.dashboard-chart-id-102 .header-line::after {
+  content: " ▼" !important;
+  color: #B00020 !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   5. СКРЫТЬ ЗАГОЛОВКИ ГРАФИКОВ (НЕ трогать Big Number)
+   --------------------------------------------------------------------------- */
+
+/* Скрыть ТЕКСТ заголовка графиков, но оставить кнопку меню */
+.dashboard-chart-id-106 .editable-title,
+.dashboard-chart-id-107 .editable-title,
+.dashboard-chart-id-108 .editable-title,
+.echarts_timeseries_line .editable-title,
+.superset-chart-table .editable-title {
+    display: none !important;
+}
+
+/* Скрыть строку заголовка визуально, но оставить кнопки управления */
+.dashboard-chart-id-106 .header-title,
+.dashboard-chart-id-107 .header-title,
+.dashboard-chart-id-108 .header-title,
+.echarts_timeseries_line .header-title,
+.superset-chart-table .header-title {
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Вернуть видимость кнопки меню (три точки) */
+.dashboard-chart-id-106 .header-controls,
+.dashboard-chart-id-107 .header-controls,
+.dashboard-chart-id-108 .header-controls,
+.echarts_timeseries_line .header-controls,
+.superset-chart-table .header-controls {
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+/* ---------------------------------------------------------------------------
+   6. ЗАГОЛОВКИ СЕКЦИЙ
+   --------------------------------------------------------------------------- */
+
+/* Вся строка заголовка секции — зелёный фон */
+.dashboard-component-header {
+  background: #1D8341 !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+/* Названия графиков — чёрные */
+.dashboard-component-chart-holder .header-title,
+.dashboard-component-chart-holder .header-title *,
+.dashboard-component-chart-holder .editable-title,
+.dashboard-component-chart-holder .editable-title * {
+  color: #000000 !important;
+}
+
+/* Разделители — зелёные, толстые */
+.dashboard-component-divider,
+.css-lu0hy9h {
+  border-color: #1D8341 !important;
+  opacity: 1 !important;
+  min-height: 6px !important;
+}
+
+.dashboard-component-divider::after,
+.css-lu0hy9h::after {
+  content: "" !important;
+  display: block !important;
+  width: 100% !important;
+  height: 4px !important;
+  background: #1D8341 !important;
+  border-radius: 2px !important;
+}
+
+.dashboard-component-divider hr,
+.css-lu0hy9h hr {
+  border: none !important;
+  border-top: 4px solid #1D8341 !important;
+  margin: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   7. ГРАФИК (ECharts)
+   --------------------------------------------------------------------------- */
+
+/*
+   Цвета серий настраиваются в конфигурации чарта Superset:
+     ЧОД:       #1D8341
+     Фин. рез.: #7A9E2E
+   Также:
+     Show Title → off
+     Y Axis Grid Lines → on, X Axis Grid Lines → off
+     Legend: horizontal, bottom
+*/
+
+/* ---------------------------------------------------------------------------
+   8. ТАБЛИЦЫ
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .table th,
+.superset-chart-table thead th {
+  background: #1D8341 !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+}
+
+.superset-chart-table .table td {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #333333 !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid #E0E0E0 !important;
+}
+
+/* Зебра */
+.superset-chart-table .table tbody tr:nth-child(odd) {
+  background: #FFFFFF !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(even) {
+  background: #F5F5F5 !important;
+}
+
+/* Hover строки */
+.superset-chart-table .table tbody tr:hover {
+  background: #E8F5E9 !important;
+}
+
+/* Числовые ячейки */
+.superset-chart-table .table .dt-is-null {
+  font-variant-numeric: tabular-nums !important;
+  text-align: right !important;
+}
+
+/* Скрыть выбор кол-ва строк */
+.superset-chart-table .dt-select-page-size {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   9. РЕКОМЕНДАЦИИ ПРОДУКТОВ — ЧИПЫ
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .ant-tag {
+  background: #FFFFFF !important;
+  border: 1.5px solid #1D8341 !important;
+  color: #1D8341 !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+.superset-chart-table td:last-child .ant-tag {
+  border-color: #FFCB08 !important;
+  color: #333333 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   10. НАВБАР
+   --------------------------------------------------------------------------- */
+
+.main-nav {
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E0E0E0 !important;
+}
+
+.main-nav .navbar-brand {
+  font-weight: 700 !important;
+  color: #1D8341 !important;
+}
+
+.main-nav input[type="text"]:focus,
+.main-nav .form-control:focus {
+  border-color: #FFCB08 !important;
+  box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.20) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   11. КНОПКИ SUPERSET
+   --------------------------------------------------------------------------- */
+
+.superset-button-primary {
+  background: #1D8341 !important;
+  border-color: #1D8341 !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-primary:hover {
+  background: #166d35 !important;
+  border-color: #166d35 !important;
+}
+
+.superset-button-secondary {
+  background: transparent !important;
+  border: 1px solid #1D8341 !important;
+  color: #1D8341 !important;
+  border-radius: 8px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   12. СКРОЛЛБАРЫ
+   --------------------------------------------------------------------------- */
+
+.dashboard-content ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dashboard-content ::-webkit-scrollbar-track {
+  background: #F2F2F2;
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb {
+  background: #E0E0E0;
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #6E6E6E;
+}
