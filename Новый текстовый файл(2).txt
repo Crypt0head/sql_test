@@ -16,46 +16,46 @@
    2. HEADER
    --------------------------------------------------------------------------- */
 
-.css-jfn13n {
-  background: inherit !important;
-}
-
 .dashboard-header-container,
-.css-1wcpuu1 {
-  background: inherit !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 100 !important;
+.css-1wcpuu1,
+[class*="dashboard-header-contain"] {
+  position: fixed !important;
+  top: 46px !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1100 !important;
   border-bottom: 2px solid #C1121F !important;
 }
 
-/* Sticky header must have solid background while scrolling. */
+/* Sticky/fixed header must always have a solid themed background. */
 html[data-theme="light"] .css-jfn13n,
+html[data-theme="light"] .dashboard-header,
 html[data-theme="light"] .dashboard-header-container,
 html[data-theme="light"] .css-1wcpuu1,
 html[data-theme="light"] [class*="dashboard-header-contain"],
-html[data-theme="light"] .dashboard-header,
 html[data-theme="light"] .header-with-actions,
 html[data-theme="light"] .title-panel {
   background: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .css-jfn13n,
+html[data-theme="dark"] .dashboard-header,
 html[data-theme="dark"] .dashboard-header-container,
 html[data-theme="dark"] .css-1wcpuu1,
 html[data-theme="dark"] [class*="dashboard-header-contain"],
-html[data-theme="dark"] .dashboard-header,
 html[data-theme="dark"] .header-with-actions,
 html[data-theme="dark"] .title-panel {
   background: #0B0B0B !important;
 }
 
-.header-with-actions {
+.header-with-actions,
+.title-panel {
   background: inherit !important;
 }
 
-.title-panel {
-  background: inherit !important;
+/* Prevent content overlap with fixed dashboard header. */
+.dashboard-content {
+  padding-top: 74px !important;
 }
 
 /* Dashboard title */
