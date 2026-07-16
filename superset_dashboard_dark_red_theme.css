@@ -1,0 +1,524 @@
+/* =============================================================================
+   DASHBOARD "ACQUIRING PORTFOLIO"
+   Apache Superset 5.0 — Custom CSS
+   Version 3.0 | 15.07.2026
+   Dark theme: Black, Red, White
+   No var(), no :has() — CSSLint Superset compatible
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   1. GLOBAL BACKGROUND AND FONT
+   --------------------------------------------------------------------------- */
+
+body,
+.dashboard {
+  background-color: #0B0B0B !important;
+  color: #FFFFFF !important;
+}
+
+.dashboard-content {
+  background-color: #0B0B0B !important;
+}
+
+/* ---------------------------------------------------------------------------
+   2. HEADER
+   --------------------------------------------------------------------------- */
+
+.css-jfn13n {
+  background: #111111 !important;
+}
+
+.dashboard-header-container,
+.css-1wcpuu1 {
+  background: #111111 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  border-bottom: 2px solid #C1121F !important;
+}
+
+.header-with-actions {
+  background: transparent !important;
+}
+
+.title-panel {
+  background: transparent !important;
+}
+
+/* Dashboard title */
+.dashboard-header-container .title-panel span.input-sizer {
+  color: #FFFFFF !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+
+.dashboard-header-container .title-panel input.dynamic-title-input {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+}
+
+.input-sizer {
+  color: #FFFFFF !important;
+}
+
+/* Edit dashboard */
+.dashboard-header-container .action-button,
+.dashboard-header-container .superset-button-secondary,
+.css-3jweij {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0.50) !important;
+}
+
+.dashboard-header-container .action-button span,
+.css-3jweij span {
+  color: #FFFFFF !important;
+}
+
+.dashboard-header-container .action-button:hover,
+.dashboard-header-container .superset-button-secondary:hover,
+.css-3jweij:hover {
+  background: rgba(193, 18, 31, 0.20) !important;
+  border-color: #C1121F !important;
+}
+
+/* Menu actions trigger */
+.dashboard-header-container .superset-button-tertiary,
+.dashboard-header-container .ant-dropdown-trigger,
+.css-a5sgrq,
+.css-17x4a00 button {
+  color: #FFFFFF !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dashboard-header-container .anticon,
+.css-1jkntxi {
+  color: #FFFFFF !important;
+}
+
+/* Hide metadata */
+.dashboard-header-container .metadata-text,
+.dashboard-header-container .metadata-icon,
+.dashboard-header-container .fave-unfave-icon,
+.dashboard-header-container .ant-tag,
+.superset-11fpo9g,
+.superset-11fhzu6,
+.superset-14dsxx4,
+.superset-kuzxg,
+.superset-1qhsoop {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   3. FILTERS SIDEBAR
+   --------------------------------------------------------------------------- */
+
+.superset-va7aid,
+.superset-1a2qin2,
+.superset-bfu8z5 {
+  background: #111111 !important;
+  border-right: 1px solid #C1121F !important;
+}
+
+.superset-1r1h1ct {
+  background: #171717 !important;
+}
+
+.superset-14gj75u {
+  background: #111111 !important;
+}
+
+.superset-1nrzzhi {
+  background: #111111 !important;
+  border-top: 1px solid #2A2A2A !important;
+}
+
+.superset-va7aid *,
+.superset-1r1h1ct *,
+.superset-14gj75u * {
+  color: #FFFFFF !important;
+}
+
+.superset-kaudsu button,
+.superset-1wdfs45 button {
+  color: #FFFFFF !important;
+  background: rgba(193, 18, 31, 0.15) !important;
+  border-color: #C1121F !important;
+}
+
+.superset-kaudsu button:hover,
+.superset-1wdfs45 button:hover {
+  background: rgba(193, 18, 31, 0.30) !important;
+}
+
+/* Select fields */
+.superset-va7aid .ant-select-selector {
+  background: #0E0E0E !important;
+  color: #FFFFFF !important;
+  border-color: #2A2A2A !important;
+}
+
+.superset-va7aid .ant-select-selection-item,
+.superset-va7aid .ant-select-selection-item-content,
+.superset-va7aid .ant-select-selector .ant-select-selection-item,
+.superset-va7aid .ant-select-selection-placeholder,
+.superset-va7aid .ant-select-item,
+.superset-va7aid .ant-select-item-option-content,
+.superset-va7aid .ant-select-arrow,
+.superset-va7aid .ant-select-selection-search-input {
+  color: #FFFFFF !important;
+}
+
+.superset-va7aid .ant-select-selection-item-remove {
+  color: #FFFFFF !important;
+}
+
+/* Open dropdown */
+.ant-select-dropdown,
+.ant-select-dropdown *,
+.rc-virtual-list,
+.rc-virtual-list * {
+  background: #141414 !important;
+  color: #FFFFFF !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-active {
+  background: #2A0D12 !important;
+  color: #FFFFFF !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-selected {
+  background: #3A0F17 !important;
+  color: #FFFFFF !important;
+}
+
+.ant-select-dropdown input {
+  color: #FFFFFF !important;
+  background: #141414 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   4. KPI CARDS (Big Number)
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-chart-holder {
+  background: #141414 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.40) !important;
+  overflow: visible !important;
+  border-top: 5px solid #C1121F !important;
+  border-left: 1px solid #2A2A2A !important;
+  border-right: 1px solid #2A2A2A !important;
+  border-bottom: 1px solid #2A2A2A !important;
+  transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
+}
+
+.dashboard-component-chart-holder:hover {
+  border-top-color: #FFFFFF !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(193, 18, 31, 0.25) !important;
+}
+
+.superset-legacy-chart-big-number {
+  background: #141414 !important;
+  min-height: 120px !important;
+  height: 100% !important;
+}
+
+.big_number_total {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total .chart-container,
+.superset-legacy-chart-big-number .chart-container {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total svg,
+.superset-legacy-chart-big-number svg {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 80px !important;
+}
+
+.big_number_total .header-line,
+.superset-legacy-chart-big-number .header-line {
+  display: flex !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+}
+
+.big_number_total svg text,
+.superset-legacy-chart-big-number svg text {
+  fill: #FFFFFF !important;
+  font-weight: 600 !important;
+}
+
+.big_number_total .no-trendline,
+.superset-legacy-chart-big-number .no-trendline {
+  color: #D0D0D0 !important;
+}
+
+.superset-legacy-chart-big-number .slice_container {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Positive KPI marker */
+.dashboard-chart-id-98 .header-line::after,
+.dashboard-chart-id-101 .header-line::after {
+  content: " ▲" !important;
+  color: #FFFFFF !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* Negative KPI marker */
+.dashboard-chart-id-99 .header-line::after,
+.dashboard-chart-id-102 .header-line::after {
+  content: " ▼" !important;
+  color: #C1121F !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   5. HIDE CHART TITLES (EXCEPT Big Number)
+   --------------------------------------------------------------------------- */
+
+.dashboard-chart-id-106 .editable-title,
+.dashboard-chart-id-107 .editable-title,
+.dashboard-chart-id-108 .editable-title,
+.echarts_timeseries_line .editable-title,
+.superset-chart-table .editable-title {
+  display: none !important;
+}
+
+.dashboard-chart-id-106 .header-title,
+.dashboard-chart-id-107 .header-title,
+.dashboard-chart-id-108 .header-title,
+.echarts_timeseries_line .header-title,
+.superset-chart-table .header-title {
+  visibility: hidden !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.dashboard-chart-id-106 .header-controls,
+.dashboard-chart-id-107 .header-controls,
+.dashboard-chart-id-108 .header-controls,
+.echarts_timeseries_line .header-controls,
+.superset-chart-table .header-controls {
+  visibility: visible !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* ---------------------------------------------------------------------------
+   6. SECTION HEADERS
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-header {
+  background: #C1121F !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+}
+
+.dashboard-component-divider,
+.css-lu0hy9h {
+  border-color: #C1121F !important;
+  opacity: 1 !important;
+  min-height: 6px !important;
+}
+
+.dashboard-component-divider::after,
+.css-lu0hy9h::after {
+  content: "" !important;
+  display: block !important;
+  width: 100% !important;
+  height: 4px !important;
+  background: #C1121F !important;
+  border-radius: 2px !important;
+}
+
+.dashboard-component-divider hr,
+.css-lu0hy9h hr {
+  border: none !important;
+  border-top: 4px solid #C1121F !important;
+  margin: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   7. CHART (ECharts)
+   --------------------------------------------------------------------------- */
+
+/*
+   Recommended series colors in Superset chart settings:
+     CHOD:       #C1121F
+     FIN RESULT: #FFFFFF
+   Also:
+     Show Title -> off
+     Y Axis Grid Lines -> on, X Axis Grid Lines -> off
+     Legend: horizontal, bottom
+*/
+
+/* ---------------------------------------------------------------------------
+   8. TABLES
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .table th,
+.superset-chart-table thead th {
+  background: #C1121F !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+}
+
+.superset-chart-table .table td {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  color: #FFFFFF !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid #2A2A2A !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(odd) {
+  background: #141414 !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(even) {
+  background: #101010 !important;
+}
+
+.superset-chart-table .table tbody tr:hover {
+  background: #2A0D12 !important;
+}
+
+.superset-chart-table .table .dt-is-null {
+  font-variant-numeric: tabular-nums !important;
+  text-align: right !important;
+}
+
+.superset-chart-table .dt-select-page-size {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   9. PRODUCT RECOMMENDATIONS — TAGS
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .ant-tag {
+  background: #141414 !important;
+  border: 1.5px solid #C1121F !important;
+  color: #FFFFFF !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+.superset-chart-table td:last-child .ant-tag {
+  border-color: #FFFFFF !important;
+  color: #FFFFFF !important;
+}
+
+/* ---------------------------------------------------------------------------
+   10. NAVBAR
+   --------------------------------------------------------------------------- */
+
+.main-nav {
+  background: #000000 !important;
+  border-bottom: 1px solid #2A2A2A !important;
+}
+
+.main-nav .navbar-brand {
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+}
+
+.main-nav input[type="text"],
+.main-nav .form-control {
+  background: #111111 !important;
+  color: #FFFFFF !important;
+  border-color: #2A2A2A !important;
+}
+
+.main-nav input[type="text"]:focus,
+.main-nav .form-control:focus {
+  border-color: #C1121F !important;
+  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.30) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   11. SUPERSET BUTTONS
+   --------------------------------------------------------------------------- */
+
+.superset-button-primary {
+  background: #C1121F !important;
+  border-color: #C1121F !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-primary:hover {
+  background: #A30F1A !important;
+  border-color: #A30F1A !important;
+}
+
+.superset-button-secondary {
+  background: transparent !important;
+  border: 1px solid #FFFFFF !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-secondary:hover {
+  background: rgba(193, 18, 31, 0.20) !important;
+  border-color: #C1121F !important;
+}
+
+/* ---------------------------------------------------------------------------
+   12. SCROLLBARS
+   --------------------------------------------------------------------------- */
+
+.dashboard-content ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dashboard-content ::-webkit-scrollbar-track {
+  background: #0B0B0B;
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb {
+  background: #2E2E2E;
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #C1121F;
+}
