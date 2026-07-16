@@ -120,23 +120,9 @@ header.top.superset-y539jf ~ div .title-panel {
   background: #292929 !important;
 }
 
-/* Universal runtime fallback for changing superset hash classes. */
-header.top[class*="superset-"] ~ div .dashboard-header-container,
-header.top[class*="superset-"] ~ div .header-with-actions,
-header.top[class*="superset-"] ~ div .title-panel {
-  background-color: #EDEBDD !important;
-  background-image: none !important;
-}
-
-header.top[class*="superset-"][style*="dark"] ~ div .dashboard-header-container,
-header.top[class*="superset-"][style*="dark"] ~ div .header-with-actions,
-header.top[class*="superset-"][style*="dark"] ~ div .title-panel {
-  background-color: #292929 !important;
-}
-
 .header-with-actions,
 .title-panel {
-  background-color: #EDEBDD !important;
+  background-color: #292929 !important;
   background-image: none !important;
 }
 
