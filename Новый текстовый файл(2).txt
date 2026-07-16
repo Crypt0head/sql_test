@@ -17,12 +17,12 @@
    --------------------------------------------------------------------------- */
 
 .css-jfn13n {
-  background: #111111 !important;
+  background: transparent !important;
 }
 
 .dashboard-header-container,
 .css-1wcpuu1 {
-  background: #111111 !important;
+  background: transparent !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 100 !important;
@@ -39,35 +39,35 @@
 
 /* Dashboard title */
 .dashboard-header-container .title-panel span.input-sizer {
-  color: #FFFFFF !important;
+  color: inherit !important;
   font-size: 22px !important;
   font-weight: 700 !important;
   background: transparent !important;
 }
 
 .dashboard-header-container .title-panel input.dynamic-title-input {
-  color: #FFFFFF !important;
+  color: inherit !important;
   background: transparent !important;
   font-size: 22px !important;
   font-weight: 700 !important;
 }
 
 .input-sizer {
-  color: #FFFFFF !important;
+  color: inherit !important;
 }
 
 /* Edit dashboard */
 .dashboard-header-container .action-button,
 .dashboard-header-container .superset-button-secondary,
 .css-3jweij {
-  color: #FFFFFF !important;
+  color: inherit !important;
   background: transparent !important;
-  border-color: rgba(255, 255, 255, 0.50) !important;
+  border-color: rgba(193, 18, 31, 0.45) !important;
 }
 
 .dashboard-header-container .action-button span,
 .css-3jweij span {
-  color: #FFFFFF !important;
+  color: inherit !important;
 }
 
 .dashboard-header-container .action-button:hover,
@@ -82,7 +82,7 @@
 .dashboard-header-container .ant-dropdown-trigger,
 .css-a5sgrq,
 .css-17x4a00 button {
-  color: #FFFFFF !important;
+  color: inherit !important;
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
@@ -90,7 +90,7 @@
 
 .dashboard-header-container .anticon,
 .css-1jkntxi {
-  color: #FFFFFF !important;
+  color: inherit !important;
 }
 
 /* Hide metadata */
@@ -150,6 +150,34 @@
 
 .ant-select-dropdown .ant-select-item-option-selected {
   background: rgba(193, 18, 31, 0.18) !important;
+}
+
+/* Filter panel controls (gear/collapse): remove halo/fill. */
+.superset-1r1h1ct button,
+.superset-1r1h1ct .ant-btn,
+.superset-1r1h1ct .ant-btn-default,
+.superset-1r1h1ct .ant-btn-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.superset-1r1h1ct button:hover,
+.superset-1r1h1ct .ant-btn:hover,
+.superset-1r1h1ct .ant-btn:focus,
+.superset-1r1h1ct .ant-btn:active {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* In light theme keep filter panel icons black. */
+html[data-theme="light"] .superset-1r1h1ct .anticon,
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="filters"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="Filters"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="settings"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
+  color: #000000 !important;
 }
 
 /* ---------------------------------------------------------------------------
