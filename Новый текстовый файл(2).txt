@@ -19,11 +19,11 @@
 .dashboard-header-container,
 .css-1wcpuu1,
 [class*="dashboard-header-contain"] {
-  position: fixed !important;
-  top: 46px !important;
-  left: 0 !important;
-  right: 0 !important;
-  z-index: 1100 !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: auto !important;
   border-bottom: 2px solid #C1121F !important;
 }
 
@@ -51,11 +51,6 @@ html[data-theme="dark"] .title-panel {
 .header-with-actions,
 .title-panel {
   background: inherit !important;
-}
-
-/* Prevent content overlap with fixed dashboard header. */
-.dashboard-content {
-  padding-top: 74px !important;
 }
 
 /* Dashboard title */
