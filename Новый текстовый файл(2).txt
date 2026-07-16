@@ -528,9 +528,15 @@ html[data-theme="dark"] .dashboard-component-chart-holder,
 body[data-theme="dark"] .dashboard-component-chart-holder,
 [data-theme="dark"] .dashboard-component-chart-holder,
 .theme-dark .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ div main.ant-layout-content .dashboard-component-chart-holder,
 header.top.superset-y539gf ~ .ant-layout .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ div main.ant-layout-content .dashboard-component-chart-holder,
 header.top.superset-y539jf ~ .ant-layout .dashboard-component-chart-holder {
   background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
 }
 
 .dashboard-component-chart-holder:hover {
