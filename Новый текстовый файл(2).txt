@@ -10,17 +10,40 @@
    1. GLOBAL BACKGROUND AND FONT
    --------------------------------------------------------------------------- */
 
-/* Theme-dependent dashboard backgrounds. */
+/* Theme-dependent dashboard backgrounds (robust selectors for Superset variants). */
 html[data-theme="dark"] body,
-html[data-theme="dark"] .dashboard,
-html[data-theme="dark"] .dashboard-content {
+body[data-theme="dark"],
+body[data-theme="dark"] .dashboard,
+body[data-theme="dark"] .dashboard-content,
+[data-theme="dark"] .dashboard,
+[data-theme="dark"] .dashboard-content,
+.theme-dark .dashboard,
+.theme-dark .dashboard-content {
   background: #292929 !important;
 }
 
 html[data-theme="light"] body,
-html[data-theme="light"] .dashboard,
-html[data-theme="light"] .dashboard-content {
+body[data-theme="light"],
+body[data-theme="light"] .dashboard,
+body[data-theme="light"] .dashboard-content,
+[data-theme="light"] .dashboard,
+[data-theme="light"] .dashboard-content,
+.theme-light .dashboard,
+.theme-light .dashboard-content {
   background: #EDEBDD !important;
+}
+
+/* Runtime theme fallback from top-menu hash classes (Superset build-specific). */
+header.top.superset-c99twh ~ div .dashboard,
+header.top.superset-c99twh ~ div .dashboard-content,
+header.top.superset-c99twh ~ div .grid-content {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard,
+header.top.superset-y539jf ~ div .dashboard-content,
+header.top.superset-y539jf ~ div .grid-content {
+  background: #292929 !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -45,7 +68,26 @@ html[data-theme="light"] .dashboard-header-container,
 html[data-theme="light"] .css-1wcpuu1,
 html[data-theme="light"] [class*="dashboard-header-contain"],
 html[data-theme="light"] .header-with-actions,
-html[data-theme="light"] .title-panel {
+html[data-theme="light"] .title-panel,
+body[data-theme="light"] .css-jfn13n,
+body[data-theme="light"] .dashboard-header,
+body[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .css-1wcpuu1,
+body[data-theme="light"] [class*="dashboard-header-contain"],
+body[data-theme="light"] .header-with-actions,
+body[data-theme="light"] .title-panel,
+[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .header-with-actions,
+[data-theme="light"] .title-panel,
+.theme-light .dashboard-header-container,
+.theme-light .header-with-actions,
+.theme-light .title-panel {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-c99twh ~ div .dashboard-header-container,
+header.top.superset-c99twh ~ div .header-with-actions,
+header.top.superset-c99twh ~ div .title-panel {
   background: #EDEBDD !important;
 }
 
@@ -55,7 +97,26 @@ html[data-theme="dark"] .dashboard-header-container,
 html[data-theme="dark"] .css-1wcpuu1,
 html[data-theme="dark"] [class*="dashboard-header-contain"],
 html[data-theme="dark"] .header-with-actions,
-html[data-theme="dark"] .title-panel {
+html[data-theme="dark"] .title-panel,
+body[data-theme="dark"] .css-jfn13n,
+body[data-theme="dark"] .dashboard-header,
+body[data-theme="dark"] .dashboard-header-container,
+body[data-theme="dark"] .css-1wcpuu1,
+body[data-theme="dark"] [class*="dashboard-header-contain"],
+body[data-theme="dark"] .header-with-actions,
+body[data-theme="dark"] .title-panel,
+[data-theme="dark"] .dashboard-header-container,
+[data-theme="dark"] .header-with-actions,
+[data-theme="dark"] .title-panel,
+.theme-dark .dashboard-header-container,
+.theme-dark .header-with-actions,
+.theme-dark .title-panel {
+  background: #292929 !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard-header-container,
+header.top.superset-y539jf ~ div .header-with-actions,
+header.top.superset-y539jf ~ div .title-panel {
   background: #292929 !important;
 }
 
