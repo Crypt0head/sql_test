@@ -822,3 +822,11 @@ body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+/* Superset 6 dark filter sidebar: exact runtime rule with cascade priority. */
+body .dashboard .dashboard-content div.superset-7c3f28.superset-7c3f28.superset-7c3f28,
+body .dashboard div.superset-7c3f28.superset-7c3f28.superset-7c3f28 {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
