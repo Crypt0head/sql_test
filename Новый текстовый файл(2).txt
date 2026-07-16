@@ -433,6 +433,53 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
   color: #000000 !important;
 }
 
+/* Final hard override for filter runtime layers (prevents rgb(20,20,20) bleed). */
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .superset-1a2qin2[class*="superset-"],
+header.top.superset-y539jf ~ div .superset-1a2qin2 [class*="superset-"],
+header.top.superset-y539jf ~ div .open.superset-1116wq,
+header.top.superset-y539jf ~ div .open.superset-1116wq[class*="superset-"],
+header.top.superset-y539jf ~ div .open.superset-1116wq [class*="superset-"],
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .superset-1a2qin2[class*="superset-"],
+html[data-theme="dark"] .superset-1a2qin2 [class*="superset-"],
+html[data-theme="dark"] .open.superset-1116wq,
+html[data-theme="dark"] .open.superset-1116wq[class*="superset-"],
+html[data-theme="dark"] .open.superset-1116wq [class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .superset-1a2qin2[class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2 [class*="superset-"],
+body[data-theme="dark"] .open.superset-1116wq,
+body[data-theme="dark"] .open.superset-1116wq[class*="superset-"],
+body[data-theme="dark"] .open.superset-1116wq [class*="superset-"] {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-1a2qin2[class*="superset-"],
+header.top.superset-c99twh ~ div .superset-1a2qin2 [class*="superset-"],
+header.top.superset-c99twh ~ div .open.superset-1116wq,
+header.top.superset-c99twh ~ div .open.superset-1116wq[class*="superset-"],
+header.top.superset-c99twh ~ div .open.superset-1116wq [class*="superset-"],
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .superset-1a2qin2[class*="superset-"],
+html[data-theme="light"] .superset-1a2qin2 [class*="superset-"],
+html[data-theme="light"] .open.superset-1116wq,
+html[data-theme="light"] .open.superset-1116wq[class*="superset-"],
+html[data-theme="light"] .open.superset-1116wq [class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-1a2qin2[class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2 [class*="superset-"],
+body[data-theme="light"] .open.superset-1116wq,
+body[data-theme="light"] .open.superset-1116wq[class*="superset-"],
+body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
+  background: #EDEBDD !important;
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
+
 /* ---------------------------------------------------------------------------
    4. KPI CARDS (Big Number)
    --------------------------------------------------------------------------- */
