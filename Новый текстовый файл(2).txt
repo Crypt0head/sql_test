@@ -17,16 +17,29 @@
    --------------------------------------------------------------------------- */
 
 .css-jfn13n {
-  background: transparent !important;
+  background: inherit !important;
 }
 
 .dashboard-header-container,
 .css-1wcpuu1 {
-  background: transparent !important;
+  background: inherit !important;
   position: sticky !important;
   top: 0 !important;
   z-index: 100 !important;
   border-bottom: 2px solid #C1121F !important;
+}
+
+/* Sticky header must have solid background while scrolling. */
+html[data-theme="light"] .css-jfn13n,
+html[data-theme="light"] .dashboard-header-container,
+html[data-theme="light"] .css-1wcpuu1 {
+  background: #FFFFFF !important;
+}
+
+html[data-theme="dark"] .css-jfn13n,
+html[data-theme="dark"] .dashboard-header-container,
+html[data-theme="dark"] .css-1wcpuu1 {
+  background: #0B0B0B !important;
 }
 
 .header-with-actions {
