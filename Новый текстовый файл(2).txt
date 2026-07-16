@@ -830,3 +830,20 @@ body .dashboard div.superset-7c3f28.superset-7c3f28.superset-7c3f28 {
   background-color: #292929 !important;
   background-image: none !important;
 }
+
+/* Superset 6 actual layout path for the filters sidebar. */
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28,
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28 > .superset-1a2qin2,
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28 .open.superset-c469fh {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28,
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28 > .superset-1a2qin2,
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28 .open.superset-c469fh {
+  background: #EDEBDD !important;
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
