@@ -847,3 +847,11 @@ header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f2
   background-color: #EDEBDD !important;
   background-image: none !important;
 }
+
+/* Actual dark dashboard grid background (parent of the filters sidebar). */
+main.ant-layout-content > div.superset-148gcvh.superset-148gcvh,
+main.ant-layout-content div.superset-148gcvh.superset-148gcvh {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
