@@ -485,9 +485,27 @@ body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
 .superset-c469fh.open,
 .superset-161gc4z,
 .superset-161gc4z.open,
+.superset-7c3f28,
+.superset-7c3f28.open,
 [class*="c469fh"],
-[class*="161gc4z"] {
+[class*="161gc4z"],
+[class*="7c3f28"] {
   /* Neutralize hardcoded runtime rgb(20,20,20) and let themed parent show through. */
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Same override with higher specificity (wins over late runtime style blocks). */
+.dashboard .dashboard-content .superset-c469fh,
+.dashboard .dashboard-content .superset-c469fh.open,
+.dashboard .dashboard-content .superset-161gc4z,
+.dashboard .dashboard-content .superset-161gc4z.open,
+.dashboard .dashboard-content .superset-7c3f28,
+.dashboard .dashboard-content .superset-7c3f28.open,
+.dashboard .dashboard-content [class*="c469fh"],
+.dashboard .dashboard-content [class*="161gc4z"],
+.dashboard .dashboard-content [class*="7c3f28"] {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
