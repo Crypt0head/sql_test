@@ -204,6 +204,80 @@ header.top.superset-y539jf ~ div .title-panel {
   border-right: 1px solid #810100 !important;
 }
 
+/* Filters panel background follows selected theme. */
+html[data-theme="dark"] .superset-va7aid,
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .superset-bfu8z5,
+html[data-theme="dark"] .superset-1r1h1ct,
+html[data-theme="dark"] .superset-14gj75u,
+html[data-theme="dark"] .superset-1nrzzhi,
+body[data-theme="dark"] .superset-va7aid,
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .superset-bfu8z5,
+body[data-theme="dark"] .superset-1r1h1ct,
+body[data-theme="dark"] .superset-14gj75u,
+body[data-theme="dark"] .superset-1nrzzhi,
+[data-theme="dark"] .superset-va7aid,
+[data-theme="dark"] .superset-1a2qin2,
+[data-theme="dark"] .superset-bfu8z5,
+[data-theme="dark"] .superset-1r1h1ct,
+[data-theme="dark"] .superset-14gj75u,
+[data-theme="dark"] .superset-1nrzzhi,
+.theme-dark .superset-va7aid,
+.theme-dark .superset-1a2qin2,
+.theme-dark .superset-bfu8z5,
+.theme-dark .superset-1r1h1ct,
+.theme-dark .superset-14gj75u,
+.theme-dark .superset-1nrzzhi {
+  background: #292929 !important;
+}
+
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .superset-bfu8z5,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-14gj75u,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-bfu8z5,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-14gj75u,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-bfu8z5,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-14gj75u,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+.theme-light .superset-bfu8z5,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-14gj75u,
+.theme-light .superset-1nrzzhi {
+  background: #EDEBDD !important;
+}
+
+/* Runtime hash fallback from top menu classes for filters panel. */
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-bfu8z5,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-14gj75u,
+header.top.superset-c99twh ~ div .superset-1nrzzhi {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .superset-va7aid,
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .superset-bfu8z5,
+header.top.superset-y539jf ~ div .superset-1r1h1ct,
+header.top.superset-y539jf ~ div .superset-14gj75u,
+header.top.superset-y539jf ~ div .superset-1nrzzhi {
+  background: #292929 !important;
+}
+
 .superset-1r1h1ct {
   border-bottom: 1px solid rgba(129, 1, 0, 0.35) !important;
 }
