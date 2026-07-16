@@ -202,7 +202,16 @@
   "color_scheme": "redToYellow",
   "refresh_frequency": 0,
   "expanded_slices": {},
-  "label_colors": {},
+  "label_colors": {
+    "Активные клиенты": "#C62828",
+    "Пассивные клиенты": "#7A1E2C",
+    "clients_active": "#C62828",
+    "clients_passive": "#7A1E2C",
+    "от 0 до 2500": "#C62828",
+    "больше 2500": "#7A1E2C",
+    "равно 0": "#FF6A00",
+    "меньше 0": "#FFD400"
+  },
   "map_label_colors": {},
   "shared_label_colors": [],
   "timed_refresh_immune_slices": [],

@@ -32,22 +32,30 @@
 /* Sticky header must have solid background while scrolling. */
 html[data-theme="light"] .css-jfn13n,
 html[data-theme="light"] .dashboard-header-container,
-html[data-theme="light"] .css-1wcpuu1 {
+html[data-theme="light"] .css-1wcpuu1,
+html[data-theme="light"] [class*="dashboard-header-contain"],
+html[data-theme="light"] .dashboard-header,
+html[data-theme="light"] .header-with-actions,
+html[data-theme="light"] .title-panel {
   background: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .css-jfn13n,
 html[data-theme="dark"] .dashboard-header-container,
-html[data-theme="dark"] .css-1wcpuu1 {
+html[data-theme="dark"] .css-1wcpuu1,
+html[data-theme="dark"] [class*="dashboard-header-contain"],
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .header-with-actions,
+html[data-theme="dark"] .title-panel {
   background: #0B0B0B !important;
 }
 
 .header-with-actions {
-  background: transparent !important;
+  background: inherit !important;
 }
 
 .title-panel {
-  background: transparent !important;
+  background: inherit !important;
 }
 
 /* Dashboard title */
@@ -296,7 +304,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
    --------------------------------------------------------------------------- */
 
 .dashboard-component-header {
-  background: #C1121F !important;
+  background: #C62828 !important;
   padding: 10px 16px !important;
   border-radius: 8px !important;
   margin-bottom: 8px !important;
@@ -312,7 +320,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .dashboard-component-divider,
 .css-lu0hy9h {
-  border-color: #C1121F !important;
+  border-color: #C62828 !important;
   opacity: 1 !important;
   min-height: 6px !important;
 }
@@ -323,14 +331,14 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
   display: block !important;
   width: 100% !important;
   height: 4px !important;
-  background: #C1121F !important;
+  background: #C62828 !important;
   border-radius: 2px !important;
 }
 
 .dashboard-component-divider hr,
 .css-lu0hy9h hr {
   border: none !important;
-  border-top: 4px solid #C1121F !important;
+  border-top: 4px solid #C62828 !important;
   margin: 0 !important;
 }
 
@@ -340,7 +348,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 /*
    Recommended series colors in Superset chart settings:
-     CHOD:       #C1121F
+     CHOD:       #C62828
      FIN RESULT: #FFFFFF
    Also:
      Show Title -> off
@@ -354,7 +362,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .superset-chart-table .table th,
 .superset-chart-table thead th {
-  background: #C1121F !important;
+  background: #C62828 !important;
   color: #FFFFFF !important;
   font-size: 12px !important;
   font-weight: 700 !important;
