@@ -10,7 +10,18 @@
    1. GLOBAL BACKGROUND AND FONT
    --------------------------------------------------------------------------- */
 
-/* Let Superset Light/Dark theme control global background and text colors. */
+/* Theme-dependent dashboard backgrounds. */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .dashboard,
+html[data-theme="dark"] .dashboard-content {
+  background: #292929 !important;
+}
+
+html[data-theme="light"] body,
+html[data-theme="light"] .dashboard,
+html[data-theme="light"] .dashboard-content {
+  background: #EDEBDD !important;
+}
 
 /* ---------------------------------------------------------------------------
    2. HEADER
@@ -24,7 +35,7 @@
   left: auto !important;
   right: auto !important;
   z-index: auto !important;
-  border-bottom: 2px solid #C1121F !important;
+  border-bottom: 2px solid #810100 !important;
 }
 
 /* Sticky/fixed header must always have a solid themed background. */
@@ -35,7 +46,7 @@ html[data-theme="light"] .css-1wcpuu1,
 html[data-theme="light"] [class*="dashboard-header-contain"],
 html[data-theme="light"] .header-with-actions,
 html[data-theme="light"] .title-panel {
-  background: #FFFFFF !important;
+  background: #EDEBDD !important;
 }
 
 html[data-theme="dark"] .css-jfn13n,
@@ -45,7 +56,7 @@ html[data-theme="dark"] .css-1wcpuu1,
 html[data-theme="dark"] [class*="dashboard-header-contain"],
 html[data-theme="dark"] .header-with-actions,
 html[data-theme="dark"] .title-panel {
-  background: #0B0B0B !important;
+  background: #292929 !important;
 }
 
 .header-with-actions,
@@ -78,7 +89,7 @@ html[data-theme="dark"] .title-panel {
 .css-3jweij {
   color: inherit !important;
   background: transparent !important;
-  border-color: rgba(193, 18, 31, 0.45) !important;
+  border-color: rgba(129, 1, 0, 0.45) !important;
 }
 
 .dashboard-header-container .action-button span,
@@ -89,8 +100,8 @@ html[data-theme="dark"] .title-panel {
 .dashboard-header-container .action-button:hover,
 .dashboard-header-container .superset-button-secondary:hover,
 .css-3jweij:hover {
-  background: rgba(193, 18, 31, 0.20) !important;
-  border-color: #C1121F !important;
+  background: rgba(129, 1, 0, 0.20) !important;
+  border-color: #810100 !important;
 }
 
 /* Menu actions trigger */
@@ -129,11 +140,11 @@ html[data-theme="dark"] .title-panel {
 .superset-va7aid,
 .superset-1a2qin2,
 .superset-bfu8z5 {
-  border-right: 1px solid #C1121F !important;
+  border-right: 1px solid #810100 !important;
 }
 
 .superset-1r1h1ct {
-  border-bottom: 1px solid rgba(193, 18, 31, 0.35) !important;
+  border-bottom: 1px solid rgba(129, 1, 0, 0.35) !important;
 }
 
 .superset-14gj75u {
@@ -141,31 +152,31 @@ html[data-theme="dark"] .title-panel {
 }
 
 .superset-1nrzzhi {
-  border-top: 1px solid rgba(193, 18, 31, 0.35) !important;
+  border-top: 1px solid rgba(129, 1, 0, 0.35) !important;
 }
 
 .superset-kaudsu button,
 .superset-1wdfs45 button {
-  background: rgba(193, 18, 31, 0.15) !important;
-  border-color: #C1121F !important;
+  background: rgba(129, 1, 0, 0.15) !important;
+  border-color: #810100 !important;
 }
 
 .superset-kaudsu button:hover,
 .superset-1wdfs45 button:hover {
-  background: rgba(193, 18, 31, 0.30) !important;
+  background: rgba(129, 1, 0, 0.30) !important;
 }
 
 /* Keep only red accents in filter controls; text/background come from theme. */
 .superset-va7aid .ant-select-selector {
-  border-color: rgba(193, 18, 31, 0.45) !important;
+  border-color: rgba(129, 1, 0, 0.45) !important;
 }
 
 .ant-select-dropdown .ant-select-item-option-active {
-  background: rgba(193, 18, 31, 0.10) !important;
+  background: rgba(129, 1, 0, 0.10) !important;
 }
 
 .ant-select-dropdown .ant-select-item-option-selected {
-  background: rgba(193, 18, 31, 0.18) !important;
+  background: rgba(129, 1, 0, 0.18) !important;
 }
 
 /* Filter panel controls (gear/collapse): remove halo/fill. */
@@ -204,14 +215,14 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
   border-radius: 14px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.40) !important;
   overflow: visible !important;
-  border-top: 5px solid #C1121F !important;
+  border-top: 5px solid #810100 !important;
   transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
 }
 
 .dashboard-component-chart-holder:hover {
-  border-top-color: #FFCB08 !important;
+  border-top-color: #810100 !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 18px rgba(255, 203, 8, 0.30) !important;
+  box-shadow: 0 6px 18px rgba(129, 1, 0, 0.30) !important;
 }
 
 .superset-legacy-chart-big-number {
@@ -263,7 +274,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 .dashboard-chart-id-98 .header-line::after,
 .dashboard-chart-id-101 .header-line::after {
   content: " ▲" !important;
-  color: #C1121F !important;
+  color: #810100 !important;
   font-size: 36px !important;
   vertical-align: middle !important;
   margin-left: 8px !important;
@@ -273,7 +284,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 .dashboard-chart-id-99 .header-line::after,
 .dashboard-chart-id-102 .header-line::after {
   content: " ▼" !important;
-  color: #C1121F !important;
+  color: #810100 !important;
   font-size: 36px !important;
   vertical-align: middle !important;
   margin-left: 8px !important;
@@ -299,7 +310,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
    --------------------------------------------------------------------------- */
 
 .dashboard-component-header {
-  background: #C62828 !important;
+  background: #810100 !important;
   padding: 10px 16px !important;
   border-radius: 8px !important;
   margin-bottom: 8px !important;
@@ -315,7 +326,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .dashboard-component-divider,
 .css-lu0hy9h {
-  border-color: #C62828 !important;
+  border-color: #810100 !important;
   opacity: 1 !important;
   min-height: 6px !important;
 }
@@ -326,14 +337,14 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
   display: block !important;
   width: 100% !important;
   height: 4px !important;
-  background: #C62828 !important;
+  background: #810100 !important;
   border-radius: 2px !important;
 }
 
 .dashboard-component-divider hr,
 .css-lu0hy9h hr {
   border: none !important;
-  border-top: 4px solid #C62828 !important;
+  border-top: 4px solid #810100 !important;
   margin: 0 !important;
 }
 
@@ -343,7 +354,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 /*
    Recommended series colors in Superset chart settings:
-     CHOD:       #C62828
+     CHOD:       #810100
      FIN RESULT: #FFFFFF
    Also:
      Show Title -> off
@@ -357,7 +368,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .superset-chart-table .table th,
 .superset-chart-table thead th {
-  background: #C62828 !important;
+  background: #810100 !important;
   color: #FFFFFF !important;
   font-size: 12px !important;
   font-weight: 700 !important;
@@ -382,7 +393,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 }
 
 .superset-chart-table .table tbody tr:hover {
-  background: rgba(193, 18, 31, 0.08) !important;
+  background: rgba(129, 1, 0, 0.08) !important;
 }
 
 .superset-chart-table .table .dt-is-null {
@@ -400,7 +411,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .superset-chart-table .ant-tag {
   background: transparent !important;
-  border: 1.5px solid #C1121F !important;
+  border: 1.5px solid #810100 !important;
   border-radius: 20px !important;
   padding: 2px 10px !important;
   font-size: 11px !important;
@@ -409,7 +420,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 }
 
 .superset-chart-table td:last-child .ant-tag {
-  border-color: #C1121F !important;
+  border-color: #810100 !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -420,13 +431,13 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 
 .main-nav input[type="text"],
 .main-nav .form-control {
-  border-color: rgba(193, 18, 31, 0.45) !important;
+  border-color: rgba(129, 1, 0, 0.45) !important;
 }
 
 .main-nav input[type="text"]:focus,
 .main-nav .form-control:focus {
-  border-color: #C1121F !important;
-  box-shadow: 0 0 0 2px rgba(193, 18, 31, 0.30) !important;
+  border-color: #810100 !important;
+  box-shadow: 0 0 0 2px rgba(129, 1, 0, 0.30) !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -434,27 +445,27 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
    --------------------------------------------------------------------------- */
 
 .superset-button-primary {
-  background: #C1121F !important;
-  border-color: #C1121F !important;
+  background: #810100 !important;
+  border-color: #810100 !important;
   color: #FFFFFF !important;
   border-radius: 8px !important;
 }
 
 .superset-button-primary:hover {
-  background: #A30F1A !important;
-  border-color: #A30F1A !important;
+  background: #810100 !important;
+  border-color: #810100 !important;
 }
 
 .superset-button-secondary {
   background: transparent !important;
-  border: 1px solid #C1121F !important;
-  color: #C1121F !important;
+  border: 1px solid #810100 !important;
+  color: #810100 !important;
   border-radius: 8px !important;
 }
 
 .superset-button-secondary:hover {
-  background: rgba(193, 18, 31, 0.20) !important;
-  border-color: #C1121F !important;
+  background: rgba(129, 1, 0, 0.20) !important;
+  border-color: #810100 !important;
 }
 
 /* ---------------------------------------------------------------------------
@@ -471,7 +482,7 @@ html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
 }
 
 .dashboard-content ::-webkit-scrollbar-thumb:hover {
-  background: #C1121F;
+  background: #810100;
 }
 
 /* ---------------------------------------------------------------------------
