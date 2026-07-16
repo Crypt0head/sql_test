@@ -46,6 +46,23 @@ header.top.superset-y539jf ~ div .grid-content {
   background: #292929 !important;
 }
 
+/* Runtime overrides for dashboard main area (observed classes). */
+.dashboard-content.superset-133p9i {
+  background: #292929 !important;
+}
+
+.dashboard-content.superset-ze2x5p {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard-content[class*="superset-"] {
+  background: #292929 !important;
+}
+
+header.top.superset-c99twh ~ div .dashboard-content[class*="superset-"] {
+  background: #EDEBDD !important;
+}
+
 /* ---------------------------------------------------------------------------
    2. HEADER
    --------------------------------------------------------------------------- */
@@ -307,6 +324,49 @@ header.top.superset-y539jf ~ div .superset-1r1h1ct,
 header.top.superset-y539jf ~ div .superset-14gj75u,
 header.top.superset-y539jf ~ div .superset-1nrzzhi {
   background: #292929 !important;
+}
+
+/* Runtime overrides for filter panel wrappers (observed classes). */
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .open.superset-1116wq,
+html[data-theme="dark"] .open[class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .open.superset-1116wq,
+body[data-theme="dark"] .open[class*="superset-"],
+[data-theme="dark"] .superset-1a2qin2,
+[data-theme="dark"] .open.superset-1116wq,
+[data-theme="dark"] .open[class*="superset-"],
+.theme-dark .superset-1a2qin2,
+.theme-dark .open.superset-1116wq,
+.theme-dark .open[class*="superset-"] {
+  background: #292929 !important;
+}
+
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .open.superset-1116wq,
+html[data-theme="light"] .open[class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .open.superset-1116wq,
+body[data-theme="light"] .open[class*="superset-"],
+[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .open.superset-1116wq,
+[data-theme="light"] .open[class*="superset-"],
+.theme-light .superset-1a2qin2,
+.theme-light .open.superset-1116wq,
+.theme-light .open[class*="superset-"] {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .open.superset-1116wq,
+header.top.superset-y539jf ~ div .open[class*="superset-"] {
+  background: #292929 !important;
+}
+
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .open.superset-1116wq,
+header.top.superset-c99twh ~ div .open[class*="superset-"] {
+  background: #EDEBDD !important;
 }
 
 .superset-1r1h1ct {
