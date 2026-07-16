@@ -524,41 +524,13 @@ body,
 }
 
 /* ---------------------------------------------------------------------------
-   13. FIXES: TEXT VISIBILITY + CHART LEGIBILITY
+   13. CHART TITLES ONLY
    --------------------------------------------------------------------------- */
 
-/* Force readable text for chart cards (some plugins inject dark text styles). */
+/* Keep only chart titles white. */
 .dashboard-component-chart-holder .header-title,
 .dashboard-component-chart-holder .header-title *,
-.dashboard-component-chart-holder .chart-slice *,
-.dashboard-component-chart-holder .slice_container *,
-.dashboard-component-chart-holder .chart-container *,
-.dashboard-component-chart-holder .header-controls *,
-.dashboard-component-chart-holder .explore-chart-button,
-.dashboard-component-chart-holder .slice-header-controls-trigger {
+.dashboard-component-chart-holder .editable-title,
+.dashboard-component-chart-holder .editable-title * {
   color: #FFFFFF !important;
-}
-
-/* Big Number subtitles and secondary labels. */
-.superset-legacy-chart-big-number .subheader-line,
-.big_number_total .subheader-line,
-.superset-legacy-chart-big-number .trendline-label,
-.big_number_total .trendline-label,
-.superset-legacy-chart-big-number .comparison-text,
-.big_number_total .comparison-text {
-  color: #D0D0D0 !important;
-}
-
-/* SVG text inside cards (axis labels, legends, numbers) must stay visible. */
-.dashboard-component-chart-holder svg text,
-.dashboard-component-chart-holder .nvd3 text {
-  fill: #FFFFFF !important;
-}
-
-/* Dim axis/grid lines to fit dark UI while preserving visibility. */
-.dashboard-component-chart-holder svg .domain,
-.dashboard-component-chart-holder svg .tick line,
-.dashboard-component-chart-holder .nvd3 .nv-axis path,
-.dashboard-component-chart-holder .nvd3 .nv-axis line {
-  stroke: #4A4A4A !important;
 }
