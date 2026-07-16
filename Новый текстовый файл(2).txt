@@ -322,6 +322,15 @@ body,
   fill: #FFFFFF !important;
 }
 
+/* Hide "Applied filters" badge in chart headers. */
+.dashboard-component-chart-holder .filter-counts,
+.dashboard-component-chart-holder [class*="filter-counts"],
+.dashboard-component-chart-holder [aria-label*="Applied filters"],
+.dashboard-component-chart-holder [aria-label*="Примененные фильтры"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
 /* ---------------------------------------------------------------------------
    6. SECTION HEADERS
    --------------------------------------------------------------------------- */
@@ -448,13 +457,28 @@ body,
    --------------------------------------------------------------------------- */
 
 .main-nav {
-  background: #000000 !important;
-  border-bottom: 1px solid #2A2A2A !important;
+  background: #FFFFFF !important;
+  border-bottom: 1px solid #E0E0E0 !important;
 }
 
 .main-nav .navbar-brand {
   font-weight: 700 !important;
-  color: #FFFFFF !important;
+  color: #000000 !important;
+}
+
+/* Top navigation strip (Dashboards / Datasets / SQL) */
+.main-nav .ant-menu,
+.main-nav .ant-menu.ant-menu-horizontal,
+.main-nav .ant-menu-light {
+  background: #FFFFFF !important;
+}
+
+.main-nav .ant-menu-item,
+.main-nav .ant-menu-submenu-title,
+.main-nav .ant-menu-title-content,
+.main-nav .ant-menu-item a,
+.main-nav .ant-menu-submenu-title a {
+  color: #000000 !important;
 }
 
 .main-nav input[type="text"],
@@ -519,4 +543,38 @@ body,
 
 .dashboard-content ::-webkit-scrollbar-thumb:hover {
   background: #C1121F;
+}
+
+/* ---------------------------------------------------------------------------
+   13. COMPACT TITLE LINES
+   --------------------------------------------------------------------------- */
+
+/* Section title bars: reduce empty vertical space. */
+.dashboard-component-header {
+  padding: 5px 10px !important;
+  margin-bottom: 6px !important;
+  min-height: auto !important;
+}
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+}
+
+/* Chart title row: keep text readable, reduce blank edges. */
+.dashboard-component-chart-holder .header-title,
+.dashboard-component-chart-holder .header-title *,
+.dashboard-component-chart-holder .editable-title,
+.dashboard-component-chart-holder .editable-title * {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.dashboard-component-chart-holder .header-controls {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
