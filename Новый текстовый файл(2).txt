@@ -516,12 +516,21 @@ body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
    --------------------------------------------------------------------------- */
 
 .dashboard-component-chart-holder {
-  background: #292929 !important;
   border-radius: 14px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.40) !important;
   overflow: visible !important;
   border-top: 5px solid #810100 !important;
   transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
+}
+
+/* Chart-card background applies only in dark theme. */
+html[data-theme="dark"] .dashboard-component-chart-holder,
+body[data-theme="dark"] .dashboard-component-chart-holder,
+[data-theme="dark"] .dashboard-component-chart-holder,
+.theme-dark .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ .ant-layout .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ .ant-layout .dashboard-component-chart-holder {
+  background: #292929 !important;
 }
 
 .dashboard-component-chart-holder:hover {
