@@ -162,6 +162,14 @@ body[data-theme="light"] .title-panel,
   background-color: #EDEBDD !important;
 }
 
+/* Ensure dark runtime class always wins over light fallback rules. */
+header.top.superset-y539jf ~ div .dashboard-header-container,
+header.top.superset-y539jf ~ div .header-with-actions,
+header.top.superset-y539jf ~ div .title-panel {
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
 /* Dashboard title */
 .dashboard-header-container .title-panel span.input-sizer {
   color: inherit !important;
