@@ -556,9 +556,9 @@ header.top.superset-c99twh ~ .ant-layout .dashboard-component-chart-holder {
 }
 
 .dashboard-component-chart-holder:hover {
-  border-top-color: #810100 !important;
+  border-top-color: #FFCB08 !important;
   transform: translateY(-2px) !important;
-  box-shadow: 0 6px 18px rgba(129, 1, 0, 0.30) !important;
+  box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.85), 0 6px 18px rgba(255, 203, 8, 0.35) !important;
 }
 
 .superset-legacy-chart-big-number {
