@@ -542,7 +542,7 @@ header.top.superset-y539jf ~ .ant-layout .dashboard-component-chart-holder {
   background-image: none !important;
 }
 
-/* Light theme restores Superset default chart-card background and selection glow. */
+/* Light theme keeps chart-card interiors white. */
 html[data-theme="light"] .dashboard-component-chart-holder,
 body[data-theme="light"] .dashboard-component-chart-holder,
 [data-theme="light"] .dashboard-component-chart-holder,
@@ -550,9 +550,9 @@ body[data-theme="light"] .dashboard-component-chart-holder,
 header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
 header.top.superset-c99twh ~ div main.ant-layout-content .dashboard-component-chart-holder,
 header.top.superset-c99twh ~ .ant-layout .dashboard-component-chart-holder {
-  background: unset !important;
-  background-color: unset !important;
-  background-image: unset !important;
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  background-image: none !important;
 }
 
 .dashboard-component-chart-holder:hover {
