@@ -202,11 +202,6 @@
   "color_scheme": "redToYellow",
   "refresh_frequency": 0,
   "expanded_slices": {},
-  "theme_chart_color_palettes": {
-    "light": ["#7A925E", "#08473C", "#8B4513", "#FFD400"],
-    "dark": ["#CEE688", "#458107", "#8B4513", "#FFD400"]
-  },
-  "active_chart_palette_theme": "dark",
   "label_colors": {
     "Активные клиенты": "#CEE688",
     "Пассивные клиенты": "#458107",
