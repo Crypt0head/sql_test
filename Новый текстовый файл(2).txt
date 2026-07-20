@@ -898,7 +898,7 @@ body[data-theme="light"] .dashboard-header-container,
 [data-theme="light"] .dashboard-header-container,
 .theme-light .dashboard-header-container,
 header.top.superset-c99twh ~ div .dashboard-header-container {
-  border-bottom-color: #08473C !important;
+  border-bottom-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-header,
@@ -921,9 +921,9 @@ body[data-theme="light"] .superset-button-primary,
 [data-theme="light"] .superset-button-primary,
 .theme-light .superset-button-primary,
 header.top.superset-c99twh ~ div .superset-button-primary {
-  background: #08473C !important;
-  background-color: #08473C !important;
-  border-color: #08473C !important;
+  background: #CEE688 !important;
+  background-color: #CEE688 !important;
+  border-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider,
@@ -941,8 +941,8 @@ body[data-theme="light"] .dashboard-component-chart-holder,
 [data-theme="light"] .dashboard-component-chart-holder,
 .theme-light .dashboard-component-chart-holder,
 header.top.superset-c99twh ~ div .dashboard-component-chart-holder {
-  border-color: #08473C !important;
-  border-top-color: #08473C !important;
+  border-color: #CEE688 !important;
+  border-top-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider::after,
@@ -955,8 +955,8 @@ body[data-theme="light"] .css-lu0hy9h::after,
 .theme-light .css-lu0hy9h::after,
 header.top.superset-c99twh ~ div .dashboard-component-divider::after,
 header.top.superset-c99twh ~ div .css-lu0hy9h::after {
-  background: #08473C !important;
-  background-color: #08473C !important;
+  background: #CEE688 !important;
+  background-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider hr,
@@ -969,7 +969,7 @@ body[data-theme="light"] .css-lu0hy9h hr,
 .theme-light .css-lu0hy9h hr,
 header.top.superset-c99twh ~ div .dashboard-component-divider hr,
 header.top.superset-c99twh ~ div .css-lu0hy9h hr {
-  border-top-color: #08473C !important;
+  border-top-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .superset-va7aid,
@@ -1011,7 +1011,7 @@ body[data-theme="light"] .superset-button-secondary,
 [data-theme="light"] .superset-button-secondary,
 .theme-light .superset-button-secondary,
 header.top.superset-c99twh ~ div .superset-button-secondary {
-  border-color: #08473C !important;
+  border-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
@@ -1039,7 +1039,7 @@ body[data-theme="light"] .superset-button-secondary,
 [data-theme="light"] .superset-button-secondary,
 .theme-light .superset-button-secondary,
 header.top.superset-c99twh ~ div .superset-button-secondary {
-  color: #08473C !important;
+  color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-chart-holder:hover,
@@ -1047,7 +1047,7 @@ body[data-theme="light"] .dashboard-component-chart-holder:hover,
 [data-theme="light"] .dashboard-component-chart-holder:hover,
 .theme-light .dashboard-component-chart-holder:hover,
 header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover {
-  border-top-color: #08473C !important;
+  border-top-color: #CEE688 !important;
   box-shadow: 0 0 0 2px rgba(8, 71, 60, 0.85), 0 6px 18px rgba(8, 71, 60, 0.35) !important;
 }
 
@@ -1063,14 +1063,14 @@ body[data-theme="light"] .superset-button-secondary:hover,
 header.top.superset-c99twh ~ div .superset-button-secondary:hover {
   background: rgba(8, 71, 60, 0.16) !important;
   background-color: rgba(8, 71, 60, 0.16) !important;
-  border-color: #08473C !important;
+  border-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 [data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 .theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
-  background: #08473C !important;
+  background: #CEE688 !important;
 }
 
 /* Dark theme accents: bright green. */
@@ -1360,7 +1360,7 @@ body[data-theme="light"] .dashboard-header-container,
 [data-theme="light"] .dashboard-header-container,
 .theme-light .dashboard-header-container,
 header.top.superset-c99twh ~ div .dashboard-header-container {
-  border-bottom-color: #08473C !important;
+  border-bottom-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-header,
@@ -1383,9 +1383,9 @@ body[data-theme="light"] .superset-button-primary,
 [data-theme="light"] .superset-button-primary,
 .theme-light .superset-button-primary,
 header.top.superset-c99twh ~ div .superset-button-primary {
-  background: #08473C !important;
-  background-color: #08473C !important;
-  border-color: #08473C !important;
+  background: #CEE688 !important;
+  background-color: #CEE688 !important;
+  border-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider,
@@ -1442,8 +1442,8 @@ body[data-theme="light"] .superset-button-secondary,
 [data-theme="light"] .superset-button-secondary,
 .theme-light .superset-button-secondary,
 header.top.superset-c99twh ~ div .superset-button-secondary {
-  border-color: #08473C !important;
-  border-top-color: #08473C !important;
+  border-color: #CEE688 !important;
+  border-top-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider::after,
@@ -1456,8 +1456,8 @@ body[data-theme="light"] .css-lu0hy9h::after,
 .theme-light .css-lu0hy9h::after,
 header.top.superset-c99twh ~ div .dashboard-component-divider::after,
 header.top.superset-c99twh ~ div .css-lu0hy9h::after {
-  background: #08473C !important;
-  background-color: #08473C !important;
+  background: #CEE688 !important;
+  background-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-divider hr,
@@ -1470,7 +1470,7 @@ body[data-theme="light"] .css-lu0hy9h hr,
 .theme-light .css-lu0hy9h hr,
 header.top.superset-c99twh ~ div .dashboard-component-divider hr,
 header.top.superset-c99twh ~ div .css-lu0hy9h hr {
-  border-top-color: #08473C !important;
+  border-top-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
@@ -1498,7 +1498,7 @@ body[data-theme="light"] .superset-button-secondary,
 [data-theme="light"] .superset-button-secondary,
 .theme-light .superset-button-secondary,
 header.top.superset-c99twh ~ div .superset-button-secondary {
-  color: #08473C !important;
+  color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-component-chart-holder:hover,
@@ -1506,7 +1506,7 @@ body[data-theme="light"] .dashboard-component-chart-holder:hover,
 [data-theme="light"] .dashboard-component-chart-holder:hover,
 .theme-light .dashboard-component-chart-holder:hover,
 header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover {
-  border-top-color: #08473C !important;
+  border-top-color: #CEE688 !important;
   box-shadow: 0 0 0 2px rgba(8, 71, 60, 0.85), 0 6px 18px rgba(8, 71, 60, 0.35) !important;
 }
 
@@ -1522,12 +1522,12 @@ body[data-theme="light"] .superset-button-secondary:hover,
 header.top.superset-c99twh ~ div .superset-button-secondary:hover {
   background: rgba(8, 71, 60, 0.16) !important;
   background-color: rgba(8, 71, 60, 0.16) !important;
-  border-color: #08473C !important;
+  border-color: #CEE688 !important;
 }
 
 html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 [data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
 .theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
-  background: #08473C !important;
+  background: #CEE688 !important;
 }
