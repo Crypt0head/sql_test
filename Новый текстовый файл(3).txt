@@ -177,7 +177,12 @@
     }
   },
   "global_chart_configuration": {
-    "scope": {"rootPath": ["ROOT_ID"], "excluded": []},
+    "scope": {
+      "rootPath": [
+        "ROOT_ID"
+      ],
+      "excluded": []
+    },
     "chartsInScope": [
       311,
       312,
@@ -209,8 +214,8 @@
     "clients_passive": "#458107",
     "от 0 до 2500": "#CEE688",
     "больше 2500": "#458107",
-    "равно 0": "#8B4513",
-    "меньше 0": "#FFD400",
+    "равно 0": "#FFD400",
+    "меньше 0": "#8B4513",
     "ЧОД": "#CEE688",
     "Фин.рез.": "#458107",
     "Фин.Рез.": "#458107",
@@ -229,20 +234,24 @@
     {
       "cascadeParentIds": [],
       "chartsInScope": [
-        257,
-        258,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        267,
-        269,
-        270,
-        271,
-        272
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328
       ],
       "controlValues": {
         "creatable": true,
@@ -262,28 +271,46 @@
       "filterType": "filter_select",
       "id": "NATIVE_FILTER-Br7uGmsP494QqkuCyxd6m",
       "name": "Региональный филиал",
-      "scope": {"excluded": [256], "rootPath": ["ROOT_ID"]},
+      "scope": {
+        "excluded": [],
+        "rootPath": [
+          "ROOT_ID"
+        ]
+      },
       "tabsInScope": [],
-      "targets": [{"column": {"name": "filial_filter"}, "datasetId": 151}],
+      "targets": [
+        {
+          "column": {
+            "name": "filial_filter"
+          },
+          "datasetId": 151
+        }
+      ],
       "type": "NATIVE_FILTER"
     },
     {
-      "cascadeParentIds": ["NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"],
+      "cascadeParentIds": [
+        "NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"
+      ],
       "chartsInScope": [
-        257,
-        258,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        267,
-        269,
-        270,
-        271,
-        272
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328
       ],
       "controlValues": {
         "creatable": true,
@@ -302,28 +329,46 @@
       "filterType": "filter_select",
       "id": "NATIVE_FILTER-tGFcD408K6NAjdXkFtPQS",
       "name": "Наименование клиента",
-      "scope": {"excluded": [256], "rootPath": ["ROOT_ID"]},
+      "scope": {
+        "excluded": [],
+        "rootPath": [
+          "ROOT_ID"
+        ]
+      },
       "tabsInScope": [],
-      "targets": [{"column": {"name": "company_name"}, "datasetId": 151}],
+      "targets": [
+        {
+          "column": {
+            "name": "company_name"
+          },
+          "datasetId": 151
+        }
+      ],
       "type": "NATIVE_FILTER"
     },
     {
-      "cascadeParentIds": ["NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"],
+      "cascadeParentIds": [
+        "NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"
+      ],
       "chartsInScope": [
-        257,
-        258,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        267,
-        269,
-        270,
-        271,
-        272
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328
       ],
       "controlValues": {
         "creatable": true,
@@ -342,28 +387,44 @@
       "filterType": "filter_select",
       "id": "NATIVE_FILTER-TCqrC5Y3XVxg24PO5bCBV",
       "name": "ИНН клиента",
-      "scope": {"excluded": [256], "rootPath": ["ROOT_ID"]},
+      "scope": {
+        "excluded": [],
+        "rootPath": [
+          "ROOT_ID"
+        ]
+      },
       "tabsInScope": [],
-      "targets": [{"column": {"name": "inn"}, "datasetId": 151}],
+      "targets": [
+        {
+          "column": {
+            "name": "inn"
+          },
+          "datasetId": 151
+        }
+      ],
       "type": "NATIVE_FILTER"
     },
     {
       "cascadeParentIds": [],
       "chartsInScope": [
-        257,
-        258,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        267,
-        269,
-        270,
-        271,
-        272
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328
       ],
       "controlValues": {
         "creatable": true,
@@ -382,27 +443,44 @@
       "filterType": "filter_select",
       "id": "NATIVE_FILTER-l33Softy4GIj9MHJVnQ3O",
       "name": "Тариф",
-      "scope": {"excluded": [256], "rootPath": ["ROOT_ID"]},
+      "scope": {
+        "excluded": [],
+        "rootPath": [
+          "ROOT_ID"
+        ]
+      },
       "tabsInScope": [],
-      "targets": [{"column": {"name": "tariff_short"}, "datasetId": 151}],
+      "targets": [
+        {
+          "column": {
+            "name": "tariff_short"
+          },
+          "datasetId": 151
+        }
+      ],
       "type": "NATIVE_FILTER"
     },
     {
       "cascadeParentIds": [],
       "chartsInScope": [
-        256,
-        257,
-        259,
-        260,
-        261,
-        262,
-        263,
-        264,
-        265,
-        267,
-        269,
-        270,
-        271
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318,
+        319,
+        320,
+        321,
+        322,
+        323,
+        324,
+        325,
+        326,
+        327,
+        328
       ],
       "controlValues": {
         "creatable": true,
@@ -421,9 +499,21 @@
       "filterType": "filter_select",
       "id": "NATIVE_FILTER-D4-CmbEs_Z1cgiCrlRcnn",
       "name": "Зона ответственности",
-      "scope": {"excluded": [258, 272], "rootPath": ["ROOT_ID"]},
+      "scope": {
+        "excluded": [],
+        "rootPath": [
+          "ROOT_ID"
+        ]
+      },
       "tabsInScope": [],
-      "targets": [{"column": {"name": "ssp_ocrm"}, "datasetId": 151}],
+      "targets": [
+        {
+          "column": {
+            "name": "ssp_ocrm"
+          },
+          "datasetId": 151
+        }
+      ],
       "type": "NATIVE_FILTER"
     },
     {
@@ -437,7 +527,9 @@
         "inverseSelection": false
       },
       "requiredFirst": {
-        "nativeEvent": {"isTrusted": true},
+        "nativeEvent": {
+          "isTrusted": true
+        },
         "target": {
           "checked": false,
           "className": "ant-wave-target css-1drql43",
@@ -449,21 +541,43 @@
       },
       "name": "Месяц",
       "filterType": "filter_select",
-      "targets": [{"datasetId": 151, "column": {"name": "report_month"}}],
+      "targets": [
+        {
+          "datasetId": 151,
+          "column": {
+            "name": "report_month"
+          }
+        }
+      ],
       "defaultDataMask": {
         "extraFormData": {
-          "filters": [{"col": "report_month", "op": "IN", "val": ["2026-06"]}]
+          "filters": [
+            {
+              "col": "report_month",
+              "op": "IN",
+              "val": [
+                "2026-06"
+              ]
+            }
+          ]
         },
         "filterState": {
           "excludeFilterValues": true,
           "label": "2026-06",
           "validateMessage": false,
           "validateStatus": false,
-          "value": ["2026-06"]
+          "value": [
+            "2026-06"
+          ]
         }
       },
       "cascadeParentIds": [],
-      "scope": {"rootPath": ["ROOT_ID"], "excluded": []},
+      "scope": {
+        "rootPath": [
+          "ROOT_ID"
+        ],
+        "excluded": []
+      },
       "type": "NATIVE_FILTER",
       "description": "",
       "chartsInScope": [
