@@ -34,6 +34,7 @@ WITH raw AS (
         COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0) AS term_cnt_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) AS active_terms_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(fin_result AS TEXT)), '') AS NUMERIC), 0) AS fin_result_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(trx_sum AS TEXT)), '') AS NUMERIC), 0) AS trx_sum_num,
         COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0) AS trx_cnt_num
     FROM sbx_da.tmp_shestopalov_acq_datamart_jan_jun
@@ -55,7 +56,8 @@ by_client_month AS (
         SUM(active_terms_num) AS active_terms,
         SUM(trx_sum_num) AS trx_sum,
         SUM(trx_cnt_num) AS trx_cnt,
-        SUM(chod_num) AS chod_sum
+        SUM(chod_num) AS chod_sum,
+        SUM(fin_result_num) AS fin_result_sum
     FROM raw
     WHERE point_report_month IS NOT NULL
     GROUP BY
@@ -86,6 +88,7 @@ metrics AS (
         trx_sum,
         trx_cnt,
         chod_sum,
+        fin_result_sum,
         CASE WHEN chod_sum > 0 AND chod_sum <= 2500 THEN 1 ELSE 0 END AS cohort_0_2500,
         CASE WHEN chod_sum > 2500 THEN 1 ELSE 0 END AS cohort_gt_2500,
         CASE WHEN chod_sum = 0 THEN 1 ELSE 0 END AS cohort_eq_0,
@@ -114,6 +117,7 @@ SELECT
     m.trx_sum,
     m.trx_cnt,
     m.chod_sum,
+    m.fin_result_sum,
     m.cohort_0_2500,
     m.cohort_gt_2500,
     m.cohort_eq_0,
