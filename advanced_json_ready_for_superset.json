@@ -514,7 +514,9 @@
     "SUM(trx_sum)": "#FF7A00",
     "SUM(active_terms)": "#CEE688",
     "SUM(passive_terms)": "#458107",
-    "SUM(term_cnt)": "#458107"
+    "SUM(term_cnt)": "#458107",
+    "SUM(retl_cnt)": "#458107",
+    "SUM(active_retl_cnt)": "#CEE688"
   },
   "map_label_colors": {
     "Активные клиенты": "#CEE688",
@@ -536,6 +538,9 @@
     "Активные терминалы": "#CEE688",
     "Пассивные терминалы": "#458107",
     "Терминалы": "#458107",
+    "Торговые точки": "#458107",
+    "Активные торговые точки": "#CEE688",
+    "Неактивные торговые точки": "#458107",
     "SUM(is_active_client)": "#CEE688",
     "SUM(is_passive_client)": "#458107",
     "SUM(cohort_0_2500)": "#CEE688",
@@ -548,7 +553,9 @@
     "SUM(trx_sum)": "#FF7A00",
     "SUM(active_terms)": "#CEE688",
     "SUM(passive_terms)": "#458107",
-    "SUM(term_cnt)": "#458107"
+    "SUM(term_cnt)": "#458107",
+    "SUM(retl_cnt)": "#458107",
+    "SUM(active_retl_cnt)": "#CEE688"
   },
   "shared_label_colors": [
     "Активные клиенты",
@@ -570,6 +577,9 @@
     "Активные терминалы",
     "Пассивные терминалы",
     "Терминалы",
+    "Торговые точки",
+    "Активные торговые точки",
+    "Неактивные торговые точки",
     "SUM(is_active_client)",
     "SUM(is_passive_client)",
     "SUM(cohort_0_2500)",
@@ -582,7 +592,9 @@
     "SUM(trx_sum)",
     "SUM(active_terms)",
     "SUM(passive_terms)",
-    "SUM(term_cnt)"
+    "SUM(term_cnt)",
+    "SUM(retl_cnt)",
+    "SUM(active_retl_cnt)"
   ],
   "timed_refresh_immune_slices": [],
   "cross_filters_enabled": true,
@@ -646,9 +658,7 @@
       "type": "NATIVE_FILTER"
     },
     {
-      "cascadeParentIds": [
-        "NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"
-      ],
+      "cascadeParentIds": [],
       "chartsInScope": [
         311,
         312,
@@ -704,9 +714,7 @@
       "type": "NATIVE_FILTER"
     },
     {
-      "cascadeParentIds": [
-        "NATIVE_FILTER-3nLzjy85ak7YWhvHVbsUv"
-      ],
+      "cascadeParentIds": [],
       "chartsInScope": [
         311,
         312,
@@ -894,26 +902,9 @@
         }
       ],
       "defaultDataMask": {
-        "extraFormData": {
-          "filters": [
-            {
-              "col": "report_month",
-              "op": "IN",
-              "val": [
-                "2026-06"
-              ]
-            }
-          ]
-        },
-        "filterState": {
-          "excludeFilterValues": true,
-          "label": "2026-06",
-          "validateMessage": false,
-          "validateStatus": false,
-          "value": [
-            "2026-06"
-          ]
-        }
+        "extraFormData": {},
+        "filterState": {},
+        "ownState": {}
       },
       "cascadeParentIds": [],
       "scope": {
