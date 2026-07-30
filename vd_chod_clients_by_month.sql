@@ -7,6 +7,12 @@
 -- Grain: 1 row = 1 client (agr_id) x report_month
 -- Mode: SINGLE month (not upto) — filter Месяц = report_month shows that month only
 -- Source: sbx_da.tmp_shestopalov_acq_datamart_jan_jun
+--
+-- Общий ЧОД (Kedr nbi_ssp):
+--   Chart metric: SUM(kedr_obshiy_chod_contrib) → label «Общий ЧОД»
+--   (contrib = value once per inn×month; do NOT SUM(kedr_obshiy_chod))
+--   Acquiring segment CHOD stays SUM(chod_sum).
+--   total_chod_placeholder kept NULL for backward compatibility — remove from chart.
 
 WITH raw AS (
     SELECT
@@ -23,7 +29,9 @@ WITH raw AS (
             NULLIF(NULLIF(BTRIM(CAST(ssp_ocrm AS TEXT)), ''), '<NULL>'),
             'Нет данных'
         ) AS ssp_ocrm_filter,
-        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num
+        COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) AS chod_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(kedr_obshiy_chod AS TEXT)), '') AS NUMERIC), 0) AS kedr_obshiy_chod_num,
+        COALESCE(CAST(NULLIF(BTRIM(CAST(kedr_obshiy_chod_contrib AS TEXT)), '') AS NUMERIC), 0) AS kedr_obshiy_chod_contrib_num
     FROM sbx_da.tmp_shestopalov_acq_datamart_jan_jun
     WHERE NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL
       AND NULLIF(BTRIM(CAST(report_month AS TEXT)), '') IS NOT NULL
@@ -37,7 +45,9 @@ by_client_month AS (
         tariff_short,
         filial_filter,
         ssp_ocrm_filter,
-        SUM(chod_num) AS chod_sum
+        SUM(chod_num) AS chod_sum,
+        MAX(kedr_obshiy_chod_num) AS kedr_obshiy_chod,
+        SUM(kedr_obshiy_chod_contrib_num) AS kedr_obshiy_chod_contrib
     FROM raw
     WHERE report_month IS NOT NULL
     GROUP BY
@@ -63,6 +73,9 @@ SELECT
         ELSE 'Клиенты с 0 ЧОД ТЭ'
     END AS client_bucket,
     chod_sum,
+    kedr_obshiy_chod,
+    kedr_obshiy_chod_contrib,
+    -- Deprecated stub (always NULL). Use SUM(kedr_obshiy_chod_contrib) as «Общий ЧОД».
     CAST(NULL AS NUMERIC) AS total_chod_placeholder
 FROM by_client_month
 ;
