@@ -1,16 +1,16 @@
 -- Virtual dataset SQL for: sbx_da.vd_new_graphs_acq (replace current SQL)
 --
--- Behavior (как раньше на презентации):
---   native filter "Месяц" → column report_month (якорь, single value)
---   на графике ось X → point_report_month
---   показываются все месяцы с point_report_month <= report_month
---   Пример: Месяц=2026-06 → на оси Jan..Jun
+-- Behavior:
+--   native filter "Месяц" → column report_month (якорь, ОБЯЗАТЕЛЬНО один месяц)
+--   ось X на графиках → point_report_month
+--   показываются месяцы с point_report_month <= report_month
 --
--- Grain of result: 1 row = 1 client (agr_id) x point_report_month x selected report_month
--- Also filterable by RF/INN/name/zone/tariff (same column names as datamart filters).
+-- Performance:
+--   Jinja режет selected_months ДО join (иначе upto × все якоря → timeout).
+--   Если месяц не выбран — берётся только MAX(month), не все 7 якорей.
 --
 -- Source: sbx_da.tmp_shestopalov_acq_datamart_jan_jun
--- Rollback source if needed: sbx_da.tmp_shestopalov_acq_datamart_q1
+-- В Superset: Dataset → SQL Lab / Edit → вставить → Enable Jinja templating (если есть галка)
 
 WITH raw AS (
     SELECT
@@ -95,9 +95,16 @@ metrics AS (
         CASE WHEN chod_sum < 0 THEN 1 ELSE 0 END AS cohort_lt_0
     FROM by_client_month
 ),
+-- Якоря: только выбранный месяц (Jinja) или MAX — НЕ все месяцы сразу
 selected_months AS (
     SELECT DISTINCT point_report_month AS report_month
     FROM metrics
+    WHERE point_report_month IS NOT NULL
+{% if filter_values('report_month') %}
+      AND point_report_month IN {{ filter_values('report_month') | where_in }}
+{% else %}
+      AND point_report_month = (SELECT MAX(point_report_month) FROM metrics)
+{% endif %}
 )
 SELECT
     s.report_month,
