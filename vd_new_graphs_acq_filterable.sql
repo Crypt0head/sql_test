@@ -1,16 +1,14 @@
--- Virtual dataset SQL for: sbx_da.vd_new_graphs_acq (replace current SQL)
+-- Virtual dataset SQL for: sbx_da.vd_new_graphs_acq
+-- Upto-selected month + Jinja early prune (нужен ENABLE_TEMPLATE_PROCESSING)
 --
--- Behavior:
---   native filter "Месяц" → column report_month (якорь, ОБЯЗАТЕЛЬНО один месяц)
---   ось X на графиках → point_report_month
---   показываются месяцы с point_report_month <= report_month
+-- Native filter "Месяц" → report_month (один месяц)
+-- Ось X → point_report_month
+-- Пример: Месяц=2026-04 → на оси 01..04
 --
--- Performance:
---   Jinja режет selected_months ДО join (иначе upto × все якоря → timeout).
---   Если месяц не выбран — берётся только MAX(month), не все 7 якорей.
---
+-- Важно: remove_filter=True — месяц режется ВНУТРИ SQL, не после раздутого join.
 -- Source: sbx_da.tmp_shestopalov_acq_datamart_jan_jun
--- В Superset: Dataset → SQL Lab / Edit → вставить → Enable Jinja templating (если есть галка)
+
+{% set sel_months = filter_values('report_month', remove_filter=True) %}
 
 WITH raw AS (
     SELECT
@@ -40,6 +38,15 @@ WITH raw AS (
     FROM sbx_da.tmp_shestopalov_acq_datamart_jan_jun
     WHERE NULLIF(BTRIM(CAST(agr_id AS TEXT)), '') IS NOT NULL
       AND NULLIF(BTRIM(CAST(report_month AS TEXT)), '') IS NOT NULL
+{% if sel_months %}
+      -- только месяцы <= выбранного якоря (не читаем «будущие» месяцы периода)
+      AND NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), '')
+          <= (SELECT MAX(x) FROM (VALUES
+            {% for m in sel_months %}
+              ('{{ m }}'){% if not loop.last %},{% endif %}
+            {% endfor %}
+          ) AS t(x))
+{% endif %}
 ),
 by_client_month AS (
     SELECT
@@ -95,15 +102,18 @@ metrics AS (
         CASE WHEN chod_sum < 0 THEN 1 ELSE 0 END AS cohort_lt_0
     FROM by_client_month
 ),
--- Якоря: только выбранный месяц (Jinja) или MAX — НЕ все месяцы сразу
 selected_months AS (
-    SELECT DISTINCT point_report_month AS report_month
-    FROM metrics
-    WHERE point_report_month IS NOT NULL
-{% if filter_values('report_month') %}
-      AND point_report_month IN {{ filter_values('report_month') | where_in }}
+{% if sel_months %}
+    SELECT DISTINCT x AS report_month
+    FROM (VALUES
+      {% for m in sel_months %}
+        ('{{ m }}'){% if not loop.last %},{% endif %}
+      {% endfor %}
+    ) AS t(x)
 {% else %}
-      AND point_report_month = (SELECT MAX(point_report_month) FROM metrics)
+    -- без фильтра месяца — только последний месяц (не раздуваем все якоря)
+    SELECT MAX(point_report_month) AS report_month
+    FROM metrics
 {% endif %}
 )
 SELECT
