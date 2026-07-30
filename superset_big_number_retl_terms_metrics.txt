@@ -1,0 +1,46 @@
+Dataset: sbx_da.tmp_shestopalov_acq_datamart_jan_jun
+Перед использованием: Dataset → Sync columns (должна быть колонка active_retl_cnt).
+
+Правило:
+- retl_cnt / active_retl_cnt  = торговые точки (ТТ)
+- term_cnt / active_terms     = терминалы
+- НЕ использовать SUM(active_terms) и НЕ умножать на 0.9 для «активных ТТ»
+
+
+==============================================================================
+ТОРГОВЫЕ ТОЧКИ
+==============================================================================
+
+merchants_total — Всего торговых точек
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+merchants_active — Активные торговые точки
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+merchants_passive — Неактивные торговые точки
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+-
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_retl_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+
+==============================================================================
+ТЕРМИНАЛЫ
+==============================================================================
+
+terminals_total — Всего терминалов
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
+
+terminals_active — Активные терминалы
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
+
+terminals_passive — Неактивные терминалы
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(term_cnt AS TEXT)), '') AS NUMERIC), 0))
+-
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0))
+
+
+==============================================================================
+УСТАРЕЛО (не копировать)
+==============================================================================
+-- старый костыль «активные ТТ»:
+-- SUM(... active_terms ...) * 0.9
