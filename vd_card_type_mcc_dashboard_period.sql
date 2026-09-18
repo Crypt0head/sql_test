@@ -14,9 +14,9 @@
 --   МИР / Visa / Mastercard / UnionPay / Карта РСХБ / прочие
 --   «Карта РСХБ» = on-us (филиалы *РФ, Головной офис, ЦРМБ). Схема из FIID не читается.
 --
--- Доли — 0–100, сумма по строке ≈ 100.
+-- Доли — 0–1 (не 0–100). Сумма по строке ≈ 1.
 -- На чарте НЕ делать AVG по месячным долям: dataset уже взвесил SUM за период.
--- Customize долей: ,.2f (не .2% — значения уже в процентах).
+-- Customize долей: .2% → «83.80%». Не ,.2f.
 -- Названия MCC — из tmp_shestopalov_acq_mcc_month (если залиты mcc_name_ru / mcc_label).
 
 {% set sel_months = filter_values('report_month', remove_filter=True) %}
@@ -97,18 +97,18 @@ SELECT
     n.mcc_name_ru,
     a.trx_cnt,
     a.trx_sum,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_mir / a.trx_cnt END AS share_mir_cnt_pct,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_visa / a.trx_cnt END AS share_visa_cnt_pct,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_mc / a.trx_cnt END AS share_mc_cnt_pct,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_up / a.trx_cnt END AS share_up_cnt_pct,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_rshb / a.trx_cnt END AS share_rshb_cnt_pct,
-    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE 100.0 * a.cnt_other / a.trx_cnt END AS share_other_cnt_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_mir / a.trx_sum END AS share_mir_sum_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_visa / a.trx_sum END AS share_visa_sum_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_mc / a.trx_sum END AS share_mc_sum_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_up / a.trx_sum END AS share_up_sum_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_rshb / a.trx_sum END AS share_rshb_sum_pct,
-    CASE WHEN a.trx_sum = 0 THEN NULL ELSE 100.0 * a.sum_other / a.trx_sum END AS share_other_sum_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_mir / a.trx_cnt END AS share_mir_cnt_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_visa / a.trx_cnt END AS share_visa_cnt_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_mc / a.trx_cnt END AS share_mc_cnt_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_up / a.trx_cnt END AS share_up_cnt_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_rshb / a.trx_cnt END AS share_rshb_cnt_pct,
+    CASE WHEN a.trx_cnt = 0 THEN NULL ELSE a.cnt_other / a.trx_cnt END AS share_other_cnt_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_mir / a.trx_sum END AS share_mir_sum_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_visa / a.trx_sum END AS share_visa_sum_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_mc / a.trx_sum END AS share_mc_sum_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_up / a.trx_sum END AS share_up_sum_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_rshb / a.trx_sum END AS share_rshb_sum_pct,
+    CASE WHEN a.trx_sum = 0 THEN NULL ELSE a.sum_other / a.trx_sum END AS share_other_sum_pct,
     '{{ mode }}' AS period_mode_applied,
     {% if anchor %}
     '{{ period_from }}' AS period_from,
