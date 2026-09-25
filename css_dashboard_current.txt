@@ -2180,29 +2180,29 @@ header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
 
 /* ---------------------------------------------------------------------------
    RLS denied_* banner: only charts named rls_denied
-   Hides slice title and column header. Other tables untouched.
-   No var(), no :has().
+   Hide column name (thead) and chart title text. Keep the phrase in tbody.
+   Do not hide .header-line / .chart-header / .slice-header -- they wrap the viz.
    --------------------------------------------------------------------------- */
-
-[data-test-chart-name="rls_denied"] .header-line,
-[data-test-chart-name="rls_denied"] .slice_header,
-[data-test-chart-name="rls_denied"] .slice-header,
-[data-test-chart-name="rls_denied"] .chart-header,
-[data-test-chart-name="rls_denied"] .header-title {
-  display: none !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
 
 [data-test-chart-name="rls_denied"] thead,
 [data-test-chart-name="rls_denied"] .ant-table-thead {
   display: none !important;
 }
 
-[data-test-chart-name="rls_denied"] .table,
+[data-test-chart-name="rls_denied"] .editable-title {
+  display: none !important;
+}
+
 [data-test-chart-name="rls_denied"] td {
   border: none !important;
-  background: transparent !important;
+  color: #FFFFFF !important;
+  font-size: 16px !important;
+}
+
+html[data-theme="light"] [data-test-chart-name="rls_denied"] td,
+body[data-theme="light"] [data-test-chart-name="rls_denied"] td,
+[data-theme="light"] [data-test-chart-name="rls_denied"] td,
+.theme-light [data-test-chart-name="rls_denied"] td,
+header.top.superset-c99twh ~ div [data-test-chart-name="rls_denied"] td {
+  color: #000000 !important;
 }
