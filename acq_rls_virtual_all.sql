@@ -45,6 +45,15 @@ SELECT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -126,6 +135,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -178,6 +196,15 @@ SELECT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -259,6 +286,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -311,6 +347,15 @@ SELECT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -392,6 +437,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -444,6 +498,15 @@ SELECT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -525,6 +588,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -577,6 +649,15 @@ SELECT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -658,6 +739,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -782,6 +872,15 @@ SELECT DISTINCT
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
@@ -806,6 +905,15 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
              'Нет информации'
            ) IN ('РФ', 'Нет информации')
       THEN 'ЦРМБ'
+      WHEN COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт-петербург%'
+        OR COALESCE(
+             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
+             'Нет информации'
+           ) ILIKE '%санкт петербург%'
+      THEN 'Санкт-Петербургский РФ'
       ELSE COALESCE(
              NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
              'Нет информации'
