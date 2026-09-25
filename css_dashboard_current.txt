@@ -2196,15 +2196,23 @@ header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
   visibility: visible !important;
 }
 
+[data-test-chart-name="rls_denied"] thead,
 [data-test-chart-name="rls_denied"] #header-access_message {
   display: none !important;
+  height: 0 !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
 }
 
+[data-test-chart-name="rls_denied"] .dashboard-chart,
 [data-test-chart-name="rls_denied"] .chart-container,
 [data-test-chart-name="rls_denied"] .slice_container,
 [data-test-chart-name="rls_denied"] .superset-chart-table,
 [data-test-chart-name="rls_denied"] [role="table"] {
-  min-height: 48px !important;
+  min-height: 36px !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
   overflow: hidden !important;
 }
 
@@ -2213,17 +2221,28 @@ header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
   overflow: hidden !important;
 }
 
-[data-test-chart-name="rls_denied"] td {
+[data-test-chart-name="rls_denied"] table,
+[data-test-chart-name="rls_denied"] tbody,
+[data-test-chart-name="rls_denied"] tr {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  height: auto !important;
+}
+
+[data-test-chart-name="rls_denied"] td,
+[data-test-chart-name="rls_denied"] .superset-chart-table .table td {
   color: #FFFFFF !important;
-  font-size: 20px !important;
+  font-size: 26px !important;
   font-weight: 700 !important;
-  line-height: 1.2 !important;
+  line-height: 1 !important;
   white-space: nowrap !important;
   border: none !important;
-  padding: 8px 12px !important;
+  padding: 2px 12px !important;
 }
 
 html[data-theme="light"] [data-test-chart-name="rls_denied"] td,
+html[data-theme="light"] [data-test-chart-name="rls_denied"] .superset-chart-table .table td,
 body[data-theme="light"] [data-test-chart-name="rls_denied"] td,
 [data-theme="light"] [data-test-chart-name="rls_denied"] td,
 .theme-light [data-test-chart-name="rls_denied"] td {
