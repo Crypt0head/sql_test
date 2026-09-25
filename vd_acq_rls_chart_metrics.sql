@@ -7,8 +7,30 @@
 
 -- =============================================================================
 -- ОБЩАЯ ИНФОРМАЦИЯ  Dataset: vd_acq_rls_overview
--- Big Number / линии: ось X = report_month (нет point_report_month)
+-- Big Number / линии: ось X = report_month
+--   нет point_report_month, нет is_active_client
+-- Динамика: смена dataset → «Очистить форму». Фильтр месяца на чарте снять.
+-- period_mode month = 1 точка; ytd = янв…якорь; quarter = квартал.
 -- =============================================================================
+
+-- --- Динамика активности клиентов (Line / Area) ---
+-- X-axis / Dimensions: report_month   (не point_report_month)
+-- Sort: report_month ASC
+-- Series labels: Активные клиенты / Пассивные клиенты
+
+-- Активные клиенты
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0
+  THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
+END)
+
+-- Пассивные клиенты  (= всего − активные, чтобы билось с KPI)
+COUNT(DISTINCT NULLIF(BTRIM(CAST(agr_id AS TEXT)), ''))
+-
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0
+  THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
+END)
 
 -- Все клиенты / ТСП
 COUNT(DISTINCT NULLIF(BTRIM(CAST(agr_id AS TEXT)), ''))
