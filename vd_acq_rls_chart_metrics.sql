@@ -79,9 +79,36 @@ COUNT(DISTINCT CASE
   THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
 END)
 
--- Когорта ЧОД 0…2500
+-- Распределение клиентов по сегментам ЧОД ТЭ
+-- Dataset: vd_acq_rls_overview  (не vd_chod_clients_by_monthly)
+-- 3 сегмента + / 0 / −. Клиент = ИНН. Dimension не нужен — 3 меры.
+-- Не путать с когортами 0…2500 / >2500 (другой график, ниже).
+
+-- Клиенты с положительным ЧОД ТЭ
 COUNT(DISTINCT CASE
-  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) >= 0
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) > 0
+  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
+END)
+
+-- Клиенты с 0 ЧОД ТЭ
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) = 0
+  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
+END)
+
+-- Клиенты с отрицательным ЧОД ТЭ
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) < 0
+  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
+END)
+
+-- Сумма ЧОД ТЭ, руб.  (если на чарте есть вторая мера)
+SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0))
+
+-- Когорты 0…2500 (график vd_new_graphs, НЕ сегменты ЧОД ТЭ)
+-- 0…2500 без нуля: chod > 0 AND chod <= 2500
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) > 0
    AND COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) <= 2500
   THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
 END)
