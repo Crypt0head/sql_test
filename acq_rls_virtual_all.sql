@@ -58,7 +58,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    d.retl_with_term_cnt,
+    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -180,7 +180,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    d.retl_with_term_cnt,
+    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -302,7 +302,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    d.retl_with_term_cnt,
+    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -424,7 +424,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    d.retl_with_term_cnt,
+    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -546,7 +546,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    d.retl_with_term_cnt,
+    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
