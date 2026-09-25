@@ -1,0 +1,2208 @@
+/* =============================================================================
+   DASHBOARD "ACQUIRING PORTFOLIO"
+   Apache Superset 5.0 — Custom CSS
+   Version 3.0 | 15.07.2026
+   Dark theme: Black, Red, White
+   No var(), no :has() — CSSLint Superset compatible
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   1. GLOBAL BACKGROUND AND FONT
+   --------------------------------------------------------------------------- */
+
+/* Theme-dependent dashboard backgrounds (robust selectors for Superset variants). */
+html[data-theme="dark"] body,
+body[data-theme="dark"],
+body[data-theme="dark"] .dashboard,
+body[data-theme="dark"] .dashboard-content,
+[data-theme="dark"] .dashboard,
+[data-theme="dark"] .dashboard-content,
+.theme-dark .dashboard,
+.theme-dark .dashboard-content {
+  background: #000000 !important;
+}
+
+html[data-theme="light"] body,
+body[data-theme="light"],
+body[data-theme="light"] .dashboard,
+body[data-theme="light"] .dashboard-content,
+[data-theme="light"] .dashboard,
+[data-theme="light"] .dashboard-content,
+.theme-light .dashboard,
+.theme-light .dashboard-content {
+  background: #EDEBDD !important;
+}
+
+/* Runtime theme fallback from top-menu hash classes (Superset build-specific). */
+header.top.superset-c99twh ~ div .dashboard,
+header.top.superset-c99twh ~ div .dashboard-content,
+header.top.superset-c99twh ~ div .grid-content {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard,
+header.top.superset-y539jf ~ div .dashboard-content,
+header.top.superset-y539jf ~ div .grid-content {
+  background: #000000 !important;
+}
+
+/* Runtime overrides for dashboard main area (observed classes). */
+.dashboard-content.superset-133p9i {
+  background: #000000 !important;
+}
+
+.dashboard-content.superset-ze2x5p {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard-content[class*="superset-"] {
+  background: #000000 !important;
+}
+
+header.top.superset-c99twh ~ div .dashboard-content[class*="superset-"] {
+  background: #EDEBDD !important;
+}
+
+/* ---------------------------------------------------------------------------
+   2. HEADER
+   --------------------------------------------------------------------------- */
+
+.dashboard-header-container,
+.css-1wcpuu1,
+[class*="dashboard-header-contain"] {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+  border-bottom: 2px solid #810100 !important;
+}
+
+/* Sticky/fixed header must always have a solid themed background. */
+html[data-theme="light"] .css-jfn13n,
+html[data-theme="light"] .dashboard-header,
+html[data-theme="light"] .dashboard-header-container,
+html[data-theme="light"] .css-1wcpuu1,
+html[data-theme="light"] [class*="dashboard-header-contain"],
+html[data-theme="light"] .header-with-actions,
+html[data-theme="light"] .title-panel,
+body[data-theme="light"] .css-jfn13n,
+body[data-theme="light"] .dashboard-header,
+body[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .css-1wcpuu1,
+body[data-theme="light"] [class*="dashboard-header-contain"],
+body[data-theme="light"] .header-with-actions,
+body[data-theme="light"] .title-panel,
+[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .header-with-actions,
+[data-theme="light"] .title-panel,
+.theme-light .dashboard-header-container,
+.theme-light .header-with-actions,
+.theme-light .title-panel {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-c99twh ~ div .dashboard-header-container,
+header.top.superset-c99twh ~ div .header-with-actions,
+header.top.superset-c99twh ~ div .title-panel {
+  background: #EDEBDD !important;
+}
+
+html[data-theme="dark"] .css-jfn13n,
+html[data-theme="dark"] .dashboard-header,
+html[data-theme="dark"] .dashboard-header-container,
+html[data-theme="dark"] .css-1wcpuu1,
+html[data-theme="dark"] [class*="dashboard-header-contain"],
+html[data-theme="dark"] .header-with-actions,
+html[data-theme="dark"] .title-panel,
+body[data-theme="dark"] .css-jfn13n,
+body[data-theme="dark"] .dashboard-header,
+body[data-theme="dark"] .dashboard-header-container,
+body[data-theme="dark"] .css-1wcpuu1,
+body[data-theme="dark"] [class*="dashboard-header-contain"],
+body[data-theme="dark"] .header-with-actions,
+body[data-theme="dark"] .title-panel,
+[data-theme="dark"] .dashboard-header-container,
+[data-theme="dark"] .header-with-actions,
+[data-theme="dark"] .title-panel,
+.theme-dark .dashboard-header-container,
+.theme-dark .header-with-actions,
+.theme-dark .title-panel {
+  background: #000000 !important;
+}
+
+header.top.superset-y539jf ~ div .dashboard-header-container,
+header.top.superset-y539jf ~ div .header-with-actions,
+header.top.superset-y539jf ~ div .title-panel {
+  background: #000000 !important;
+}
+
+.header-with-actions,
+.title-panel {
+  background-color: #000000 !important;
+  background-image: none !important;
+}
+
+html[data-theme="dark"] .header-with-actions,
+html[data-theme="dark"] .title-panel,
+body[data-theme="dark"] .header-with-actions,
+body[data-theme="dark"] .title-panel,
+[data-theme="dark"] .header-with-actions,
+[data-theme="dark"] .title-panel,
+.theme-dark .header-with-actions,
+.theme-dark .title-panel {
+  background-color: #000000 !important;
+}
+
+html[data-theme="light"] .header-with-actions,
+html[data-theme="light"] .title-panel,
+body[data-theme="light"] .header-with-actions,
+body[data-theme="light"] .title-panel,
+[data-theme="light"] .header-with-actions,
+[data-theme="light"] .title-panel,
+.theme-light .header-with-actions,
+.theme-light .title-panel {
+  background-color: #EDEBDD !important;
+}
+
+/* Ensure dark runtime class always wins over light fallback rules. */
+header.top.superset-y539jf ~ div .dashboard-header-container,
+header.top.superset-y539jf ~ div .header-with-actions,
+header.top.superset-y539jf ~ div .title-panel {
+  background-color: #000000 !important;
+  background-image: none !important;
+}
+
+/* Dashboard title */
+.dashboard-header-container .title-panel span.input-sizer {
+  color: inherit !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+
+.dashboard-header-container .title-panel input.dynamic-title-input {
+  color: inherit !important;
+  background: transparent !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+}
+
+.input-sizer {
+  color: inherit !important;
+}
+
+/* Edit dashboard */
+.dashboard-header-container .action-button,
+.dashboard-header-container .superset-button-secondary,
+.css-3jweij {
+  color: inherit !important;
+  background: transparent !important;
+  border-color: rgba(129, 1, 0, 0.45) !important;
+}
+
+.dashboard-header-container .action-button span,
+.css-3jweij span {
+  color: inherit !important;
+}
+
+.dashboard-header-container .action-button:hover,
+.dashboard-header-container .superset-button-secondary:hover,
+.css-3jweij:hover {
+  background: rgba(129, 1, 0, 0.20) !important;
+  border-color: #810100 !important;
+}
+
+/* Menu actions trigger */
+.dashboard-header-container .superset-button-tertiary,
+.dashboard-header-container .ant-dropdown-trigger,
+.css-a5sgrq,
+.css-17x4a00 button {
+  color: inherit !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.dashboard-header-container .anticon,
+.css-1jkntxi {
+  color: inherit !important;
+}
+
+/* Hide metadata */
+.dashboard-header-container .fave-unfave-icon {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   3. FILTERS SIDEBAR
+   --------------------------------------------------------------------------- */
+
+.superset-va7aid,
+.superset-1a2qin2,
+.superset-bfu8z5 {
+  border-right: 1px solid #810100 !important;
+}
+
+/* Filters panel background follows selected theme. */
+html[data-theme="dark"] .superset-va7aid,
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .superset-bfu8z5,
+html[data-theme="dark"] .superset-1r1h1ct,
+html[data-theme="dark"] .superset-14gj75u,
+html[data-theme="dark"] .superset-1nrzzhi,
+body[data-theme="dark"] .superset-va7aid,
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .superset-bfu8z5,
+body[data-theme="dark"] .superset-1r1h1ct,
+body[data-theme="dark"] .superset-14gj75u,
+body[data-theme="dark"] .superset-1nrzzhi,
+[data-theme="dark"] .superset-va7aid,
+[data-theme="dark"] .superset-1a2qin2,
+[data-theme="dark"] .superset-bfu8z5,
+[data-theme="dark"] .superset-1r1h1ct,
+[data-theme="dark"] .superset-14gj75u,
+[data-theme="dark"] .superset-1nrzzhi,
+.theme-dark .superset-va7aid,
+.theme-dark .superset-1a2qin2,
+.theme-dark .superset-bfu8z5,
+.theme-dark .superset-1r1h1ct,
+.theme-dark .superset-14gj75u,
+.theme-dark .superset-1nrzzhi {
+  background: #292929 !important;
+}
+
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .superset-bfu8z5,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-14gj75u,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-bfu8z5,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-14gj75u,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-bfu8z5,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-14gj75u,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+.theme-light .superset-bfu8z5,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-14gj75u,
+.theme-light .superset-1nrzzhi {
+  background: #EDEBDD !important;
+}
+
+/* Runtime hash fallback from top menu classes for filters panel. */
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-bfu8z5,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-14gj75u,
+header.top.superset-c99twh ~ div .superset-1nrzzhi {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .superset-va7aid,
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .superset-bfu8z5,
+header.top.superset-y539jf ~ div .superset-1r1h1ct,
+header.top.superset-y539jf ~ div .superset-14gj75u,
+header.top.superset-y539jf ~ div .superset-1nrzzhi {
+  background: #292929 !important;
+}
+
+/* Runtime overrides for filter panel wrappers (observed classes). */
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .open.superset-1116wq,
+html[data-theme="dark"] .open[class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .open.superset-1116wq,
+body[data-theme="dark"] .open[class*="superset-"],
+[data-theme="dark"] .superset-1a2qin2,
+[data-theme="dark"] .open.superset-1116wq,
+[data-theme="dark"] .open[class*="superset-"],
+.theme-dark .superset-1a2qin2,
+.theme-dark .open.superset-1116wq,
+.theme-dark .open[class*="superset-"] {
+  background: #292929 !important;
+}
+
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .open.superset-1116wq,
+html[data-theme="light"] .open[class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .open.superset-1116wq,
+body[data-theme="light"] .open[class*="superset-"],
+[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .open.superset-1116wq,
+[data-theme="light"] .open[class*="superset-"],
+.theme-light .superset-1a2qin2,
+.theme-light .open.superset-1116wq,
+.theme-light .open[class*="superset-"] {
+  background: #EDEBDD !important;
+}
+
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .open.superset-1116wq,
+header.top.superset-y539jf ~ div .open[class*="superset-"] {
+  background: #292929 !important;
+}
+
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .open.superset-1116wq,
+header.top.superset-c99twh ~ div .open[class*="superset-"] {
+  background: #EDEBDD !important;
+}
+
+.superset-1r1h1ct {
+  border-bottom: 1px solid rgba(129, 1, 0, 0.35) !important;
+}
+
+.superset-14gj75u {
+  border-top: none !important;
+}
+
+.superset-1nrzzhi {
+  border-top: 1px solid rgba(129, 1, 0, 0.35) !important;
+}
+
+.superset-kaudsu button,
+.superset-1wdfs45 button {
+  background: rgba(129, 1, 0, 0.15) !important;
+  border-color: #810100 !important;
+}
+
+.superset-kaudsu button:hover,
+.superset-1wdfs45 button:hover {
+  background: rgba(129, 1, 0, 0.30) !important;
+}
+
+/* Light theme: "Apply" / "Применить" label must stay readable (black). */
+html[data-theme="light"] .superset-1nrzzhi button,
+html[data-theme="light"] .superset-1nrzzhi button span,
+html[data-theme="light"] .superset-kaudsu button,
+html[data-theme="light"] .superset-kaudsu button span,
+html[data-theme="light"] .superset-1wdfs45 button,
+html[data-theme="light"] .superset-1wdfs45 button span,
+html[data-theme="light"] .superset-va7aid button[data-test*="apply"],
+html[data-theme="light"] .superset-va7aid button[data-test*="apply"] span,
+html[data-theme="light"] .superset-1a2qin2 button[data-test*="apply"],
+html[data-theme="light"] .superset-1a2qin2 button[data-test*="apply"] span,
+body[data-theme="light"] .superset-1nrzzhi button,
+body[data-theme="light"] .superset-1nrzzhi button span,
+body[data-theme="light"] .superset-kaudsu button,
+body[data-theme="light"] .superset-kaudsu button span,
+body[data-theme="light"] .superset-1wdfs45 button,
+body[data-theme="light"] .superset-1wdfs45 button span,
+[data-theme="light"] .superset-1nrzzhi button,
+[data-theme="light"] .superset-1nrzzhi button span,
+[data-theme="light"] .superset-kaudsu button,
+[data-theme="light"] .superset-kaudsu button span,
+[data-theme="light"] .superset-1wdfs45 button,
+[data-theme="light"] .superset-1wdfs45 button span,
+.theme-light .superset-1nrzzhi button,
+.theme-light .superset-1nrzzhi button span,
+.theme-light .superset-kaudsu button,
+.theme-light .superset-kaudsu button span,
+.theme-light .superset-1wdfs45 button,
+.theme-light .superset-1wdfs45 button span,
+header.top.superset-c99twh ~ div .superset-1nrzzhi button,
+header.top.superset-c99twh ~ div .superset-1nrzzhi button span,
+header.top.superset-c99twh ~ div .superset-kaudsu button,
+header.top.superset-c99twh ~ div .superset-kaudsu button span,
+header.top.superset-c99twh ~ div .superset-1wdfs45 button,
+header.top.superset-c99twh ~ div .superset-1wdfs45 button span {
+  color: #000000 !important;
+}
+
+/* Keep only red accents in filter controls; text/background come from theme. */
+.superset-va7aid .ant-select-selector {
+  border-color: rgba(129, 1, 0, 0.45) !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-active {
+  background: rgba(129, 1, 0, 0.10) !important;
+}
+
+.ant-select-dropdown .ant-select-item-option-selected {
+  background: rgba(129, 1, 0, 0.18) !important;
+}
+
+/* Filter panel controls (gear/collapse): remove halo/fill. */
+.superset-1r1h1ct button,
+.superset-1r1h1ct .ant-btn,
+.superset-1r1h1ct .ant-btn-default,
+.superset-1r1h1ct .ant-btn-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.superset-1r1h1ct button:hover,
+.superset-1r1h1ct .ant-btn:hover,
+.superset-1r1h1ct .ant-btn:focus,
+.superset-1r1h1ct .ant-btn:active {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* In light theme keep filter panel icons black. */
+html[data-theme="light"] .superset-1r1h1ct .anticon,
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="filters"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="Filters"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="settings"],
+html[data-theme="light"] .superset-1r1h1ct [aria-label*="Settings"] {
+  color: #000000 !important;
+}
+
+/* Final hard override for filter runtime layers (prevents rgb(20,20,20) bleed). */
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .superset-1a2qin2[class*="superset-"],
+header.top.superset-y539jf ~ div .superset-1a2qin2 [class*="superset-"],
+header.top.superset-y539jf ~ div .open.superset-1116wq,
+header.top.superset-y539jf ~ div .open.superset-1116wq[class*="superset-"],
+header.top.superset-y539jf ~ div .open.superset-1116wq [class*="superset-"],
+html[data-theme="dark"] .superset-1a2qin2,
+html[data-theme="dark"] .superset-1a2qin2[class*="superset-"],
+html[data-theme="dark"] .superset-1a2qin2 [class*="superset-"],
+html[data-theme="dark"] .open.superset-1116wq,
+html[data-theme="dark"] .open.superset-1116wq[class*="superset-"],
+html[data-theme="dark"] .open.superset-1116wq [class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .superset-1a2qin2[class*="superset-"],
+body[data-theme="dark"] .superset-1a2qin2 [class*="superset-"],
+body[data-theme="dark"] .open.superset-1116wq,
+body[data-theme="dark"] .open.superset-1116wq[class*="superset-"],
+body[data-theme="dark"] .open.superset-1116wq [class*="superset-"] {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-1a2qin2[class*="superset-"],
+header.top.superset-c99twh ~ div .superset-1a2qin2 [class*="superset-"],
+header.top.superset-c99twh ~ div .open.superset-1116wq,
+header.top.superset-c99twh ~ div .open.superset-1116wq[class*="superset-"],
+header.top.superset-c99twh ~ div .open.superset-1116wq [class*="superset-"],
+html[data-theme="light"] .superset-1a2qin2,
+html[data-theme="light"] .superset-1a2qin2[class*="superset-"],
+html[data-theme="light"] .superset-1a2qin2 [class*="superset-"],
+html[data-theme="light"] .open.superset-1116wq,
+html[data-theme="light"] .open.superset-1116wq[class*="superset-"],
+html[data-theme="light"] .open.superset-1116wq [class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-1a2qin2[class*="superset-"],
+body[data-theme="light"] .superset-1a2qin2 [class*="superset-"],
+body[data-theme="light"] .open.superset-1116wq,
+body[data-theme="light"] .open.superset-1116wq[class*="superset-"],
+body[data-theme="light"] .open.superset-1116wq [class*="superset-"] {
+  background: #EDEBDD !important;
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
+
+/* Exact runtime override for current filter container hash. */
+.superset-c469fh,
+.superset-c469fh.open,
+.superset-161gc4z,
+.superset-161gc4z.open,
+.superset-7c3f28,
+.superset-7c3f28.open,
+[class*="c469fh"],
+[class*="161gc4z"],
+[class*="7c3f28"] {
+  /* Neutralize hardcoded runtime rgb(20,20,20) and let themed parent show through. */
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* Same override with higher specificity (wins over late runtime style blocks). */
+.dashboard .dashboard-content .superset-c469fh,
+.dashboard .dashboard-content .superset-c469fh.open,
+.dashboard .dashboard-content .superset-161gc4z,
+.dashboard .dashboard-content .superset-161gc4z.open,
+.dashboard .dashboard-content .superset-7c3f28,
+.dashboard .dashboard-content .superset-7c3f28.open,
+.dashboard .dashboard-content [class*="c469fh"],
+.dashboard .dashboard-content [class*="161gc4z"],
+.dashboard .dashboard-content [class*="7c3f28"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   4. KPI CARDS (Big Number)
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-chart-holder {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+  border-radius: 14px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.40) !important;
+  overflow: visible !important;
+  border-top: 5px solid #810100 !important;
+  transition: transform 140ms ease-out, border-color 140ms ease-out, box-shadow 140ms ease-out !important;
+}
+
+/* Chart-card background applies only in dark theme. */
+html[data-theme="dark"] .dashboard-component-chart-holder,
+body[data-theme="dark"] .dashboard-component-chart-holder,
+[data-theme="dark"] .dashboard-component-chart-holder,
+.theme-dark .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ div main.ant-layout-content .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ .ant-layout .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ div main.ant-layout-content .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ .ant-layout .dashboard-component-chart-holder {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+/* Light theme keeps chart-card interiors white. */
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div main.ant-layout-content .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ .ant-layout .dashboard-component-chart-holder {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+  background-image: none !important;
+}
+
+.dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 0 0 2px rgba(255, 203, 8, 0.85), 0 6px 18px rgba(255, 203, 8, 0.35) !important;
+}
+
+.superset-legacy-chart-big-number {
+  min-height: 120px !important;
+  height: 100% !important;
+}
+
+.big_number_total {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total .chart-container,
+.superset-legacy-chart-big-number .chart-container {
+  height: 100% !important;
+  min-height: 100px !important;
+}
+
+.big_number_total svg,
+.superset-legacy-chart-big-number svg {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 80px !important;
+}
+
+.big_number_total .header-line,
+.superset-legacy-chart-big-number .header-line {
+  display: flex !important;
+  font-weight: 600 !important;
+}
+
+.big_number_total svg text,
+.superset-legacy-chart-big-number svg text {
+  font-weight: 600 !important;
+}
+
+.big_number_total .no-trendline,
+.superset-legacy-chart-big-number .no-trendline {
+  opacity: 0.85 !important;
+}
+
+.superset-legacy-chart-big-number .slice_container {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Positive KPI marker */
+.dashboard-chart-id-98 .header-line::after,
+.dashboard-chart-id-101 .header-line::after {
+  content: " ▲" !important;
+  color: #810100 !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* Negative KPI marker */
+.dashboard-chart-id-99 .header-line::after,
+.dashboard-chart-id-102 .header-line::after {
+  content: " ▼" !important;
+  color: #810100 !important;
+  font-size: 36px !important;
+  vertical-align: middle !important;
+  margin-left: 8px !important;
+}
+
+/* ---------------------------------------------------------------------------
+   5. CHART TITLES + LEGENDS
+   --------------------------------------------------------------------------- */
+
+/* Theme-driven colors: do not force chart title/legend colors. */
+
+/* Hide "Applied filters" badge in chart headers. */
+.dashboard-component-chart-holder .filter-counts,
+.dashboard-component-chart-holder [class*="filter-counts"],
+.dashboard-component-chart-holder [aria-label*="Applied filters"],
+.dashboard-component-chart-holder [aria-label*="Примененные фильтры"] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* TEMP OFF (dataset migration): chart "⋯" / More Options visible again.
+   Re-enable hide when migration is done — uncomment block below.
+.dashboard-component-chart-holder button[aria-label="More Options"],
+.dashboard-component-chart-holder button[aria-label="Дополнительные параметры"],
+.dashboard-component-chart-holder button[aria-label="Ещё"],
+.dashboard-component-chart-holder button[id$="-controls"],
+.dashboard-component-chart-holder .header-controls button.ant-dropdown-trigger {
+  display: none !important;
+  visibility: hidden !important;
+}
+*/
+
+/* ---------------------------------------------------------------------------
+   6. SECTION HEADERS
+   --------------------------------------------------------------------------- */
+
+.dashboard-component-header {
+  background: #810100 !important;
+  padding: 10px 16px !important;
+  border-radius: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+}
+
+.dashboard-component-divider,
+.css-lu0hy9h {
+  border-color: #810100 !important;
+  opacity: 1 !important;
+  min-height: 6px !important;
+}
+
+.dashboard-component-divider::after,
+.css-lu0hy9h::after {
+  content: "" !important;
+  display: block !important;
+  width: 100% !important;
+  height: 4px !important;
+  background: #810100 !important;
+  border-radius: 2px !important;
+}
+
+.dashboard-component-divider hr,
+.css-lu0hy9h hr {
+  border: none !important;
+  border-top: 4px solid #810100 !important;
+  margin: 0 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   7. CHART (ECharts)
+   --------------------------------------------------------------------------- */
+
+/*
+   Recommended series colors in Superset chart settings:
+     CHOD:       #810100
+     FIN RESULT: #FFFFFF
+   Also:
+     Show Title -> off
+     Y Axis Grid Lines -> on, X Axis Grid Lines -> off
+     Legend: horizontal, bottom
+*/
+
+/* ---------------------------------------------------------------------------
+   8. TABLES
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .table th,
+.superset-chart-table thead th {
+  background: #810100 !important;
+  color: #FFFFFF !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+  padding: 10px 12px !important;
+  white-space: nowrap !important;
+}
+
+.superset-chart-table .table td {
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  padding: 8px 12px !important;
+  border-bottom: 1px solid rgba(127, 127, 127, 0.35) !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(odd) {
+  background: transparent !important;
+}
+
+.superset-chart-table .table tbody tr:nth-child(even) {
+  background: transparent !important;
+}
+
+.superset-chart-table .table tbody tr:hover {
+  background: rgba(129, 1, 0, 0.08) !important;
+}
+
+.superset-chart-table .table .dt-is-null {
+  font-variant-numeric: tabular-nums !important;
+  text-align: right !important;
+}
+
+.superset-chart-table .dt-select-page-size {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   9. PRODUCT RECOMMENDATIONS — TAGS
+   --------------------------------------------------------------------------- */
+
+.superset-chart-table .ant-tag {
+  background: transparent !important;
+  border: 1.5px solid #810100 !important;
+  border-radius: 20px !important;
+  padding: 2px 10px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+.superset-chart-table td:last-child .ant-tag {
+  border-color: #810100 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   10. NAVBAR
+   --------------------------------------------------------------------------- */
+
+/* Let Superset theme control navbar colors. */
+
+.main-nav input[type="text"],
+.main-nav .form-control {
+  border-color: rgba(129, 1, 0, 0.45) !important;
+}
+
+.main-nav input[type="text"]:focus,
+.main-nav .form-control:focus {
+  border-color: #810100 !important;
+  box-shadow: 0 0 0 2px rgba(129, 1, 0, 0.30) !important;
+}
+
+/* ---------------------------------------------------------------------------
+   11. SUPERSET BUTTONS
+   --------------------------------------------------------------------------- */
+
+.superset-button-primary {
+  background: #810100 !important;
+  border-color: #810100 !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-primary:hover {
+  background: #810100 !important;
+  border-color: #810100 !important;
+}
+
+.superset-button-secondary {
+  background: transparent !important;
+  border: 1px solid #810100 !important;
+  color: #810100 !important;
+  border-radius: 8px !important;
+}
+
+.superset-button-secondary:hover {
+  background: rgba(129, 1, 0, 0.20) !important;
+  border-color: #810100 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   12. SCROLLBARS
+   --------------------------------------------------------------------------- */
+
+.dashboard-content ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #810100;
+}
+
+/* ---------------------------------------------------------------------------
+   13. COMPACT TITLE LINES
+   --------------------------------------------------------------------------- */
+
+/* Section title bars: reduce empty vertical space. */
+.dashboard-component-header {
+  padding: 5px 10px !important;
+  margin-bottom: 6px !important;
+  min-height: auto !important;
+}
+
+.dashboard-component-header .header-medium,
+.dashboard-component-header h2,
+.dashboard-component-header span {
+  font-size: 15px !important;
+  line-height: 1.2 !important;
+}
+
+/* Chart title row: keep text readable, reduce blank edges. */
+.dashboard-component-chart-holder .header-title,
+.dashboard-component-chart-holder .header-title *,
+.dashboard-component-chart-holder .editable-title,
+.dashboard-component-chart-holder .editable-title * {
+  font-size: 14px !important;
+  line-height: 1.2 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.dashboard-component-chart-holder .header-controls {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Superset 6 dark filter sidebar: exact runtime rule with cascade priority. */
+body .dashboard .dashboard-content div.superset-7c3f28.superset-7c3f28.superset-7c3f28,
+body .dashboard div.superset-7c3f28.superset-7c3f28.superset-7c3f28 {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+/* Superset 6 actual layout path for the filters sidebar. */
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28,
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28 > .superset-1a2qin2,
+header.top.superset-y539gf ~ .ant-layout main.ant-layout-content .superset-7c3f28 .open.superset-c469fh {
+  background: #292929 !important;
+  background-color: #292929 !important;
+  background-image: none !important;
+}
+
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28,
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28 > .superset-1a2qin2,
+header.top.superset-c99twh ~ .ant-layout main.ant-layout-content .superset-7c3f28 .open.superset-c469fh {
+  background: #EDEBDD !important;
+  background-color: #EDEBDD !important;
+  background-image: none !important;
+}
+
+/* Actual dark dashboard grid background (parent of the filters sidebar). */
+main.ant-layout-content > div.superset-148gcvh.superset-148gcvh,
+main.ant-layout-content div.superset-148gcvh.superset-148gcvh {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  background-image: none !important;
+}
+
+/* ---------------------------------------------------------------------------
+   14. THEME ACCENT OVERRIDES
+   --------------------------------------------------------------------------- */
+
+/* Light theme accents: deep green. */
+html[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .dashboard-header-container,
+.theme-light .dashboard-header-container,
+header.top.superset-c99twh ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-header,
+body[data-theme="light"] .dashboard-component-header,
+[data-theme="light"] .dashboard-component-header,
+.theme-light .dashboard-component-header,
+header.top.superset-c99twh ~ div .dashboard-component-header,
+html[data-theme="light"] .superset-chart-table .table th,
+html[data-theme="light"] .superset-chart-table thead th,
+body[data-theme="light"] .superset-chart-table .table th,
+body[data-theme="light"] .superset-chart-table thead th,
+[data-theme="light"] .superset-chart-table .table th,
+[data-theme="light"] .superset-chart-table thead th,
+.theme-light .superset-chart-table .table th,
+.theme-light .superset-chart-table thead th,
+header.top.superset-c99twh ~ div .superset-chart-table .table th,
+header.top.superset-c99twh ~ div .superset-chart-table thead th,
+html[data-theme="light"] .superset-button-primary,
+body[data-theme="light"] .superset-button-primary,
+[data-theme="light"] .superset-button-primary,
+.theme-light .superset-button-primary,
+header.top.superset-c99twh ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider,
+html[data-theme="light"] .css-lu0hy9h,
+body[data-theme="light"] .dashboard-component-divider,
+body[data-theme="light"] .css-lu0hy9h,
+[data-theme="light"] .dashboard-component-divider,
+[data-theme="light"] .css-lu0hy9h,
+.theme-light .dashboard-component-divider,
+.theme-light .css-lu0hy9h,
+header.top.superset-c99twh ~ div .dashboard-component-divider,
+header.top.superset-c99twh ~ div .css-lu0hy9h,
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider::after,
+html[data-theme="light"] .css-lu0hy9h::after,
+body[data-theme="light"] .dashboard-component-divider::after,
+body[data-theme="light"] .css-lu0hy9h::after,
+[data-theme="light"] .dashboard-component-divider::after,
+[data-theme="light"] .css-lu0hy9h::after,
+.theme-light .dashboard-component-divider::after,
+.theme-light .css-lu0hy9h::after,
+header.top.superset-c99twh ~ div .dashboard-component-divider::after,
+header.top.superset-c99twh ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider hr,
+html[data-theme="light"] .css-lu0hy9h hr,
+body[data-theme="light"] .dashboard-component-divider hr,
+body[data-theme="light"] .css-lu0hy9h hr,
+[data-theme="light"] .dashboard-component-divider hr,
+[data-theme="light"] .css-lu0hy9h hr,
+.theme-light .dashboard-component-divider hr,
+.theme-light .css-lu0hy9h hr,
+header.top.superset-c99twh ~ div .dashboard-component-divider hr,
+header.top.superset-c99twh ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-1nrzzhi,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-1nrzzhi,
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+body[data-theme="light"] .superset-va7aid .ant-select-selector,
+[data-theme="light"] .superset-va7aid .ant-select-selector,
+.theme-light .superset-va7aid .ant-select-selector,
+header.top.superset-c99twh ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .superset-chart-table .ant-tag,
+body[data-theme="light"] .superset-chart-table .ant-tag,
+[data-theme="light"] .superset-chart-table .ant-tag,
+.theme-light .superset-chart-table .ant-tag,
+header.top.superset-c99twh ~ div .superset-chart-table .ant-tag,
+html[data-theme="light"] .main-nav input[type="text"],
+html[data-theme="light"] .main-nav .form-control,
+body[data-theme="light"] .main-nav input[type="text"],
+body[data-theme="light"] .main-nav .form-control,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+.theme-light .dashboard-chart-id-98 .header-line::after,
+.theme-light .dashboard-chart-id-101 .header-line::after,
+.theme-light .dashboard-chart-id-99 .header-line::after,
+.theme-light .dashboard-chart-id-102 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-chart-holder:hover,
+body[data-theme="light"] .dashboard-component-chart-holder:hover,
+[data-theme="light"] .dashboard-component-chart-holder:hover,
+.theme-light .dashboard-component-chart-holder:hover,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #458107 !important;
+  box-shadow: 0 0 0 2px rgba(69, 129, 7, 0.85), 0 6px 18px rgba(69, 129, 7, 0.35) !important;
+}
+
+html[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+.theme-light .superset-chart-table .table tbody tr:hover,
+header.top.superset-c99twh ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="light"] .superset-button-secondary:hover,
+body[data-theme="light"] .superset-button-secondary:hover,
+[data-theme="light"] .superset-button-secondary:hover,
+.theme-light .superset-button-secondary:hover,
+header.top.superset-c99twh ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.16) !important;
+  background-color: rgba(69, 129, 7, 0.16) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+/* Final chart hover: yellow top border in both themes. */
+.dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+*** End of File
+
+/* Final chart hover: yellow top border in both themes. */
+.dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+*** End of File
+
+/* ---------------------------------------------------------------------------
+   17. ABSOLUTE FINAL LIGHT ACCENT AND CHART HOVER
+   --------------------------------------------------------------------------- */
+
+html[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .dashboard-header-container,
+.theme-light .dashboard-header-container,
+header.top.superset-c99twh ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-header,
+body[data-theme="light"] .dashboard-component-header,
+[data-theme="light"] .dashboard-component-header,
+.theme-light .dashboard-component-header,
+header.top.superset-c99twh ~ div .dashboard-component-header,
+html[data-theme="light"] .superset-chart-table .table th,
+html[data-theme="light"] .superset-chart-table thead th,
+body[data-theme="light"] .superset-chart-table .table th,
+body[data-theme="light"] .superset-chart-table thead th,
+[data-theme="light"] .superset-chart-table .table th,
+[data-theme="light"] .superset-chart-table thead th,
+.theme-light .superset-chart-table .table th,
+.theme-light .superset-chart-table thead th,
+header.top.superset-c99twh ~ div .superset-chart-table .table th,
+header.top.superset-c99twh ~ div .superset-chart-table thead th,
+html[data-theme="light"] .superset-button-primary,
+body[data-theme="light"] .superset-button-primary,
+[data-theme="light"] .superset-button-primary,
+.theme-light .superset-button-primary,
+header.top.superset-c99twh ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider,
+html[data-theme="light"] .css-lu0hy9h,
+body[data-theme="light"] .dashboard-component-divider,
+body[data-theme="light"] .css-lu0hy9h,
+[data-theme="light"] .dashboard-component-divider,
+[data-theme="light"] .css-lu0hy9h,
+.theme-light .dashboard-component-divider,
+.theme-light .css-lu0hy9h,
+header.top.superset-c99twh ~ div .dashboard-component-divider,
+header.top.superset-c99twh ~ div .css-lu0hy9h,
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-1nrzzhi,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-1nrzzhi,
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+body[data-theme="light"] .superset-va7aid .ant-select-selector,
+[data-theme="light"] .superset-va7aid .ant-select-selector,
+.theme-light .superset-va7aid .ant-select-selector,
+header.top.superset-c99twh ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .superset-chart-table .ant-tag,
+body[data-theme="light"] .superset-chart-table .ant-tag,
+[data-theme="light"] .superset-chart-table .ant-tag,
+.theme-light .superset-chart-table .ant-tag,
+header.top.superset-c99twh ~ div .superset-chart-table .ant-tag,
+html[data-theme="light"] .main-nav input[type="text"],
+html[data-theme="light"] .main-nav .form-control,
+body[data-theme="light"] .main-nav input[type="text"],
+body[data-theme="light"] .main-nav .form-control,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider::after,
+html[data-theme="light"] .css-lu0hy9h::after,
+body[data-theme="light"] .dashboard-component-divider::after,
+body[data-theme="light"] .css-lu0hy9h::after,
+[data-theme="light"] .dashboard-component-divider::after,
+[data-theme="light"] .css-lu0hy9h::after,
+.theme-light .dashboard-component-divider::after,
+.theme-light .css-lu0hy9h::after,
+header.top.superset-c99twh ~ div .dashboard-component-divider::after,
+header.top.superset-c99twh ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider hr,
+html[data-theme="light"] .css-lu0hy9h hr,
+body[data-theme="light"] .dashboard-component-divider hr,
+body[data-theme="light"] .css-lu0hy9h hr,
+[data-theme="light"] .dashboard-component-divider hr,
+[data-theme="light"] .css-lu0hy9h hr,
+.theme-light .dashboard-component-divider hr,
+.theme-light .css-lu0hy9h hr,
+header.top.superset-c99twh ~ div .dashboard-component-divider hr,
+header.top.superset-c99twh ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+.theme-light .dashboard-chart-id-98 .header-line::after,
+.theme-light .dashboard-chart-id-101 .header-line::after,
+.theme-light .dashboard-chart-id-99 .header-line::after,
+.theme-light .dashboard-chart-id-102 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+.theme-light .superset-chart-table .table tbody tr:hover,
+header.top.superset-c99twh ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="light"] .superset-button-secondary:hover,
+body[data-theme="light"] .superset-button-secondary:hover,
+[data-theme="light"] .superset-button-secondary:hover,
+.theme-light .superset-button-secondary:hover,
+header.top.superset-c99twh ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.16) !important;
+  background-color: rgba(69, 129, 7, 0.16) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+.dashboard-component-chart-holder:hover,
+html[data-theme="light"] .dashboard-component-chart-holder:hover,
+body[data-theme="light"] .dashboard-component-chart-holder:hover,
+[data-theme="light"] .dashboard-component-chart-holder:hover,
+.theme-light .dashboard-component-chart-holder:hover,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover,
+html[data-theme="dark"] .dashboard-component-chart-holder:hover,
+body[data-theme="dark"] .dashboard-component-chart-holder:hover,
+[data-theme="dark"] .dashboard-component-chart-holder:hover,
+.theme-dark .dashboard-component-chart-holder:hover,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder:hover,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+*** End of File
+
+/* ---------------------------------------------------------------------------
+   16. FINAL LIGHT ACCENT AND CHART HOVER
+   --------------------------------------------------------------------------- */
+
+html[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .dashboard-header-container,
+.theme-light .dashboard-header-container,
+header.top.superset-c99twh ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-header,
+body[data-theme="light"] .dashboard-component-header,
+[data-theme="light"] .dashboard-component-header,
+.theme-light .dashboard-component-header,
+header.top.superset-c99twh ~ div .dashboard-component-header,
+html[data-theme="light"] .superset-chart-table .table th,
+html[data-theme="light"] .superset-chart-table thead th,
+body[data-theme="light"] .superset-chart-table .table th,
+body[data-theme="light"] .superset-chart-table thead th,
+[data-theme="light"] .superset-chart-table .table th,
+[data-theme="light"] .superset-chart-table thead th,
+.theme-light .superset-chart-table .table th,
+.theme-light .superset-chart-table thead th,
+header.top.superset-c99twh ~ div .superset-chart-table .table th,
+header.top.superset-c99twh ~ div .superset-chart-table thead th,
+html[data-theme="light"] .superset-button-primary,
+body[data-theme="light"] .superset-button-primary,
+[data-theme="light"] .superset-button-primary,
+.theme-light .superset-button-primary,
+header.top.superset-c99twh ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider,
+html[data-theme="light"] .css-lu0hy9h,
+body[data-theme="light"] .dashboard-component-divider,
+body[data-theme="light"] .css-lu0hy9h,
+[data-theme="light"] .dashboard-component-divider,
+[data-theme="light"] .css-lu0hy9h,
+.theme-light .dashboard-component-divider,
+.theme-light .css-lu0hy9h,
+header.top.superset-c99twh ~ div .dashboard-component-divider,
+header.top.superset-c99twh ~ div .css-lu0hy9h,
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-1nrzzhi,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-1nrzzhi,
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+body[data-theme="light"] .superset-va7aid .ant-select-selector,
+[data-theme="light"] .superset-va7aid .ant-select-selector,
+.theme-light .superset-va7aid .ant-select-selector,
+header.top.superset-c99twh ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .superset-chart-table .ant-tag,
+body[data-theme="light"] .superset-chart-table .ant-tag,
+[data-theme="light"] .superset-chart-table .ant-tag,
+.theme-light .superset-chart-table .ant-tag,
+header.top.superset-c99twh ~ div .superset-chart-table .ant-tag,
+html[data-theme="light"] .main-nav input[type="text"],
+html[data-theme="light"] .main-nav .form-control,
+body[data-theme="light"] .main-nav input[type="text"],
+body[data-theme="light"] .main-nav .form-control,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider::after,
+html[data-theme="light"] .css-lu0hy9h::after,
+body[data-theme="light"] .dashboard-component-divider::after,
+body[data-theme="light"] .css-lu0hy9h::after,
+[data-theme="light"] .dashboard-component-divider::after,
+[data-theme="light"] .css-lu0hy9h::after,
+.theme-light .dashboard-component-divider::after,
+.theme-light .css-lu0hy9h::after,
+header.top.superset-c99twh ~ div .dashboard-component-divider::after,
+header.top.superset-c99twh ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider hr,
+html[data-theme="light"] .css-lu0hy9h hr,
+body[data-theme="light"] .dashboard-component-divider hr,
+body[data-theme="light"] .css-lu0hy9h hr,
+[data-theme="light"] .dashboard-component-divider hr,
+[data-theme="light"] .css-lu0hy9h hr,
+.theme-light .dashboard-component-divider hr,
+.theme-light .css-lu0hy9h hr,
+header.top.superset-c99twh ~ div .dashboard-component-divider hr,
+header.top.superset-c99twh ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+.theme-light .dashboard-chart-id-98 .header-line::after,
+.theme-light .dashboard-chart-id-101 .header-line::after,
+.theme-light .dashboard-chart-id-99 .header-line::after,
+.theme-light .dashboard-chart-id-102 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+.theme-light .superset-chart-table .table tbody tr:hover,
+header.top.superset-c99twh ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="light"] .superset-button-secondary:hover,
+body[data-theme="light"] .superset-button-secondary:hover,
+[data-theme="light"] .superset-button-secondary:hover,
+.theme-light .superset-button-secondary:hover,
+header.top.superset-c99twh ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.16) !important;
+  background-color: rgba(69, 129, 7, 0.16) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+.dashboard-component-chart-holder:hover,
+html[data-theme="light"] .dashboard-component-chart-holder:hover,
+body[data-theme="light"] .dashboard-component-chart-holder:hover,
+[data-theme="light"] .dashboard-component-chart-holder:hover,
+.theme-light .dashboard-component-chart-holder:hover,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover,
+html[data-theme="dark"] .dashboard-component-chart-holder:hover,
+body[data-theme="dark"] .dashboard-component-chart-holder:hover,
+[data-theme="dark"] .dashboard-component-chart-holder:hover,
+.theme-dark .dashboard-component-chart-holder:hover,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder:hover,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+
+/* Final light theme accent: same green as dark theme. */
+html[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .dashboard-header-container,
+.theme-light .dashboard-header-container,
+header.top.superset-c99twh ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-header,
+body[data-theme="light"] .dashboard-component-header,
+[data-theme="light"] .dashboard-component-header,
+.theme-light .dashboard-component-header,
+header.top.superset-c99twh ~ div .dashboard-component-header,
+html[data-theme="light"] .superset-chart-table .table th,
+html[data-theme="light"] .superset-chart-table thead th,
+body[data-theme="light"] .superset-chart-table .table th,
+body[data-theme="light"] .superset-chart-table thead th,
+[data-theme="light"] .superset-chart-table .table th,
+[data-theme="light"] .superset-chart-table thead th,
+.theme-light .superset-chart-table .table th,
+.theme-light .superset-chart-table thead th,
+header.top.superset-c99twh ~ div .superset-chart-table .table th,
+header.top.superset-c99twh ~ div .superset-chart-table thead th,
+html[data-theme="light"] .superset-button-primary,
+body[data-theme="light"] .superset-button-primary,
+[data-theme="light"] .superset-button-primary,
+.theme-light .superset-button-primary,
+header.top.superset-c99twh ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider,
+html[data-theme="light"] .css-lu0hy9h,
+body[data-theme="light"] .dashboard-component-divider,
+body[data-theme="light"] .css-lu0hy9h,
+[data-theme="light"] .dashboard-component-divider,
+[data-theme="light"] .css-lu0hy9h,
+.theme-light .dashboard-component-divider,
+.theme-light .css-lu0hy9h,
+header.top.superset-c99twh ~ div .dashboard-component-divider,
+header.top.superset-c99twh ~ div .css-lu0hy9h,
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-1nrzzhi,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-1nrzzhi,
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+body[data-theme="light"] .superset-va7aid .ant-select-selector,
+[data-theme="light"] .superset-va7aid .ant-select-selector,
+.theme-light .superset-va7aid .ant-select-selector,
+header.top.superset-c99twh ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .superset-chart-table .ant-tag,
+body[data-theme="light"] .superset-chart-table .ant-tag,
+[data-theme="light"] .superset-chart-table .ant-tag,
+.theme-light .superset-chart-table .ant-tag,
+header.top.superset-c99twh ~ div .superset-chart-table .ant-tag,
+html[data-theme="light"] .main-nav input[type="text"],
+html[data-theme="light"] .main-nav .form-control,
+body[data-theme="light"] .main-nav input[type="text"],
+body[data-theme="light"] .main-nav .form-control,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider::after,
+html[data-theme="light"] .css-lu0hy9h::after,
+body[data-theme="light"] .dashboard-component-divider::after,
+body[data-theme="light"] .css-lu0hy9h::after,
+[data-theme="light"] .dashboard-component-divider::after,
+[data-theme="light"] .css-lu0hy9h::after,
+.theme-light .dashboard-component-divider::after,
+.theme-light .css-lu0hy9h::after,
+header.top.superset-c99twh ~ div .dashboard-component-divider::after,
+header.top.superset-c99twh ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider hr,
+html[data-theme="light"] .css-lu0hy9h hr,
+body[data-theme="light"] .dashboard-component-divider hr,
+body[data-theme="light"] .css-lu0hy9h hr,
+[data-theme="light"] .dashboard-component-divider hr,
+[data-theme="light"] .css-lu0hy9h hr,
+.theme-light .dashboard-component-divider hr,
+.theme-light .css-lu0hy9h hr,
+header.top.superset-c99twh ~ div .dashboard-component-divider hr,
+header.top.superset-c99twh ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+.theme-light .dashboard-chart-id-98 .header-line::after,
+.theme-light .dashboard-chart-id-101 .header-line::after,
+.theme-light .dashboard-chart-id-99 .header-line::after,
+.theme-light .dashboard-chart-id-102 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+.theme-light .superset-chart-table .table tbody tr:hover,
+header.top.superset-c99twh ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="light"] .superset-button-secondary:hover,
+body[data-theme="light"] .superset-button-secondary:hover,
+[data-theme="light"] .superset-button-secondary:hover,
+.theme-light .superset-button-secondary:hover,
+header.top.superset-c99twh ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.16) !important;
+  background-color: rgba(69, 129, 7, 0.16) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+/* Chart hover keeps yellow top-border highlight in both themes. */
+.dashboard-component-chart-holder:hover,
+html[data-theme="light"] .dashboard-component-chart-holder:hover,
+body[data-theme="light"] .dashboard-component-chart-holder:hover,
+[data-theme="light"] .dashboard-component-chart-holder:hover,
+.theme-light .dashboard-component-chart-holder:hover,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover,
+html[data-theme="dark"] .dashboard-component-chart-holder:hover,
+body[data-theme="dark"] .dashboard-component-chart-holder:hover,
+[data-theme="dark"] .dashboard-component-chart-holder:hover,
+.theme-dark .dashboard-component-chart-holder:hover,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder:hover,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+
+/* Dark theme accents: bright green. */
+html[data-theme="dark"] .dashboard-header-container,
+body[data-theme="dark"] .dashboard-header-container,
+[data-theme="dark"] .dashboard-header-container,
+.theme-dark .dashboard-header-container,
+header.top.superset-y539gf ~ div .dashboard-header-container,
+header.top.superset-y539jf ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-component-header,
+body[data-theme="dark"] .dashboard-component-header,
+[data-theme="dark"] .dashboard-component-header,
+.theme-dark .dashboard-component-header,
+header.top.superset-y539gf ~ div .dashboard-component-header,
+header.top.superset-y539jf ~ div .dashboard-component-header,
+html[data-theme="dark"] .superset-chart-table .table th,
+html[data-theme="dark"] .superset-chart-table thead th,
+body[data-theme="dark"] .superset-chart-table .table th,
+body[data-theme="dark"] .superset-chart-table thead th,
+[data-theme="dark"] .superset-chart-table .table th,
+[data-theme="dark"] .superset-chart-table thead th,
+.theme-dark .superset-chart-table .table th,
+.theme-dark .superset-chart-table thead th,
+header.top.superset-y539gf ~ div .superset-chart-table .table th,
+header.top.superset-y539gf ~ div .superset-chart-table thead th,
+header.top.superset-y539jf ~ div .superset-chart-table .table th,
+header.top.superset-y539jf ~ div .superset-chart-table thead th,
+html[data-theme="dark"] .superset-button-primary,
+body[data-theme="dark"] .superset-button-primary,
+[data-theme="dark"] .superset-button-primary,
+.theme-dark .superset-button-primary,
+header.top.superset-y539gf ~ div .superset-button-primary,
+header.top.superset-y539jf ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-component-divider,
+html[data-theme="dark"] .css-lu0hy9h,
+body[data-theme="dark"] .dashboard-component-divider,
+body[data-theme="dark"] .css-lu0hy9h,
+[data-theme="dark"] .dashboard-component-divider,
+[data-theme="dark"] .css-lu0hy9h,
+.theme-dark .dashboard-component-divider,
+.theme-dark .css-lu0hy9h,
+header.top.superset-y539gf ~ div .dashboard-component-divider,
+header.top.superset-y539gf ~ div .css-lu0hy9h,
+header.top.superset-y539jf ~ div .dashboard-component-divider,
+header.top.superset-y539jf ~ div .css-lu0hy9h,
+html[data-theme="dark"] .dashboard-component-chart-holder,
+body[data-theme="dark"] .dashboard-component-chart-holder,
+[data-theme="dark"] .dashboard-component-chart-holder,
+.theme-dark .dashboard-component-chart-holder,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-component-divider::after,
+html[data-theme="dark"] .css-lu0hy9h::after,
+body[data-theme="dark"] .dashboard-component-divider::after,
+body[data-theme="dark"] .css-lu0hy9h::after,
+[data-theme="dark"] .dashboard-component-divider::after,
+[data-theme="dark"] .css-lu0hy9h::after,
+.theme-dark .dashboard-component-divider::after,
+.theme-dark .css-lu0hy9h::after,
+header.top.superset-y539gf ~ div .dashboard-component-divider::after,
+header.top.superset-y539gf ~ div .css-lu0hy9h::after,
+header.top.superset-y539jf ~ div .dashboard-component-divider::after,
+header.top.superset-y539jf ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-component-divider hr,
+html[data-theme="dark"] .css-lu0hy9h hr,
+body[data-theme="dark"] .dashboard-component-divider hr,
+body[data-theme="dark"] .css-lu0hy9h hr,
+[data-theme="dark"] .dashboard-component-divider hr,
+[data-theme="dark"] .css-lu0hy9h hr,
+.theme-dark .dashboard-component-divider hr,
+.theme-dark .css-lu0hy9h hr,
+header.top.superset-y539gf ~ div .dashboard-component-divider hr,
+header.top.superset-y539gf ~ div .css-lu0hy9h hr,
+header.top.superset-y539jf ~ div .dashboard-component-divider hr,
+header.top.superset-y539jf ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="dark"] .superset-va7aid,
+html[data-theme="dark"] .superset-1a2qin2,
+body[data-theme="dark"] .superset-va7aid,
+body[data-theme="dark"] .superset-1a2qin2,
+[data-theme="dark"] .superset-va7aid,
+[data-theme="dark"] .superset-1a2qin2,
+.theme-dark .superset-va7aid,
+.theme-dark .superset-1a2qin2,
+header.top.superset-y539gf ~ div .superset-va7aid,
+header.top.superset-y539gf ~ div .superset-1a2qin2,
+header.top.superset-y539jf ~ div .superset-va7aid,
+header.top.superset-y539jf ~ div .superset-1a2qin2,
+html[data-theme="dark"] .superset-1r1h1ct,
+html[data-theme="dark"] .superset-1nrzzhi,
+body[data-theme="dark"] .superset-1r1h1ct,
+body[data-theme="dark"] .superset-1nrzzhi,
+[data-theme="dark"] .superset-1r1h1ct,
+[data-theme="dark"] .superset-1nrzzhi,
+.theme-dark .superset-1r1h1ct,
+.theme-dark .superset-1nrzzhi,
+header.top.superset-y539gf ~ div .superset-1r1h1ct,
+header.top.superset-y539gf ~ div .superset-1nrzzhi,
+header.top.superset-y539jf ~ div .superset-1r1h1ct,
+header.top.superset-y539jf ~ div .superset-1nrzzhi,
+html[data-theme="dark"] .superset-va7aid .ant-select-selector,
+body[data-theme="dark"] .superset-va7aid .ant-select-selector,
+[data-theme="dark"] .superset-va7aid .ant-select-selector,
+.theme-dark .superset-va7aid .ant-select-selector,
+header.top.superset-y539gf ~ div .superset-va7aid .ant-select-selector,
+header.top.superset-y539jf ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="dark"] .superset-chart-table .ant-tag,
+body[data-theme="dark"] .superset-chart-table .ant-tag,
+[data-theme="dark"] .superset-chart-table .ant-tag,
+.theme-dark .superset-chart-table .ant-tag,
+header.top.superset-y539gf ~ div .superset-chart-table .ant-tag,
+header.top.superset-y539jf ~ div .superset-chart-table .ant-tag,
+html[data-theme="dark"] .main-nav input[type="text"],
+html[data-theme="dark"] .main-nav .form-control,
+body[data-theme="dark"] .main-nav input[type="text"],
+body[data-theme="dark"] .main-nav .form-control,
+html[data-theme="dark"] .superset-button-secondary,
+body[data-theme="dark"] .superset-button-secondary,
+[data-theme="dark"] .superset-button-secondary,
+.theme-dark .superset-button-secondary,
+header.top.superset-y539gf ~ div .superset-button-secondary,
+header.top.superset-y539jf ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="dark"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="dark"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="dark"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="dark"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="dark"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="dark"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="dark"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="dark"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="dark"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="dark"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="dark"] .dashboard-chart-id-102 .header-line::after,
+.theme-dark .dashboard-chart-id-98 .header-line::after,
+.theme-dark .dashboard-chart-id-101 .header-line::after,
+.theme-dark .dashboard-chart-id-99 .header-line::after,
+.theme-dark .dashboard-chart-id-102 .header-line::after,
+header.top.superset-y539gf ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-y539gf ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-y539gf ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-y539gf ~ div .dashboard-chart-id-102 .header-line::after,
+header.top.superset-y539jf ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-y539jf ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-y539jf ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-y539jf ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="dark"] .superset-button-secondary,
+body[data-theme="dark"] .superset-button-secondary,
+[data-theme="dark"] .superset-button-secondary,
+.theme-dark .superset-button-secondary,
+header.top.superset-y539gf ~ div .superset-button-secondary,
+header.top.superset-y539jf ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-component-chart-holder:hover,
+body[data-theme="dark"] .dashboard-component-chart-holder:hover,
+[data-theme="dark"] .dashboard-component-chart-holder:hover,
+.theme-dark .dashboard-component-chart-holder:hover,
+header.top.superset-y539gf ~ div .dashboard-component-chart-holder:hover,
+header.top.superset-y539jf ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #458107 !important;
+  box-shadow: 0 0 0 2px rgba(69, 129, 7, 0.85), 0 6px 18px rgba(69, 129, 7, 0.35) !important;
+}
+
+html[data-theme="dark"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="dark"] .superset-chart-table .table tbody tr:hover,
+[data-theme="dark"] .superset-chart-table .table tbody tr:hover,
+.theme-dark .superset-chart-table .table tbody tr:hover,
+header.top.superset-y539gf ~ div .superset-chart-table .table tbody tr:hover,
+header.top.superset-y539jf ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="dark"] .superset-button-secondary:hover,
+body[data-theme="dark"] .superset-button-secondary:hover,
+[data-theme="dark"] .superset-button-secondary:hover,
+.theme-dark .superset-button-secondary:hover,
+header.top.superset-y539gf ~ div .superset-button-secondary:hover,
+header.top.superset-y539jf ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.18) !important;
+  background-color: rgba(69, 129, 7, 0.18) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="dark"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="dark"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-dark .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   15. FINAL ACCENT FALLBACKS
+   --------------------------------------------------------------------------- */
+
+/* Default/fallback accent for dark runtime variants that do not expose data-theme. */
+.dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+.dashboard-component-header,
+.superset-chart-table .table th,
+.superset-chart-table thead th,
+.superset-button-primary,
+.superset-button-primary:hover {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+.dashboard-component-divider,
+.css-lu0hy9h,
+.dashboard-component-chart-holder,
+.superset-va7aid,
+.superset-1a2qin2,
+.superset-1r1h1ct,
+.superset-1nrzzhi,
+.superset-va7aid .ant-select-selector,
+.superset-chart-table .ant-tag,
+.main-nav input[type="text"],
+.main-nav .form-control,
+.superset-button-secondary {
+  border-color: #458107 !important;
+}
+
+.dashboard-component-chart-holder {
+  border-top-color: #458107 !important;
+}
+
+.dashboard-component-divider::after,
+.css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+.dashboard-component-divider hr,
+.css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+.dashboard-chart-id-98 .header-line::after,
+.dashboard-chart-id-101 .header-line::after,
+.dashboard-chart-id-99 .header-line::after,
+.dashboard-chart-id-102 .header-line::after,
+.superset-button-secondary {
+  color: #458107 !important;
+}
+
+.dashboard-component-chart-holder:hover {
+  border-top-color: #458107 !important;
+  box-shadow: 0 0 0 2px rgba(69, 129, 7, 0.85), 0 6px 18px rgba(69, 129, 7, 0.35) !important;
+}
+
+.superset-chart-table .table tbody tr:hover,
+.superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.18) !important;
+  background-color: rgba(69, 129, 7, 0.18) !important;
+  border-color: #458107 !important;
+}
+
+.dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+
+/* Light theme wins after the fallback above. */
+html[data-theme="light"] .dashboard-header-container,
+body[data-theme="light"] .dashboard-header-container,
+[data-theme="light"] .dashboard-header-container,
+.theme-light .dashboard-header-container,
+header.top.superset-c99twh ~ div .dashboard-header-container {
+  border-bottom-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-header,
+body[data-theme="light"] .dashboard-component-header,
+[data-theme="light"] .dashboard-component-header,
+.theme-light .dashboard-component-header,
+header.top.superset-c99twh ~ div .dashboard-component-header,
+html[data-theme="light"] .superset-chart-table .table th,
+html[data-theme="light"] .superset-chart-table thead th,
+body[data-theme="light"] .superset-chart-table .table th,
+body[data-theme="light"] .superset-chart-table thead th,
+[data-theme="light"] .superset-chart-table .table th,
+[data-theme="light"] .superset-chart-table thead th,
+.theme-light .superset-chart-table .table th,
+.theme-light .superset-chart-table thead th,
+header.top.superset-c99twh ~ div .superset-chart-table .table th,
+header.top.superset-c99twh ~ div .superset-chart-table thead th,
+html[data-theme="light"] .superset-button-primary,
+body[data-theme="light"] .superset-button-primary,
+[data-theme="light"] .superset-button-primary,
+.theme-light .superset-button-primary,
+header.top.superset-c99twh ~ div .superset-button-primary {
+  background: #458107 !important;
+  background-color: #458107 !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider,
+html[data-theme="light"] .css-lu0hy9h,
+body[data-theme="light"] .dashboard-component-divider,
+body[data-theme="light"] .css-lu0hy9h,
+[data-theme="light"] .dashboard-component-divider,
+[data-theme="light"] .css-lu0hy9h,
+.theme-light .dashboard-component-divider,
+.theme-light .css-lu0hy9h,
+header.top.superset-c99twh ~ div .dashboard-component-divider,
+header.top.superset-c99twh ~ div .css-lu0hy9h,
+html[data-theme="light"] .dashboard-component-chart-holder,
+body[data-theme="light"] .dashboard-component-chart-holder,
+[data-theme="light"] .dashboard-component-chart-holder,
+.theme-light .dashboard-component-chart-holder,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder,
+html[data-theme="light"] .superset-va7aid,
+html[data-theme="light"] .superset-1a2qin2,
+body[data-theme="light"] .superset-va7aid,
+body[data-theme="light"] .superset-1a2qin2,
+[data-theme="light"] .superset-va7aid,
+[data-theme="light"] .superset-1a2qin2,
+.theme-light .superset-va7aid,
+.theme-light .superset-1a2qin2,
+header.top.superset-c99twh ~ div .superset-va7aid,
+header.top.superset-c99twh ~ div .superset-1a2qin2,
+html[data-theme="light"] .superset-1r1h1ct,
+html[data-theme="light"] .superset-1nrzzhi,
+body[data-theme="light"] .superset-1r1h1ct,
+body[data-theme="light"] .superset-1nrzzhi,
+[data-theme="light"] .superset-1r1h1ct,
+[data-theme="light"] .superset-1nrzzhi,
+.theme-light .superset-1r1h1ct,
+.theme-light .superset-1nrzzhi,
+header.top.superset-c99twh ~ div .superset-1r1h1ct,
+header.top.superset-c99twh ~ div .superset-1nrzzhi,
+html[data-theme="light"] .superset-va7aid .ant-select-selector,
+body[data-theme="light"] .superset-va7aid .ant-select-selector,
+[data-theme="light"] .superset-va7aid .ant-select-selector,
+.theme-light .superset-va7aid .ant-select-selector,
+header.top.superset-c99twh ~ div .superset-va7aid .ant-select-selector,
+html[data-theme="light"] .superset-chart-table .ant-tag,
+body[data-theme="light"] .superset-chart-table .ant-tag,
+[data-theme="light"] .superset-chart-table .ant-tag,
+.theme-light .superset-chart-table .ant-tag,
+header.top.superset-c99twh ~ div .superset-chart-table .ant-tag,
+html[data-theme="light"] .main-nav input[type="text"],
+html[data-theme="light"] .main-nav .form-control,
+body[data-theme="light"] .main-nav input[type="text"],
+body[data-theme="light"] .main-nav .form-control,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  border-color: #458107 !important;
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider::after,
+html[data-theme="light"] .css-lu0hy9h::after,
+body[data-theme="light"] .dashboard-component-divider::after,
+body[data-theme="light"] .css-lu0hy9h::after,
+[data-theme="light"] .dashboard-component-divider::after,
+[data-theme="light"] .css-lu0hy9h::after,
+.theme-light .dashboard-component-divider::after,
+.theme-light .css-lu0hy9h::after,
+header.top.superset-c99twh ~ div .dashboard-component-divider::after,
+header.top.superset-c99twh ~ div .css-lu0hy9h::after {
+  background: #458107 !important;
+  background-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-divider hr,
+html[data-theme="light"] .css-lu0hy9h hr,
+body[data-theme="light"] .dashboard-component-divider hr,
+body[data-theme="light"] .css-lu0hy9h hr,
+[data-theme="light"] .dashboard-component-divider hr,
+[data-theme="light"] .css-lu0hy9h hr,
+.theme-light .dashboard-component-divider hr,
+.theme-light .css-lu0hy9h hr,
+header.top.superset-c99twh ~ div .dashboard-component-divider hr,
+header.top.superset-c99twh ~ div .css-lu0hy9h hr {
+  border-top-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+html[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+body[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-98 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-101 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-99 .header-line::after,
+[data-theme="light"] .dashboard-chart-id-102 .header-line::after,
+.theme-light .dashboard-chart-id-98 .header-line::after,
+.theme-light .dashboard-chart-id-101 .header-line::after,
+.theme-light .dashboard-chart-id-99 .header-line::after,
+.theme-light .dashboard-chart-id-102 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-98 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-101 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-99 .header-line::after,
+header.top.superset-c99twh ~ div .dashboard-chart-id-102 .header-line::after,
+html[data-theme="light"] .superset-button-secondary,
+body[data-theme="light"] .superset-button-secondary,
+[data-theme="light"] .superset-button-secondary,
+.theme-light .superset-button-secondary,
+header.top.superset-c99twh ~ div .superset-button-secondary {
+  color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-component-chart-holder:hover,
+body[data-theme="light"] .dashboard-component-chart-holder:hover,
+[data-theme="light"] .dashboard-component-chart-holder:hover,
+.theme-light .dashboard-component-chart-holder:hover,
+header.top.superset-c99twh ~ div .dashboard-component-chart-holder:hover {
+  border-top-color: #458107 !important;
+  box-shadow: 0 0 0 2px rgba(69, 129, 7, 0.85), 0 6px 18px rgba(69, 129, 7, 0.35) !important;
+}
+
+html[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+body[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+[data-theme="light"] .superset-chart-table .table tbody tr:hover,
+.theme-light .superset-chart-table .table tbody tr:hover,
+header.top.superset-c99twh ~ div .superset-chart-table .table tbody tr:hover,
+html[data-theme="light"] .superset-button-secondary:hover,
+body[data-theme="light"] .superset-button-secondary:hover,
+[data-theme="light"] .superset-button-secondary:hover,
+.theme-light .superset-button-secondary:hover,
+header.top.superset-c99twh ~ div .superset-button-secondary:hover {
+  background: rgba(69, 129, 7, 0.16) !important;
+  background-color: rgba(69, 129, 7, 0.16) !important;
+  border-color: #458107 !important;
+}
+
+html[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+body[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .dashboard-content ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-content ::-webkit-scrollbar-thumb:hover {
+  background: #458107 !important;
+}
+/* Final chart hover: yellow top border in both themes. */
+.dashboard-component-chart-holder:hover {
+  border-top-color: #FFCB08 !important;
+}
+
+/* Final: light-theme filter Apply / Применить text = black (wins over primary white). */
+html[data-theme="light"] .superset-1nrzzhi button,
+html[data-theme="light"] .superset-1nrzzhi button *,
+html[data-theme="light"] .superset-kaudsu button,
+html[data-theme="light"] .superset-kaudsu button *,
+html[data-theme="light"] .superset-1wdfs45 button,
+html[data-theme="light"] .superset-1wdfs45 button *,
+html[data-theme="light"] .superset-1a2qin2 .superset-1nrzzhi .superset-button-primary,
+html[data-theme="light"] .superset-1a2qin2 .superset-1nrzzhi .superset-button-primary *,
+body[data-theme="light"] .superset-1nrzzhi button,
+body[data-theme="light"] .superset-1nrzzhi button *,
+body[data-theme="light"] .superset-kaudsu button,
+body[data-theme="light"] .superset-kaudsu button *,
+body[data-theme="light"] .superset-1wdfs45 button,
+body[data-theme="light"] .superset-1wdfs45 button *,
+[data-theme="light"] .superset-1nrzzhi button,
+[data-theme="light"] .superset-1nrzzhi button *,
+.theme-light .superset-1nrzzhi button,
+.theme-light .superset-1nrzzhi button *,
+header.top.superset-c99twh ~ div .superset-1nrzzhi button,
+header.top.superset-c99twh ~ div .superset-1nrzzhi button *,
+header.top.superset-c99twh ~ div .superset-kaudsu button,
+header.top.superset-c99twh ~ div .superset-kaudsu button *,
+header.top.superset-c99twh ~ div .superset-1wdfs45 button,
+header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
+  color: #000000 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   RLS denied_* banner: only charts named rls_denied
+   Hides slice title and column header. Other tables untouched.
+   No var(), no :has().
+   --------------------------------------------------------------------------- */
+
+[data-test-chart-name="rls_denied"] .header-line,
+[data-test-chart-name="rls_denied"] .slice_header,
+[data-test-chart-name="rls_denied"] .slice-header,
+[data-test-chart-name="rls_denied"] .chart-header,
+[data-test-chart-name="rls_denied"] .header-title {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+[data-test-chart-name="rls_denied"] thead,
+[data-test-chart-name="rls_denied"] .ant-table-thead {
+  display: none !important;
+}
+
+[data-test-chart-name="rls_denied"] .table,
+[data-test-chart-name="rls_denied"] td {
+  border: none !important;
+  background: transparent !important;
+}
