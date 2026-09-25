@@ -19,9 +19,27 @@ COUNT(DISTINCT CASE
   THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
 END)
 
--- Пассивные клиенты
+-- Неактивные клиенты  = всего − активные  (NULL active_terms не теряются)
+COUNT(DISTINCT NULLIF(BTRIM(CAST(agr_id AS TEXT)), ''))
+-
 COUNT(DISTINCT CASE
-  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) <= 0
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(active_terms AS TEXT)), '') AS NUMERIC), 0) > 0
+  THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
+END)
+
+-- Новые договоры  (открыты в месяце строки; в VD нужны d_valid_from / snapshot_month_start)
+COUNT(DISTINCT CASE
+  WHEN NULLIF(BTRIM(CAST(d_valid_from AS TEXT)), '') IS NOT NULL
+   AND date_trunc('month', CAST(NULLIF(BTRIM(CAST(d_valid_from AS TEXT)), '') AS DATE))
+     = date_trunc('month', CAST(NULLIF(BTRIM(CAST(snapshot_month_start AS TEXT)), '') AS DATE))
+  THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
+END)
+
+-- Расторгнутые договоры  (закрыты в месяце строки; в VD нужен d_valid_to)
+COUNT(DISTINCT CASE
+  WHEN NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') IS NOT NULL
+   AND date_trunc('month', CAST(NULLIF(BTRIM(CAST(d_valid_to AS TEXT)), '') AS DATE))
+     = date_trunc('month', CAST(NULLIF(BTRIM(CAST(snapshot_month_start AS TEXT)), '') AS DATE))
   THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
 END)
 
