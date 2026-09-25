@@ -34,6 +34,8 @@ SELECT
     NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') AS report_month,
     NULLIF(BTRIM(CAST(d.snapshot_month_start AS TEXT)), '') AS snapshot_month_start,
     NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') AS agr_id,
+    NULLIF(BTRIM(CAST(d.d_valid_from AS TEXT)), '') AS d_valid_from,
+    NULLIF(BTRIM(CAST(d.d_valid_to AS TEXT)), '') AS d_valid_to,
     NULLIF(BTRIM(CAST(d.inn AS TEXT)), '') AS inn,
     NULLIF(BTRIM(CAST(d.company_name AS TEXT)), '') AS company_name,
     NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), '') AS filial_rf,
@@ -48,6 +50,15 @@ SELECT
              'Нет информации'
            )
     END AS filial_filter,
+    CASE
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) > 0
+      THEN 'Клиенты с положительным ЧОД ТЭ'
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) < 0
+      THEN 'Клиенты с отрицательным ЧОД ТЭ'
+      ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    d.kedr_obshiy_chod,
+    d.kedr_obshiy_chod_contrib,
     d.tsp_effective,
     d.commission_from_ops,
     d.commission_monthly,
@@ -156,6 +167,8 @@ SELECT
     NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') AS report_month,
     NULLIF(BTRIM(CAST(d.snapshot_month_start AS TEXT)), '') AS snapshot_month_start,
     NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') AS agr_id,
+    NULLIF(BTRIM(CAST(d.d_valid_from AS TEXT)), '') AS d_valid_from,
+    NULLIF(BTRIM(CAST(d.d_valid_to AS TEXT)), '') AS d_valid_to,
     NULLIF(BTRIM(CAST(d.inn AS TEXT)), '') AS inn,
     NULLIF(BTRIM(CAST(d.company_name AS TEXT)), '') AS company_name,
     NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), '') AS filial_rf,
@@ -170,6 +183,15 @@ SELECT
              'Нет информации'
            )
     END AS filial_filter,
+    CASE
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) > 0
+      THEN 'Клиенты с положительным ЧОД ТЭ'
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) < 0
+      THEN 'Клиенты с отрицательным ЧОД ТЭ'
+      ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    d.kedr_obshiy_chod,
+    d.kedr_obshiy_chod_contrib,
     d.tsp_effective,
     d.commission_from_ops,
     d.commission_monthly,
@@ -278,6 +300,8 @@ SELECT
     NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') AS report_month,
     NULLIF(BTRIM(CAST(d.snapshot_month_start AS TEXT)), '') AS snapshot_month_start,
     NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') AS agr_id,
+    NULLIF(BTRIM(CAST(d.d_valid_from AS TEXT)), '') AS d_valid_from,
+    NULLIF(BTRIM(CAST(d.d_valid_to AS TEXT)), '') AS d_valid_to,
     NULLIF(BTRIM(CAST(d.inn AS TEXT)), '') AS inn,
     NULLIF(BTRIM(CAST(d.company_name AS TEXT)), '') AS company_name,
     NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), '') AS filial_rf,
@@ -292,6 +316,15 @@ SELECT
              'Нет информации'
            )
     END AS filial_filter,
+    CASE
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) > 0
+      THEN 'Клиенты с положительным ЧОД ТЭ'
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) < 0
+      THEN 'Клиенты с отрицательным ЧОД ТЭ'
+      ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    d.kedr_obshiy_chod,
+    d.kedr_obshiy_chod_contrib,
     d.tsp_effective,
     d.commission_from_ops,
     d.commission_monthly,
@@ -400,6 +433,8 @@ SELECT
     NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') AS report_month,
     NULLIF(BTRIM(CAST(d.snapshot_month_start AS TEXT)), '') AS snapshot_month_start,
     NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') AS agr_id,
+    NULLIF(BTRIM(CAST(d.d_valid_from AS TEXT)), '') AS d_valid_from,
+    NULLIF(BTRIM(CAST(d.d_valid_to AS TEXT)), '') AS d_valid_to,
     NULLIF(BTRIM(CAST(d.inn AS TEXT)), '') AS inn,
     NULLIF(BTRIM(CAST(d.company_name AS TEXT)), '') AS company_name,
     NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), '') AS filial_rf,
@@ -414,6 +449,15 @@ SELECT
              'Нет информации'
            )
     END AS filial_filter,
+    CASE
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) > 0
+      THEN 'Клиенты с положительным ЧОД ТЭ'
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) < 0
+      THEN 'Клиенты с отрицательным ЧОД ТЭ'
+      ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    d.kedr_obshiy_chod,
+    d.kedr_obshiy_chod_contrib,
     d.tsp_effective,
     d.commission_from_ops,
     d.commission_monthly,
@@ -522,6 +566,8 @@ SELECT
     NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') AS report_month,
     NULLIF(BTRIM(CAST(d.snapshot_month_start AS TEXT)), '') AS snapshot_month_start,
     NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') AS agr_id,
+    NULLIF(BTRIM(CAST(d.d_valid_from AS TEXT)), '') AS d_valid_from,
+    NULLIF(BTRIM(CAST(d.d_valid_to AS TEXT)), '') AS d_valid_to,
     NULLIF(BTRIM(CAST(d.inn AS TEXT)), '') AS inn,
     NULLIF(BTRIM(CAST(d.company_name AS TEXT)), '') AS company_name,
     NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), '') AS filial_rf,
@@ -536,6 +582,15 @@ SELECT
              'Нет информации'
            )
     END AS filial_filter,
+    CASE
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) > 0
+      THEN 'Клиенты с положительным ЧОД ТЭ'
+      WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(d.chod AS TEXT)), '') AS NUMERIC), 0) < 0
+      THEN 'Клиенты с отрицательным ЧОД ТЭ'
+      ELSE 'Клиенты с 0 ЧОД ТЭ'
+    END AS client_bucket,
+    d.kedr_obshiy_chod,
+    d.kedr_obshiy_chod_contrib,
     d.tsp_effective,
     d.commission_from_ops,
     d.commission_monthly,
@@ -761,98 +816,188 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 ORDER BY 1
 
 
--- Баннеры «нет прав» по листу. Jinja ON. По одному dataset на лист.
--- Разрешённому пользователю — 0 строк (чарт пустой).
+-- Баннеры по листу. Jinja ON. Всегда 1 строка.
+-- Доступ: «Данные обновлены: 25.09.2026 07:00». Нет прав: «Тебе сюда нельзя».
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_overview
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «Общая информация». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «Общая информация». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_tsp_eff
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «Эффективность ТСП». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «Эффективность ТСП». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_pnl
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «P&L». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «P&L». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_clients
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «Клиенты». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «Клиенты». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_terminals
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «Терминалы». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «Терминалы». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- -----------------------------------------------------------------------------
 -- vd_acq_rls_denied_mcc
 -- -----------------------------------------------------------------------------
 SELECT
-  'Тебе сюда нельзя' AS access_message,
-  'Нет прав на лист «MCC-коды». Обратитесь к владельцу дашборда.' AS access_detail
-WHERE NOT EXISTS (
-  SELECT 1
-  FROM sbx_da.rls_acq_user u
-  JOIN sbx_da.rls_acq_role_sheet s
-    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-    AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-);
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Данные обновлены: 25.09.2026 07:00'
+    ELSE 'Тебе сюда нельзя'
+  END AS access_message,
+  CASE
+    WHEN EXISTS (
+      SELECT 1
+      FROM sbx_da.rls_acq_user u
+      JOIN sbx_da.rls_acq_role_sheet s
+        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+        AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+    )
+    THEN 'Срез витрины (дата заглушка)'
+    ELSE 'Нет прав на лист «MCC-коды». Обратитесь к владельцу дашборда.'
+  END AS access_detail
+;
 
 -- =============================================================================
 -- SMOKE (SQL Lab, БЕЗ Jinja — подставь логин)
