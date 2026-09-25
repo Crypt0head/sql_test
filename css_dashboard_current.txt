@@ -2179,9 +2179,17 @@ header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
 }
 
 /* ---------------------------------------------------------------------------
-   RLS denied_* banner (chart name rls_denied).
-   Table plugin keeps the real table in a visibility:hidden sizer.
+   RLS denied_* banner (chart name rls_denied). Table, one phrase, no scroll.
+   Do not set min-height: 0 on .chart-container -- plugin then hides the row.
    --------------------------------------------------------------------------- */
+
+[data-test-chart-name="rls_denied"] [data-test="slice-header"] {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
 
 [data-test-chart-name="rls_denied"] [style*="visibility: hidden"],
 [data-test-chart-name="rls_denied"] [style*="visibility:hidden"] {
@@ -2192,31 +2200,27 @@ header.top.superset-c99twh ~ div .superset-1wdfs45 button * {
   display: none !important;
 }
 
-[data-test-chart-name="rls_denied"] [data-test="slice-header"] {
-  display: none !important;
-  height: 0 !important;
-  min-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
+[data-test-chart-name="rls_denied"] .chart-container,
+[data-test-chart-name="rls_denied"] .slice_container,
+[data-test-chart-name="rls_denied"] .superset-chart-table,
+[data-test-chart-name="rls_denied"] [role="table"] {
+  min-height: 48px !important;
   overflow: hidden !important;
 }
 
-[data-test-chart-name="rls_denied"],
-[data-test-chart-name="rls_denied"] .dashboard-chart,
-[data-test-chart-name="rls_denied"] .chart-container,
-[data-test-chart-name="rls_denied"] .slice_container,
-[data-test-chart-name="rls_denied"] .superset-chart-table {
-  min-height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
+[data-test-chart-name="rls_denied"] [style*="overflow: auto"],
+[data-test-chart-name="rls_denied"] [style*="overflow:auto"] {
+  overflow: hidden !important;
 }
 
 [data-test-chart-name="rls_denied"] td {
   color: #FFFFFF !important;
-  font-size: 13px !important;
-  border: none !important;
-  padding: 4px 8px !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
   line-height: 1.2 !important;
+  white-space: nowrap !important;
+  border: none !important;
+  padding: 8px 12px !important;
 }
 
 html[data-theme="light"] [data-test-chart-name="rls_denied"] td,
