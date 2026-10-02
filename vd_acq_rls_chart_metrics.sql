@@ -79,31 +79,22 @@ COUNT(DISTINCT CASE
   THEN NULLIF(BTRIM(CAST(agr_id AS TEXT)), '')
 END)
 
--- Распределение клиентов по сегментам ЧОД ТЭ
--- Dataset: vd_acq_rls_overview  (не vd_chod_clients_by_monthly)
--- 3 сегмента + / 0 / −. Клиент = ИНН. Dimension не нужен — 3 меры.
--- Не путать с когортами 0…2500 / >2500 (другой график, ниже).
+-- Распределение клиентов по сегментам ЧОД ТЭ  (как vd_chod_clients_by_monthly)
+-- Dataset: vd_acq_rls_overview
+-- Chart type: Table. Dimension: client_bucket
+-- Строки: + / 0 / − по ЧОД ТЭ. В VD нужны client_bucket + kedr_*.
 
--- Клиенты с положительным ЧОД ТЭ
-COUNT(DISTINCT CASE
-  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) > 0
-  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
-END)
+-- Кол-во
+COUNT(DISTINCT NULLIF(BTRIM(CAST(inn AS TEXT)), ''))
 
--- Клиенты с 0 ЧОД ТЭ
-COUNT(DISTINCT CASE
-  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) = 0
-  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
-END)
-
--- Клиенты с отрицательным ЧОД ТЭ
-COUNT(DISTINCT CASE
-  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0) < 0
-  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
-END)
-
--- Сумма ЧОД ТЭ, руб.  (если на чарте есть вторая мера)
+-- ЧОД ТЭ, руб.
 SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(chod AS TEXT)), '') AS NUMERIC), 0))
+
+-- Общ. ЧОД −, шт.  (ИНН с Kedr < 0 внутри сегмента)
+COUNT(DISTINCT CASE
+  WHEN COALESCE(CAST(NULLIF(BTRIM(CAST(kedr_obshiy_chod AS TEXT)), '') AS NUMERIC), 0) < 0
+  THEN NULLIF(BTRIM(CAST(inn AS TEXT)), '')
+END)
 
 -- Когорты 0…2500 (график vd_new_graphs, НЕ сегменты ЧОД ТЭ)
 -- 0…2500 без нуля: chod > 0 AND chod <= 2500
@@ -326,5 +317,6 @@ SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(trx_cnt AS TEXT)), '') AS NUMERIC), 0))
 
 -- =============================================================================
 -- БАННЕР  Dataset: vd_acq_rls_denied_*
--- Chart type: Table. Колонки (не меры): access_message, access_detail
+-- Chart type: Table, сырые записи. Колонки: access_message, access_detail
+-- Всегда 1 строка: доступ → «Данные обновлены: 25.09.2026 07:00»; иначе «Тебе сюда нельзя».
 -- =============================================================================
