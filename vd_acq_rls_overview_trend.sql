@@ -1,14 +1,28 @@
 -- Virtual dataset: vd_acq_rls_overview_trend
 -- Только график «Динамика активности клиентов».
--- Якорь report_month — последний месяц на оси. Ось = все месяцы с января этого года по якорь.
--- period_mode не читаем: карточки на vd_acq_rls_overview остаются в режиме «Месяц».
--- Jinja ON. Фильтр месяца на самом чарте не ставить.
+-- Якорь report_month — последний месяц на оси.
+-- period_mode: month = только якорь; ytd = январь…якорь; quarter = с 1-го месяца квартала по якорь.
+-- Jinja ON. Фильтр месяца на самом чарте не ставить. Чарту нужен scope report_month и period_mode.
 -- Роли те же, что у vd_acq_rls_overview.
 
 {% set sel_months = filter_values('report_month', remove_filter=True) %}
+{% set modes = filter_values('period_mode', remove_filter=True) %}
+{% set mode = (modes[0] | lower | trim) if modes else 'month' %}
+{% if mode not in ['month', 'ytd', 'quarter'] %}
+  {% set mode = 'month' %}
+{% endif %}
 {% set anchor = (sel_months | sort | last) if sel_months else none %}
 {% if anchor %}
-  {% set period_from = anchor[:4] ~ '-01' %}
+  {% set yr = anchor[:4] %}
+  {% set mo = anchor[5:7] | int %}
+  {% if mode == 'ytd' %}
+    {% set period_from = yr ~ '-01' %}
+  {% elif mode == 'quarter' %}
+    {% set qm = ((mo - 1) // 3) * 3 + 1 %}
+    {% set period_from = yr ~ '-' ~ ('%02d' | format(qm)) %}
+  {% else %}
+    {% set period_from = anchor %}
+  {% endif %}
   {% set period_to = anchor %}
 {% endif %}
 
@@ -70,7 +84,7 @@ SELECT
     d.chod_pct,
     d.tariff_short,
     d.mcc,
-    'ytd' AS period_mode_applied,
+    '{{ mode }}' AS period_mode_applied,
     {% if anchor %}
     '{{ period_from }}' AS period_from,
     '{{ period_to }}' AS period_to,
@@ -86,6 +100,11 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% if anchor %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') >= '{{ period_from }}'
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') <= '{{ period_to }}'
+{% else %}
+  AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
+    SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
+  )
 {% endif %}
   AND EXISTS (
   SELECT 1
