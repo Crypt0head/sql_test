@@ -78,7 +78,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
+    d.retl_with_term_cnt,
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -98,7 +98,7 @@ SELECT
     NULL AS period_to,
     NULL AS anchor_report_month
     {% endif %}
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') IS NOT NULL
 {% if anchor %}
@@ -107,7 +107,7 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% else %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
     SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
   )
 {% endif %}
   AND EXISTS (
@@ -158,7 +158,9 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 -- =============================================================================
 -- Virtual dataset: vd_acq_rls_tsp_eff
 -- Лист: Эффективность ТСП. Jinja ON. Не вешать RLS на physical Dataset A.
--- Фильтры дашборда: report_month + period_mode (как vd_acq_dashboard_period).
+-- Фильтры дашборда: report_month + period_mode.
+-- ACL филиала НЕТ — все роли видят все РФ.
+-- Сними native-фильтр filial_filter со scope чартов этого листа.
 
 {% set sel_months = filter_values('report_month', remove_filter=True) %}
 {% set modes = filter_values('period_mode', remove_filter=True) %}
@@ -229,7 +231,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
+    d.retl_with_term_cnt,
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -249,7 +251,7 @@ SELECT
     NULL AS period_to,
     NULL AS anchor_report_month
     {% endif %}
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') IS NOT NULL
 {% if anchor %}
@@ -258,7 +260,7 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% else %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
     SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
   )
 {% endif %}
   AND EXISTS (
@@ -268,39 +270,6 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
     ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
   WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
     AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-)
-  AND (
-  EXISTS (
-    SELECT 1
-    FROM sbx_da.rls_acq_user u
-    WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-      AND BTRIM(CAST(u.is_all_filials AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-  )
-  OR EXISTS (
-    SELECT 1
-    FROM sbx_da.rls_acq_user_filial f
-    WHERE lower(BTRIM(CAST(f.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-      AND BTRIM(CAST(f.filial_filter AS TEXT)) = CASE
-      WHEN COALESCE(
-             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
-             'Нет информации'
-           ) IN ('РФ', 'Нет информации')
-      THEN 'ЦРМБ'
-      WHEN COALESCE(
-             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
-             'Нет информации'
-           ) ILIKE '%санкт-петербург%'
-        OR COALESCE(
-             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
-             'Нет информации'
-           ) ILIKE '%санкт петербург%'
-      THEN 'Санкт-Петербургский РФ'
-      ELSE COALESCE(
-             NULLIF(NULLIF(BTRIM(CAST(d.filial_rf AS TEXT)), ''), '<NULL>'),
-             'Нет информации'
-           )
-    END
-  )
 )
 
 
@@ -380,7 +349,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
+    d.retl_with_term_cnt,
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -400,7 +369,7 @@ SELECT
     NULL AS period_to,
     NULL AS anchor_report_month
     {% endif %}
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') IS NOT NULL
 {% if anchor %}
@@ -409,7 +378,7 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% else %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
     SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
   )
 {% endif %}
   AND EXISTS (
@@ -531,7 +500,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
+    d.retl_with_term_cnt,
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -551,7 +520,7 @@ SELECT
     NULL AS period_to,
     NULL AS anchor_report_month
     {% endif %}
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') IS NOT NULL
 {% if anchor %}
@@ -560,7 +529,7 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% else %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
     SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
   )
 {% endif %}
   AND EXISTS (
@@ -682,7 +651,7 @@ SELECT
     d.amortization,
     d.fin_result,
     d.retl_cnt,
-    NULL::numeric AS retl_with_term_cnt,  -- колонки нет в …_final_script_2; будет в …_fin_version
+    d.retl_with_term_cnt,
     d.term_cnt,
     d.active_terms,
     d.active_retl_cnt,
@@ -702,7 +671,7 @@ SELECT
     NULL AS period_to,
     NULL AS anchor_report_month
     {% endif %}
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') IS NOT NULL
 {% if anchor %}
@@ -711,7 +680,7 @@ WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
 {% else %}
   AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
     SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+    FROM sbx_da.tmp_shestopalov_acq_fin_version
   )
 {% endif %}
   AND EXISTS (
@@ -816,7 +785,7 @@ LEFT JOIN (
         COUNT(DISTINCT NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '')) AS tsp_cnt,
         SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(d.term_cnt AS TEXT)), '') AS NUMERIC), 0)) AS term_cnt,
         SUM(COALESCE(CAST(NULLIF(BTRIM(CAST(d.aur AS TEXT)), '') AS NUMERIC), 0)) AS aur
-    FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+    FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
     CROSS JOIN LATERAL regexp_split_to_table(
         REGEXP_REPLACE(COALESCE(CAST(d.mcc AS TEXT), ''), '[;|]', ',', 'g'),
         '\s*,\s*'
@@ -830,7 +799,7 @@ LEFT JOIN (
     {% else %}
       AND NULLIF(SUBSTRING(BTRIM(CAST(d.report_month AS TEXT)) FROM 1 FOR 7), '') = (
         SELECT MAX(NULLIF(SUBSTRING(BTRIM(CAST(report_month AS TEXT)) FROM 1 FOR 7), ''))
-        FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2
+        FROM sbx_da.tmp_shestopalov_acq_fin_version
       )
     {% endif %}
     GROUP BY 1, 2
@@ -886,7 +855,7 @@ SELECT DISTINCT
              'Нет информации'
            )
     END AS filial_filter
-FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 AS d
+FROM sbx_da.tmp_shestopalov_acq_fin_version AS d
 WHERE NULLIF(BTRIM(CAST(d.agr_id AS TEXT)), '') IS NOT NULL
   AND (
   EXISTS (
@@ -933,25 +902,25 @@ ORDER BY 1
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.overview AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «Общая информация». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -963,25 +932,25 @@ SELECT
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.tsp_eff AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «Эффективность ТСП». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -993,25 +962,25 @@ SELECT
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.pnl AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «P&L». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -1023,25 +992,25 @@ SELECT
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.clients AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «Клиенты». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -1053,25 +1022,25 @@ SELECT
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.terminals AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «Терминалы». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -1083,25 +1052,25 @@ SELECT
 SELECT
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Данные обновлены: 25.09.2026 07:00'
     ELSE 'Тебе сюда нельзя'
   END AS access_message,
   CASE
     WHEN EXISTS (
-      SELECT 1
-      FROM sbx_da.rls_acq_user u
-      JOIN sbx_da.rls_acq_role_sheet s
-        ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
-      WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
-        AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
-    )
+  SELECT 1
+  FROM sbx_da.rls_acq_user u
+  JOIN sbx_da.rls_acq_role_sheet s
+    ON BTRIM(CAST(s.role AS TEXT)) = BTRIM(CAST(u.role AS TEXT))
+  WHERE lower(BTRIM(CAST(u.username AS TEXT))) = lower(BTRIM('{{ current_username() }}'))
+    AND BTRIM(CAST(s.mcc AS TEXT)) IN ('1', 'true', 'True', 'Y', 'y')
+)
     THEN 'Срез витрины (дата заглушка)'
     ELSE 'Нет прав на лист «MCC-коды». Обратитесь к владельцу дашборда.'
   END AS access_detail
@@ -1118,21 +1087,21 @@ SELECT
 /*
 WITH who AS (SELECT 'Shestopalov-VYur' AS username)
 SELECT
-  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 d
+  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_fin_version d
    WHERE EXISTS (
      SELECT 1 FROM sbx_da.rls_acq_user u
      JOIN sbx_da.rls_acq_role_sheet s ON BTRIM(s.role) = BTRIM(u.role)
      JOIN who w ON lower(BTRIM(u.username)) = lower(BTRIM(w.username))
      WHERE BTRIM(s.overview) IN ('1', 'true', 'Y', 'y')
    )) AS overview_cnt,
-  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 d
+  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_fin_version d
    WHERE EXISTS (
      SELECT 1 FROM sbx_da.rls_acq_user u
      JOIN sbx_da.rls_acq_role_sheet s ON BTRIM(s.role) = BTRIM(u.role)
      JOIN who w ON lower(BTRIM(u.username)) = lower(BTRIM(w.username))
      WHERE BTRIM(s.tsp_eff) IN ('1', 'true', 'Y', 'y')
    )) AS tsp_eff_cnt,
-  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_datamart_final_script_2 d
+  (SELECT COUNT(*) FROM sbx_da.tmp_shestopalov_acq_fin_version d
    WHERE EXISTS (
      SELECT 1 FROM sbx_da.rls_acq_user u
      JOIN sbx_da.rls_acq_role_sheet s ON BTRIM(s.role) = BTRIM(u.role)
