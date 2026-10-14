@@ -1,0 +1,26 @@
+# Keys to add to conf/.../table_conf.yaml under impala.tables and drp.tables.
+impala:
+    tables:
+        acq_01_sa_perimeter: "sandbox_ai.tmp_shestopalov_acq_01_sa_perimeter"
+        acq_02_cdi_map: "sandbox_ai.tmp_shestopalov_acq_02_cdi_map"
+        acq_03_cft_map: "sandbox_ai.tmp_shestopalov_acq_03_cft_map"
+        acq_05_trx_agr: "sandbox_ai.tmp_shestopalov_acq_05_trx_agr"
+        acq_mcc_by_agr: "sandbox_ai.tmp_shestopalov_acq_mcc_by_agr"
+        acq_04_terminals: "sandbox_ai.tmp_shestopalov_acq_04_terminals"
+        acq_05b_active_retl: "sandbox_ai.tmp_shestopalov_acq_05b_active_retl"
+        acq_06_cft_attrs: "sandbox_ai.tmp_shestopalov_acq_06_cft_attrs"
+        acq_08b_tariff_fix: "sandbox_ai.tmp_shestopalov_acq_08b_tariff_fix"
+        acq_09_tariff: "sandbox_ai.tmp_shestopalov_acq_09_tariff"
+        acq_10o_doc_oper: "sandbox_ai.tmp_shestopalov_acq_10o_doc_oper"
+        acq_10m_mpos: "sandbox_ai.tmp_shestopalov_acq_10m_mpos"
+        acq_10b_products: "sandbox_ai.tmp_shestopalov_acq_10b_products"
+        acq_kedr_chod: "sandbox_ai.tmp_shestopalov_acq_kedr_chod"
+        acq_month_slice: "sandbox_ai.tmp_shestopalov_acq_month_slice"
+
+        acq_slice_load: "sandbox_ai.tmp_shestopalov_acq_month_slice_load"
+        acq_slice_hist: "sandbox_ai.shestopalov_acq_final_df_hist"
+
+drp:
+    tables:
+        target_acq_fin_temp: sbx_da.tmp_shestopalov_acq_month_slice_temp
+        target_acq_fin: sbx_da.tmp_shestopalov_acq_fin_version
