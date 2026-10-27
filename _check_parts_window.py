@@ -12,7 +12,7 @@ from rail_connectors.connection import connect
 REPO = Path.home() / "documents/Equaring/Фин.скрипт/Регламент/airflow_shestopalov_acq_dashbord"
 SQL_DIR = REPO / "include/sql"
 
-EXEC_DATES = ["2026-10-05", "2026-10-25"]
+EXEC_DATES = ["2026-09-05"]
 PREV_MONTH_DAYS = 10
 MEM_LIMIT = "12g"
 HIST = "sandbox_ai.shestopalov_acq_final_df_hist"
