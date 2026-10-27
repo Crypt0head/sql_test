@@ -4,6 +4,7 @@
 Запускать, только когда DAG etl__acq_final_df__test не работает: таблицы частей общие.
 Пишет только во временные таблицы sandbox_ai.tmp_shestopalov_acq_*; история и DRP не меняются.
 """
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -15,6 +16,11 @@ SQL_DIR = REPO / "include/sql"
 
 EXEC_DATES = ["2026-09-05"]
 PREV_MONTH_DAYS = 10
+# Продолжить с этой части, не пересчитывая готовые (None - с начала). Готовые таблицы должны быть на ту же exec_dt.
+START_FROM = "acq_08b_tariff_fix"
+# Повтор при "Failed to acquire lock": исходную таблицу ODS в этот момент кто-то пишет.
+LOCK_RETRIES = 3
+LOCK_WAIT_SECONDS = 300
 MEM_LIMIT_DEFAULT = "8g"
 MEM_LIMIT_BY_PART = {
     "acq_00_months": "1g",
@@ -74,16 +80,25 @@ def log(message):
 
 def build_parts(exec_dt):
     params = {**TABLES, "exec_dt": exec_dt, "acq_prev_month_days": PREV_MONTH_DAYS}
-    for part in PARTS:
+    parts = PARTS[PARTS.index(START_FROM):] if START_FROM else PARTS
+    for part in parts:
         table = TABLES[part]
         sql = (SQL_DIR / f"{part}.sql").read_text(encoding="utf-8").format(**params)
         mem_limit = MEM_LIMIT_BY_PART.get(part, MEM_LIMIT_DEFAULT)
-        log(f"{part}: старт, MEM_LIMIT={mem_limit}")
-        with imp:
-            imp.execute(f"SET MEM_LIMIT={mem_limit}")
-            imp.execute(f"DROP TABLE IF EXISTS {table}")
-            log(f"{part}: таблица удалена, строю")
-            imp.execute(sql)
+        for attempt in range(1, LOCK_RETRIES + 1):
+            log(f"{part}: старт, MEM_LIMIT={mem_limit}, попытка {attempt}")
+            try:
+                with imp:
+                    imp.execute(f"SET MEM_LIMIT={mem_limit}")
+                    imp.execute(f"DROP TABLE IF EXISTS {table}")
+                    log(f"{part}: таблица удалена, строю")
+                    imp.execute(sql)
+                break
+            except Exception as error:
+                if "Failed to acquire lock" not in str(error) or attempt == LOCK_RETRIES:
+                    raise
+                log(f"{part}: исходная таблица заблокирована, жду {LOCK_WAIT_SECONDS // 60} мин")
+                time.sleep(LOCK_WAIT_SECONDS)
         if part in MONTHLY_PARTS:
             sql = f"SELECT report_month, count(*) AS n FROM {table} GROUP BY report_month ORDER BY report_month"
         else:
