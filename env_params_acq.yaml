@@ -16,8 +16,6 @@ acq_source_tables:
     - ods_alpha.scd1_mrc_pos_rent
     - ods.scd1_z_r2_ip_merchants
     - ods.scd1_z_r2_tariff_plan
-    - ods.scd1_z_r2_tariff_tune
-    - ods.scd1_z_r2_tariff_fix
     - ods.scd1_z_R2_IP_DOG_OPER
     - ods.scd1_z_client
     - ods.scd1_z_cl_corp
@@ -41,10 +39,58 @@ acq_parts:
     - acq_04_terminals
     - acq_05b_active_retl
     - acq_06_cft_attrs
-    - acq_08b_tariff_fix
     - acq_09_tariff
     - acq_10o_doc_oper
     - acq_10m_mpos
     - acq_10b_products
     - acq_kedr_chod
     - acq_slice_load
+
+# Сенсор: DAG ждёт успешной загрузки этих потоков ODS в день запуска (таблица schedule_table из table_conf).
+acq_sensor_run_names:
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_agreements
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_companies
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_agr_terms
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_trx
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_trx_acq
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_trx_int
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_base24_fiids
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_merchants
+    - APP_ODS/wf_ods2dl_ora2hive_scd1_pos_terminals
+    - APP_ODS_EFR/wf_ods2dl_ora2hive_scd1_mrc_pos_rent
+    - App_ODS_CFT_D4/wf_ods2dl_ora2hive_scd1_z_r2_ip_merchants
+    - App_ODS_CFT_D4/wf_ods2dl_ora2hive_scd1_z_r2_ip_dog_oper
+    - App_ODS_CFT_D4/wf_ods2dl_ora2hive_scd1_z_r2_tariff_plan
+    - App_ODS_CFT_D1/wf_ods2dl_ora2hive_scd1_z_client
+    - App_ODS_CFT_D1/wf_ods2dl_ora2hive_scd1_z_branch
+    - App_ODS_CFT_D1/wf_ods2dl_ora2hive_scd1_z_cl_corp
+    - App_ODS_CFT_D2/wf_ods2dl_ora2hive_scd1_z_depart
+# Потоки процессинга заканчиваются до ~12:50, ЦФТ D4 - до ~15:00; DAG стартует в 12:00.
+acq_sensor_poke_seconds: 1800
+# Если потоки не загрузились за это время (до 16:00), сенсор падает и срабатывает notification_on_fail.
+acq_sensor_timeout_seconds: 14400
+
+# Подключения Airflow (Admin -> Connections), из которых DAG берёт логин и пароль.
+acq_datalake_conn_id: datalake_tech_conn
+
+# Загрузка в DRP: Variable Airflow со значением true/false; если Variable нет, DRP включён.
+acq_load_to_drp_variable: acq_final_df_load_to_drp
+
+# Перенос среза из озера во временную таблицу DRP (HIVE2JDBCOperator).
+acq_spark_conn_id: spark_datalake
+# Одна учётка на весь DRP: и перенос через Spark, и SQL-задачи, чтобы временную таблицу создавал и читал один ТУЗ.
+acq_drp_conn_id: spark_drp
+acq_spark_conf:
+    "spark.executor.instances": "1"
+    "spark.executor.memory": "4g"
+    "spark.executor.cores": "2"
+    "spark.driver.memory": "1g"
+    "spark.driver.cores": "1"
+    "spark.yarn.stagingDir": "hdfs:///tmp"
+    "spark.sql.extensions": "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions,com.qubole.spark.hiveacid.HiveAcidAutoConvertExtension"
+    "spark.executor.extraClassPath": "hdfs:///apps/spark-acid-lib/spark-acid-3.5.2-assembly-0.6.0.jar,hdfs:////apps/spark-acid-lib/ojdbc8.jar,hdfs:////apps/spark-acid-lib/postgresql-42.2.5.jar"
+    "spark.jars": "hdfs:///apps/spark-acid-lib/spark-acid-3.5.2-assembly-0.6.0.jar,hdfs:////apps/spark-acid-lib/ojdbc8.jar,hdfs:////apps/spark-acid-lib/postgresql-42.2.5.jar"
+    "spark.yarn.queue": "ai"
+    "spark.ui.view.acls.groups": "spark,hdfs,dr.who,go-sg-as-hdp-dlk_admdbd,go-sg-as-hdp-dlk_ds_ai"
+    "spark.yarn.maxAppAttempts": "1"
+    "spark.dynamicAllocation.enabled": "false"
