@@ -97,6 +97,7 @@ with DAG(
 ) as dag:
     start = DummyOperator(task_id='start')
     point1 = DummyOperator(task_id='point1')
+    point2 = DummyOperator(task_id='point2')
     skip_drp = DummyOperator(task_id='skip_drp')
     end = DummyOperator(task_id='end', trigger_rule='none_failed_min_one_success')
 
@@ -127,9 +128,10 @@ with DAG(
             dag=dag
         ))
 
-    part_task_list = []
+    drop_task_list = []
+    build_task_list = []
     for part in cfg.env.acq_parts:
-        part_task_list.append(RailSQLOperator(
+        drop_task_list.append(RailSQLOperator(
             task_id=f'drop_{part}',
             sql_file='drop_table.sql',
             connect_to='impala',
@@ -138,7 +140,7 @@ with DAG(
             requirements=parse_requirements(),
             dag=dag
         ))
-        part_task_list.append(RailSQLOperator(
+        build_task_list.append(RailSQLOperator(
             task_id=f'build_{part}',
             sql_file=f'{part}.sql',
             connect_to='impala',
@@ -245,9 +247,11 @@ with DAG(
     )
 
     start >> check_new_data >> refresh_task_list >> point1
+    # Удаления независимы и идут параллельно; сборки - по порядку acq_parts, части используют результаты предыдущих.
+    point1 >> drop_task_list >> point2
     chain(
-        point1,
-        *part_task_list,
+        point2,
+        *build_task_list,
         invalidate_acq_slice,
         create_acq_slice_hist,
         load_acq_slice_2_dl_hist,
@@ -257,7 +261,7 @@ with DAG(
         >> load_acq_temp2target >> check_acq_drp_target >> end
     branch_load_to_drp >> skip_drp >> end
 
-    main_task_list = [check_new_data] + refresh_task_list + part_task_list + [
+    main_task_list = [check_new_data] + refresh_task_list + drop_task_list + build_task_list + [
         invalidate_acq_slice,
         create_acq_slice_hist,
         load_acq_slice_2_dl_hist,
