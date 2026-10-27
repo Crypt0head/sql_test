@@ -139,7 +139,8 @@ base as (
     end as tariff_source,
     tar.c_tariff_plan,
     tar.tariff_name_actual,
-    fix.commission_monthly_fix,
+    -- Справочная колонка оставлена пустой, чтобы не менять структуру истории; в расчётах не участвует.
+    cast(null as decimal(18,2)) as commission_monthly_fix,
     coalesce(oper.commission_monthly, 0) as commission_monthly,
     coalesce(oper.commission_monthly, 0) as commission_monthly_oper_net,
     case
@@ -186,8 +187,6 @@ base as (
   left join {acq_06_cft_attrs} r2
     on cast(r2.cft_id as string) = cft.cft_id
   left join {acq_09_tariff} tar on tar.agr_id = p.agr_id and tar.report_month = p.report_month
-  left join {acq_08b_tariff_fix} fix
-    on cast(fix.c_tariff_plan as string) = cast(tar.c_tariff_plan as string)
   left join {acq_10o_doc_oper} oper on oper.agr_id = p.agr_id and oper.report_month = p.report_month
   left join mpos_one mpos on mpos.agr_id = p.agr_id and mpos.inn = p.inn and mpos.report_month = p.report_month
   left join {acq_mcc_by_agr} mcc on mcc.n_agr = p.n_agr
