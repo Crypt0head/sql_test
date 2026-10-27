@@ -1,0 +1,45 @@
+-- Колонки таблицы дашборда (все TEXT). Каждая должна быть в include/sql/acq_slice_load.sql;
+-- колонки среза, которых здесь нет (term_calc_source, c_tariff_plan и др.), остаются только в озере.
+INSERT INTO {target_acq_fin} (
+    report_month, snapshot_month_start, inn, company_name, agr_id, n_agr,
+    contract_number, d_valid_from, d_valid_to, n_agr_actual, contract_number_acq,
+    d_valid_from_actual, d_valid_to_actual, cdi_id, ssp_ocrm, cft_id, ogrn,
+    filial_rf, vsp_name, vsp_code, tariff_name, tariff_short, tariff_source,
+    retl_cnt, retl_with_term_cnt, active_retl_cnt, term_cnt, active_terms,
+    active_term_cnt, trx_cnt, trx_sum, commission_from_ops, commission_monthly,
+    commission_monthly_source, commission_monthly_mpos, commission_monthly_oper_raw,
+    commission_monthly_oper_net, int_component, commission_total, aur, amortization,
+    chod, fin_result, tsp_effective, acq_pct, chod_pct, mcc, mcc_profile,
+    mcc_cnt, rko, accounting, business_cards, credit, dbo, deposit, insurance,
+    loyalty_program, nmo, nso, pravocard, salary_project, self_inkass,
+    service_package, sms_info, factoring, lising, recommended_products,
+    kedr_obshiy_chod, kedr_src_cnt, kedr_obshiy_chod_contrib
+)
+SELECT
+    cast(report_month AS text), cast(snapshot_month_start AS text), cast(inn AS text),
+    cast(company_name AS text), cast(agr_id AS text), cast(n_agr AS text),
+    cast(contract_number AS text), cast(d_valid_from AS text), cast(d_valid_to AS text),
+    cast(n_agr_actual AS text), cast(contract_number_acq AS text),
+    cast(d_valid_from_actual AS text), cast(d_valid_to_actual AS text), cast(cdi_id AS text),
+    cast(ssp_ocrm AS text), cast(cft_id AS text), cast(ogrn AS text),
+    cast(filial_rf AS text), cast(vsp_name AS text), cast(vsp_code AS text),
+    cast(tariff_name AS text), cast(tariff_short AS text), cast(tariff_source AS text),
+    cast(retl_cnt AS text), cast(retl_with_term_cnt AS text), cast(active_retl_cnt AS text),
+    cast(term_cnt AS text), cast(active_terms AS text),
+    cast(active_term_cnt AS text), cast(trx_cnt AS text), cast(trx_sum AS text),
+    cast(commission_from_ops AS text), cast(commission_monthly AS text),
+    cast(commission_monthly_source AS text), cast(commission_monthly_mpos AS text),
+    cast(commission_monthly_oper_raw AS text),
+    cast(commission_monthly_oper_net AS text), cast(int_component AS text),
+    cast(commission_total AS text), cast(aur AS text), cast(amortization AS text),
+    cast(chod AS text), cast(fin_result AS text), cast(tsp_effective AS text),
+    cast(acq_pct AS text), cast(chod_pct AS text), cast(mcc AS text), cast(mcc_profile AS text),
+    cast(mcc_cnt AS text), cast(rko AS text), cast(accounting AS text),
+    cast(business_cards AS text), cast(credit AS text), cast(dbo AS text),
+    cast(deposit AS text), cast(insurance AS text),
+    cast(loyalty_program AS text), cast(nmo AS text), cast(nso AS text),
+    cast(pravocard AS text), cast(salary_project AS text), cast(self_inkass AS text),
+    cast(service_package AS text), cast(sms_info AS text), cast(factoring AS text),
+    cast(lising AS text), cast(recommended_products AS text),
+    cast(kedr_obshiy_chod AS text), cast(kedr_src_cnt AS text), cast(kedr_obshiy_chod_contrib AS text)
+FROM {target_acq_fin_temp}
