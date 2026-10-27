@@ -4,10 +4,14 @@ import sys
 from datetime import datetime, timedelta
 
 from airflow import DAG
+from airflow.hooks.base import BaseHook
 from airflow.models import Variable
 from airflow.models.baseoperator import chain
 from airflow.operators.dummy import DummyOperator
-from airflow.operators.python import PythonVirtualenvOperator
+from airflow.operators.python import BranchPythonOperator
+from airflow.sensors.python import PythonSensor
+from omegaconf import OmegaConf
+from raisa_transport import HIVE2JDBCOperator
 from rail_operator import (
     ENV,
     PROJECT_PATH,
@@ -15,14 +19,25 @@ from rail_operator import (
     RailSQLOperator,
     get_config,
     parse_requirements,
-    run_func_from_module,
 )
 
 sys.path.append(os.path.dirname(__file__))
 
 
-# Тестовый прогон без записи в DRP - ставь 'False'
-LOAD_TO_DRP = True
+cfg = get_config()
+
+dl_conn = BaseHook.get_connection(cfg.env.acq_datalake_conn_id)
+drp_conn = BaseHook.get_connection(cfg.env.acq_drp_conn_id)
+
+CONN_OVERRIDES = [
+    f'env.session_config.impala.user_params.user_name={dl_conn.login}',
+    f'env.session_config.impala.user_params.password="{dl_conn.password}"',
+    'env.session_config.impala.kerberos.use_credentials=True',
+    f'env.session_config.hive.user_params.user_name={dl_conn.login}',
+    f'env.session_config.hive.user_params.password="{dl_conn.password}"',
+    f'env.session_config.drp.user_params.user_name={drp_conn.login}',
+    f'env.session_config.drp.user_params.password="{drp_conn.password}"',
+]
 
 PY_COMMON_OVERRIDES = [
     f'env={ENV}',
@@ -30,28 +45,13 @@ PY_COMMON_OVERRIDES = [
     'env.exec_dt={{ ds }}',
     'env.exec_ts={{ data_interval_end }}',
     'env.dag_id={{ dag.dag_id }}',
-    f'env.session_config.impala.user_params.user_name={Variable.get("datalake_tech_user", default_var="")}',
-    f'env.session_config.impala.user_params.password="{Variable.get("datalake_tech_password", default_var="")}"',
-    'env.session_config.impala.kerberos.use_credentials=True',
-    f'env.session_config.hive.user_params.user_name={Variable.get("datalake_tech_user", default_var="")}',
-    f'env.session_config.hive.user_params.password="{Variable.get("datalake_tech_password", default_var="")}"',
-    f'env.session_config.drp.user_params.user_name={Variable.get("drp_user", default_var="")}',
-    f'env.session_config.drp.user_params.password="{Variable.get("drp_password", default_var="")}"',
+    *CONN_OVERRIDES,
 ]
 
 SQL_COMMON_OVERRIDES = [
     f'env={ENV}',
-    f'env.session_config.impala.user_params.user_name={Variable.get("datalake_tech_user", default_var="")}',
-    f'env.session_config.impala.user_params.password="{Variable.get("datalake_tech_password", default_var="")}"',
-    'env.session_config.impala.kerberos.use_credentials=True',
-    f'env.session_config.hive.user_params.user_name={Variable.get("datalake_tech_user", default_var="")}',
-    f'env.session_config.hive.user_params.password="{Variable.get("datalake_tech_password", default_var="")}"',
-    f'env.session_config.drp.user_params.user_name={Variable.get("drp_user", default_var="")}',
-    f'env.session_config.drp.user_params.password="{Variable.get("drp_password", default_var="")}"',
+    *CONN_OVERRIDES,
 ]
-
-
-cfg = get_config()
 
 dl_tables = cfg.env.tables.impala.tables
 drp_tables = cfg.env.tables.drp.tables
@@ -61,6 +61,21 @@ WINDOW_PARAMS = {
     'exec_dt': '{{ ds }}',
     'acq_prev_month_days': cfg.env.acq_prev_month_days,
 }
+
+
+def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[]):
+    import importlib
+    import sys
+
+    sys.path.append(project_path)
+    module = importlib.import_module(f"include.python.{module_name}")
+    return module.main(overrides=overrides)
+
+
+def branch_drp():
+    # Variable читается при запуске задачи, поэтому переключение DRP не требует правки кода.
+    load_to_drp = Variable.get(cfg.env.acq_load_to_drp_variable, default_var='true')
+    return 'hive2drp__acq_slice' if load_to_drp.strip().lower() == 'true' else 'skip_drp'
 
 
 with DAG(
@@ -73,7 +88,7 @@ with DAG(
         'retry_delay': timedelta(minutes=10),
     },
     description='Витрина эквайринга final_df: расчёт месяцев окна в Impala, история в озере, замена месяцев в DRP',
-    schedule_interval="0 10 * * *",
+    schedule_interval="0 12 * * *",
     start_date=datetime(2026, 1, 1),
     catchup=False,
     concurrency=3,
@@ -82,7 +97,23 @@ with DAG(
 ) as dag:
     start = DummyOperator(task_id='start')
     point1 = DummyOperator(task_id='point1')
-    end = DummyOperator(task_id='end')
+    skip_drp = DummyOperator(task_id='skip_drp')
+    end = DummyOperator(task_id='end', trigger_rule='none_failed_min_one_success')
+
+    check_new_data = PythonSensor(
+        task_id='check_new_data',
+        python_callable=run_func_from_module_for_sensor,
+        op_args=[PROJECT_PATH],
+        op_kwargs={
+            'module_name': 'check_new_data',
+            'overrides': PY_COMMON_OVERRIDES,
+        },
+        mode='reschedule',
+        poke_interval=cfg.env.acq_sensor_poke_seconds,
+        timeout=cfg.env.acq_sensor_timeout_seconds,
+        retries=0,
+        dag=dag,
+    )
 
     refresh_task_list = []
     for table in cfg.env.acq_source_tables:
@@ -116,16 +147,6 @@ with DAG(
             requirements=parse_requirements(),
             dag=dag
         ))
-
-    check_acq_slice = RailSQLOperator(
-        task_id='check_acq_slice',
-        sql_file='check_acq_slice.sql',
-        connect_to='hive',
-        sql_params={**dl_tables},
-        overrides=SQL_COMMON_OVERRIDES,
-        requirements=parse_requirements(),
-        dag=dag
-    )
 
     invalidate_acq_slice = RailSQLOperator(
         task_id='invalidate_acq_slice',
@@ -166,91 +187,85 @@ with DAG(
         dag=dag,
     )
 
-    start >> refresh_task_list >> point1
+    branch_load_to_drp = BranchPythonOperator(
+        task_id='branch_load_to_drp',
+        python_callable=branch_drp,
+        dag=dag,
+    )
+
+    hive2drp__acq_slice = HIVE2JDBCOperator(
+        task_id='hive2drp__acq_slice',
+        spark_conn_id=cfg.env.acq_spark_conn_id,
+        hive_table=dl_tables.acq_slice_load,
+        tgt_conn_id=cfg.env.acq_drp_conn_id,
+        tgt_table=drp_tables.target_acq_fin_temp,
+        spark_conf=OmegaConf.to_container(cfg.env.acq_spark_conf, resolve=True),
+        mode='overwrite',
+        enable_openlineage=False,
+    )
+
+    check_acq_drp_temp = RailSQLOperator(
+        task_id='check_acq_drp_temp',
+        sql_file='check_acq_drp_temp.sql',
+        connect_to='drp',
+        sql_params={**drp_tables, **WINDOW_PARAMS},
+        overrides=SQL_COMMON_OVERRIDES,
+        requirements=parse_requirements(),
+        dag=dag
+    )
+
+    delete_acq_months_from_target = RailSQLOperator(
+        task_id='delete_acq_months_from_target',
+        sql_file='delete_acq_months_from_target.sql',
+        connect_to='drp',
+        sql_params={**drp_tables, **WINDOW_PARAMS},
+        overrides=SQL_COMMON_OVERRIDES,
+        requirements=parse_requirements(),
+        dag=dag
+    )
+
+    load_acq_temp2target = RailSQLOperator(
+        task_id='load_acq_temp2target',
+        sql_file='load_acq_temp2target.sql',
+        connect_to='drp',
+        sql_params={**drp_tables},
+        overrides=SQL_COMMON_OVERRIDES,
+        requirements=parse_requirements(),
+        dag=dag
+    )
+
+    check_acq_drp_target = RailSQLOperator(
+        task_id='check_acq_drp_target',
+        sql_file='check_acq_drp_target.sql',
+        connect_to='drp',
+        sql_params={**drp_tables, **WINDOW_PARAMS},
+        overrides=SQL_COMMON_OVERRIDES,
+        requirements=parse_requirements(),
+        dag=dag
+    )
+
+    start >> check_new_data >> refresh_task_list >> point1
     chain(
         point1,
         *part_task_list,
-        check_acq_slice,
         invalidate_acq_slice,
         create_acq_slice_hist,
         load_acq_slice_2_dl_hist,
+        branch_load_to_drp,
     )
+    branch_load_to_drp >> hive2drp__acq_slice >> check_acq_drp_temp >> delete_acq_months_from_target \
+        >> load_acq_temp2target >> check_acq_drp_target >> end
+    branch_load_to_drp >> skip_drp >> end
 
-    main_task_list = refresh_task_list + part_task_list + [
-        check_acq_slice,
+    main_task_list = [check_new_data] + refresh_task_list + part_task_list + [
         invalidate_acq_slice,
         create_acq_slice_hist,
         load_acq_slice_2_dl_hist,
+        branch_load_to_drp,
+        hive2drp__acq_slice,
+        check_acq_drp_temp,
+        delete_acq_months_from_target,
+        load_acq_temp2target,
+        check_acq_drp_target,
     ]
-
-    if LOAD_TO_DRP:
-        # Около 7 000 строк в месяц передаются через pandas; вариант через Spark:
-        # HIVE2JDBCOperator(task_id='hive2drp__acq_final_df', spark_conn_id='spark_kuz_lle',
-        #     hive_table=dl_tables.acq_slice_load, tgt_conn_id='spark_drp',
-        #     tgt_table=drp_tables.target_acq_fin_temp,
-        #     mode='overwrite', enable_openlineage=False)
-        load_acq_slice_2_drp_temp = PythonVirtualenvOperator(
-            task_id='load_acq_slice_2_drp_temp',
-            python_callable=run_func_from_module,
-            op_kwargs={
-                'module_name': 'load_acq_slice_2_drp_temp',
-                'project_path': PROJECT_PATH,
-                'config': PY_COMMON_OVERRIDES,
-            },
-            requirements=parse_requirements(),
-        )
-
-        check_acq_drp_temp = RailSQLOperator(
-            task_id='check_acq_drp_temp',
-            sql_file='check_acq_drp_temp.sql',
-            connect_to='drp',
-            sql_params={**drp_tables, **WINDOW_PARAMS},
-            overrides=SQL_COMMON_OVERRIDES,
-            requirements=parse_requirements(),
-            dag=dag
-        )
-
-        delete_acq_months_from_target = RailSQLOperator(
-            task_id='delete_acq_months_from_target',
-            sql_file='delete_acq_months_from_target.sql',
-            connect_to='drp',
-            sql_params={**drp_tables, **WINDOW_PARAMS},
-            overrides=SQL_COMMON_OVERRIDES,
-            requirements=parse_requirements(),
-            dag=dag
-        )
-
-        load_acq_temp2target = RailSQLOperator(
-            task_id='load_acq_temp2target',
-            sql_file='load_acq_temp2target.sql',
-            connect_to='drp',
-            sql_params={**drp_tables},
-            overrides=SQL_COMMON_OVERRIDES,
-            requirements=parse_requirements(),
-            dag=dag
-        )
-
-        check_acq_drp_target = RailSQLOperator(
-            task_id='check_acq_drp_target',
-            sql_file='check_acq_drp_target.sql',
-            connect_to='drp',
-            sql_params={**drp_tables, **WINDOW_PARAMS},
-            overrides=SQL_COMMON_OVERRIDES,
-            requirements=parse_requirements(),
-            dag=dag
-        )
-
-        load_acq_slice_2_dl_hist >> load_acq_slice_2_drp_temp >> check_acq_drp_temp \
-            >> delete_acq_months_from_target >> load_acq_temp2target >> check_acq_drp_target >> end
-
-        main_task_list += [
-            load_acq_slice_2_drp_temp,
-            check_acq_drp_temp,
-            delete_acq_months_from_target,
-            load_acq_temp2target,
-            check_acq_drp_target,
-        ]
-    else:
-        load_acq_slice_2_dl_hist >> end
-
     main_task_list >> notification_on_fail
