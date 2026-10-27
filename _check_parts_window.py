@@ -17,7 +17,7 @@ SQL_DIR = REPO / "include/sql"
 EXEC_DATES = ["2026-09-05"]
 PREV_MONTH_DAYS = 10
 # Продолжить с этой части, не пересчитывая готовые (None - с начала). Готовые таблицы должны быть на ту же exec_dt.
-START_FROM = "acq_08b_tariff_fix"
+START_FROM = "acq_09_tariff"
 # Повтор при "Failed to acquire lock": исходную таблицу ODS в этот момент кто-то пишет.
 LOCK_RETRIES = 3
 LOCK_WAIT_SECONDS = 300
@@ -41,7 +41,6 @@ TABLES = {
     "acq_04_terminals": "sandbox_ai.tmp_shestopalov_acq_04_terminals",
     "acq_05b_active_retl": "sandbox_ai.tmp_shestopalov_acq_05b_active_retl",
     "acq_06_cft_attrs": "sandbox_ai.tmp_shestopalov_acq_06_cft_attrs",
-    "acq_08b_tariff_fix": "sandbox_ai.tmp_shestopalov_acq_08b_tariff_fix",
     "acq_09_tariff": "sandbox_ai.tmp_shestopalov_acq_09_tariff",
     "acq_10o_doc_oper": "sandbox_ai.tmp_shestopalov_acq_10o_doc_oper",
     "acq_10m_mpos": "sandbox_ai.tmp_shestopalov_acq_10m_mpos",
