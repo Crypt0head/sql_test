@@ -1,9 +1,10 @@
 """Проверка SQL-частей витрины с окном месяцев до выкладки DAG.
 
-Запуск в Jupyter (терминал): python _check_parts_window.py
+Запуск в ячейке Jupyter: %run _check_parts_window.py
 Запускать, только когда DAG etl__acq_final_df__test не работает: таблицы частей общие.
 Пишет только во временные таблицы sandbox_ai.tmp_shestopalov_acq_*; история и DRP не меняются.
 """
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -14,7 +15,14 @@ SQL_DIR = REPO / "include/sql"
 
 EXEC_DATES = ["2026-09-05"]
 PREV_MONTH_DAYS = 10
-MEM_LIMIT = "12g"
+MEM_LIMIT_DEFAULT = "8g"
+MEM_LIMIT_BY_PART = {
+    "acq_00_months": "1g",
+    "acq_mcc_by_agr": "4g",
+    "acq_kedr_chod": "4g",
+    "acq_05_trx_agr": "12g",
+    "acq_04_terminals": "12g",
+}
 HIST = "sandbox_ai.shestopalov_acq_final_df_hist"
 
 TABLES = {
@@ -60,14 +68,22 @@ imp = connect(
 )
 
 
+def log(message):
+    print(f"[{datetime.now():%H:%M:%S}] {message}", flush=True)
+
+
 def build_parts(exec_dt):
     params = {**TABLES, "exec_dt": exec_dt, "acq_prev_month_days": PREV_MONTH_DAYS}
     for part in PARTS:
         table = TABLES[part]
+        sql = (SQL_DIR / f"{part}.sql").read_text(encoding="utf-8").format(**params)
+        mem_limit = MEM_LIMIT_BY_PART.get(part, MEM_LIMIT_DEFAULT)
+        log(f"{part}: старт, MEM_LIMIT={mem_limit}")
         with imp:
-            imp.execute(f"SET MEM_LIMIT={MEM_LIMIT}")
+            imp.execute(f"SET MEM_LIMIT={mem_limit}")
             imp.execute(f"DROP TABLE IF EXISTS {table}")
-            imp.execute_from_file(str(SQL_DIR / f"{part}.sql"), **params)
+            log(f"{part}: таблица удалена, строю")
+            imp.execute(sql)
         if part in MONTHLY_PARTS:
             sql = f"SELECT report_month, count(*) AS n FROM {table} GROUP BY report_month ORDER BY report_month"
         else:
@@ -75,7 +91,7 @@ def build_parts(exec_dt):
         with imp:
             imp.execute("SET MEM_LIMIT=1g")
             df = imp.fetch(sql)
-        print(f"{part}: " + ", ".join(f"{r.report_month}={r.n}" for r in df.itertuples()))
+        log(f"{part}: готово, " + ", ".join(f"{r.report_month}={r.n}" for r in df.itertuples()))
 
 
 def check_slice():
