@@ -1,0 +1,50 @@
+# Ключи, которые нужно добавить на верхний уровень conf/env/test.yaml и conf/env/prod.yaml (рядом с exec_dt).
+
+# Сколько дней после конца месяца он ещё пересчитывается: окно расчёта = последние N дней до exec_dt.
+acq_prev_month_days: 10
+
+acq_source_tables:
+    - ods_alpha.scd1_agreements
+    - ods_alpha.scd1_companies
+    - ods_alpha.scd1_agr_terms
+    - ods_alpha.scd1_trx
+    - ods_alpha.scd1_trx_acq
+    - ods_alpha.scd1_trx_int
+    - ods_alpha.scd1_base24_fiids
+    - ods_alpha.scd1_merchants
+    - ods_alpha.scd1_pos_terminals
+    - ods_alpha.scd1_mrc_pos_rent
+    - ods.scd1_z_r2_ip_merchants
+    - ods.scd1_z_r2_tariff_plan
+    - ods.scd1_z_r2_tariff_tune
+    - ods.scd1_z_r2_tariff_fix
+    - ods.scd1_z_R2_IP_DOG_OPER
+    - ods.scd1_z_client
+    - ods.scd1_z_cl_corp
+    - ods.scd1_z_depart
+    - ods.scd1_z_branch
+    - ocrm_ul.s_org_ext
+    - cdiul.ext_id_org
+    - sandbox_ai.shestopalov_terminal_amortization_model_jan_aug
+    - sandbox_ai.shestopalov_kedr_obshiy_chod_inn_month
+    - sandbox_ai.prod__kuznetsov_lle__acc_ul_trx_features_impala
+    - sandbox_ai.le_nbo_scoring__targets_product_agreems
+
+# Части витрины по порядку. Имя = ключ таблицы в table_conf.yaml = имя файла include/sql/<имя>.sql.
+acq_parts:
+    - acq_00_months
+    - acq_01_sa_perimeter
+    - acq_02_cdi_map
+    - acq_03_cft_map
+    - acq_05_trx_agr
+    - acq_mcc_by_agr
+    - acq_04_terminals
+    - acq_05b_active_retl
+    - acq_06_cft_attrs
+    - acq_08b_tariff_fix
+    - acq_09_tariff
+    - acq_10o_doc_oper
+    - acq_10m_mpos
+    - acq_10b_products
+    - acq_kedr_chod
+    - acq_slice_load
