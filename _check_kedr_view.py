@@ -9,7 +9,7 @@ import pandas as pd
 from IPython.display import display
 from rail_connectors.connection import connect
 
-DRP_VIEW = "sbx_edm_dfip.v_detail_dmkb_dkb_dmdsmark"
+DRP_VIEW = "sbx_edm_dfip.v_detail_dmkb_dkb_dmsb"
 OUR_TABLE = "sandbox_ai.shestopalov_kedr_obshiy_chod_inn_month"
 LAKE_VIEWS = {"dmkb": "Kedr.v_detail_dmkb", "dmsb": "Kedr.v_detail_dmsb", "dkb": "Kedr.v_detail_dkb"}
 TECH_DRP_USER = "drp_raisa"
