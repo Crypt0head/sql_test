@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -72,6 +73,22 @@ def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[]
     return module.main(overrides=overrides)
 
 
+def redo_drop_on_retry(context):
+    # Упавший CTAS оставляет таблицу, и повтор build_* падает на «Table already exists».
+    # Сбрасываем парную drop_*: build_* зависит от неё и повторится только после нового удаления.
+    drop_task_id = context['task_instance'].task_id.replace('build_', 'drop_', 1)
+    logical_date = context['dag_run'].execution_date
+    try:
+        context['dag'].clear(
+            task_ids=[drop_task_id],
+            start_date=logical_date,
+            end_date=logical_date,
+            dag_run_state=False,
+        )
+    except Exception as exc:
+        logging.warning('Не удалось сбросить %s перед повтором: %s', drop_task_id, exc)
+
+
 def branch_drp():
     # Variable читается при запуске задачи, поэтому переключение DRP не требует правки кода.
     load_to_drp = Variable.get(cfg.env.acq_load_to_drp_variable, default_var='true')
@@ -91,7 +108,7 @@ with DAG(
     schedule_interval="0 12 * * *",
     start_date=datetime(2026, 1, 1),
     catchup=False,
-    concurrency=3,
+    concurrency=6,
     max_active_runs=1,
     tags=[ENV, 'dashboard', 'acquiring'],
 ) as dag:
@@ -113,6 +130,31 @@ with DAG(
         poke_interval=cfg.env.acq_sensor_poke_seconds,
         timeout=cfg.env.acq_sensor_timeout_seconds,
         retries=0,
+        dag=dag,
+    )
+
+    # Та же проверка с коротким таймаутом: не держит расчёт, только шлёт письмо о задержке источников.
+    check_new_data_late = PythonSensor(
+        task_id='check_new_data_late',
+        python_callable=run_func_from_module_for_sensor,
+        op_args=[PROJECT_PATH],
+        op_kwargs={
+            'module_name': 'check_new_data',
+            'overrides': PY_COMMON_OVERRIDES,
+        },
+        mode='reschedule',
+        poke_interval=cfg.env.acq_sensor_poke_seconds,
+        timeout=cfg.env.acq_sensor_late_seconds,
+        retries=0,
+        dag=dag,
+    )
+
+    notification_on_late = RailPYOperator(
+        task_id='notification_on_late',
+        py_file='notification_on_fail',
+        overrides=PY_COMMON_OVERRIDES,
+        requirements=parse_requirements(),
+        trigger_rule='one_failed',
         dag=dag,
     )
 
@@ -147,6 +189,7 @@ with DAG(
             sql_params={**dl_tables, **WINDOW_PARAMS},
             overrides=SQL_COMMON_OVERRIDES,
             requirements=parse_requirements(),
+            on_retry_callback=redo_drop_on_retry,
             dag=dag
         ))
 
@@ -247,8 +290,11 @@ with DAG(
     )
 
     start >> check_new_data >> refresh_task_list >> point1
+    start >> check_new_data_late >> notification_on_late
     # Удаления независимы и идут параллельно; сборки - по порядку acq_parts, части используют результаты предыдущих.
     point1 >> drop_task_list >> point2
+    for drop_task, build_task in zip(drop_task_list, build_task_list):
+        drop_task >> build_task
     chain(
         point2,
         *build_task_list,

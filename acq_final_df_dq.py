@@ -119,7 +119,8 @@ with DAG(
         failed_states=['failed', 'upstream_failed', 'skipped'],
         mode='reschedule',
         poke_interval=600,
-        timeout=8 * 60 * 60,
+        # DAG витрины может ждать источники почти сутки (acq_sensor_timeout_seconds).
+        timeout=24 * 60 * 60,
     )
 
     check_tasks = []
