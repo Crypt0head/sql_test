@@ -8,6 +8,7 @@ from airflow import DAG
 from airflow.hooks.base import BaseHook
 from airflow.models import Variable
 from airflow.models.baseoperator import chain
+from airflow.models.param import Param
 from airflow.operators.dummy import DummyOperator
 from airflow.operators.python import BranchPythonOperator
 from airflow.sensors.python import PythonSensor
@@ -64,13 +65,13 @@ WINDOW_PARAMS = {
 }
 
 
-def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[]):
+def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[], **kwargs):
     import importlib
     import sys
 
     sys.path.append(project_path)
     module = importlib.import_module(f"include.python.{module_name}")
-    return module.main(overrides=overrides)
+    return module.main(overrides=overrides, **kwargs)
 
 
 def redo_drop_on_retry(context):
@@ -110,6 +111,7 @@ with DAG(
     catchup=False,
     concurrency=6,
     max_active_runs=1,
+    params={'note': Param('', type=['null', 'string'], description='Комментарий к ручному запуску, на расчёт не влияет')},
     tags=[ENV, 'dashboard', 'acquiring'],
 ) as dag:
     start = DummyOperator(task_id='start')
@@ -125,6 +127,8 @@ with DAG(
         op_kwargs={
             'module_name': 'check_new_data',
             'overrides': PY_COMMON_OVERRIDES,
+            # После acq_sensor_skip_at пускает расчёт без недогруженных потоков; письмо о них шлёт check_new_data_late.
+            'allow_skip': True,
         },
         mode='reschedule',
         poke_interval=cfg.env.acq_sensor_poke_seconds,
