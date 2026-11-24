@@ -65,13 +65,14 @@ WINDOW_PARAMS = {
 }
 
 
-def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[], **kwargs):
+# Без **kwargs: если функция их принимает, Airflow передаёт в неё весь контекст запуска (conf, dag, ds, ...).
+def run_func_from_module_for_sensor(project_path, module_name=None, overrides=[], allow_skip=False):
     import importlib
     import sys
 
     sys.path.append(project_path)
     module = importlib.import_module(f"include.python.{module_name}")
-    return module.main(overrides=overrides, **kwargs)
+    return module.main(overrides=overrides, allow_skip=allow_skip)
 
 
 def redo_drop_on_retry(context):

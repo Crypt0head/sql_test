@@ -17,6 +17,27 @@ INSERT INTO {target_acq_fin} (
     service_package, sms_info, factoring, lising, recommended_products,
     kedr_obshiy_chod, kedr_src_cnt, kedr_obshiy_chod_contrib
 )
+-- filial_rf приводится к виду истории и таблицы прав rls_acq_user_filial («Алтайский РФ»):
+-- обрезка после «РФ», без «АО …», регистр «Первая заглавная». Только «АО "Россельхозбанк"» -> NULL (на дашборде «ЦРМБ»).
+-- Делается здесь, а не в Impala: там lower()/upper() не меняют кириллицу.
+WITH f0 AS (
+    SELECT t.*,
+           NULLIF(BTRIM(REGEXP_REPLACE(REPLACE(CAST(t.filial_rf AS TEXT), CHR(160), ' '), '\s+', ' ', 'g')), '') AS filial_s0
+    FROM {target_acq_fin_temp} t
+),
+f1 AS (
+    SELECT f0.*,
+           CASE WHEN STRPOS(LOWER(filial_s0), 'рф') > 0
+                THEN LEFT(filial_s0, STRPOS(LOWER(filial_s0), 'рф') + 1)
+                ELSE filial_s0
+           END AS filial_s1
+    FROM f0
+),
+f2 AS (
+    SELECT f1.*,
+           NULLIF(BTRIM(REGEXP_REPLACE(filial_s1, '\m(ао|пао|оао|зао)\M.*$', '', 'i'), ' ,;.-'), '') AS filial_s2
+    FROM f1
+)
 SELECT
     cast(report_month AS text), cast(snapshot_month_start AS text), cast(inn AS text),
     cast(company_name AS text), cast(agr_id AS text), cast(n_agr AS text),
@@ -24,8 +45,21 @@ SELECT
     cast(n_agr_actual AS text), cast(contract_number_acq AS text),
     cast(d_valid_from_actual AS text), cast(d_valid_to_actual AS text), cast(cdi_id AS text),
     cast(ssp_ocrm AS text), cast(cft_id AS text), cast(ogrn AS text),
-    cast(filial_rf AS text), cast(vsp_name AS text), cast(vsp_code AS text),
-    cast(tariff_name AS text), cast(tariff_short AS text), cast(tariff_source AS text),
+    REGEXP_REPLACE(UPPER(LEFT(filial_s2, 1)) || LOWER(SUBSTR(filial_s2, 2)), 'рф', 'РФ', 'gi'),
+    cast(vsp_name AS text), cast(vsp_code AS text),
+    cast(tariff_name AS text),
+    -- tariff_short из среза не берётся: в Impala lower() не меняет кириллицу, и «Индивидуальный» не находится.
+    -- STRPOS вместо LIKE: знак процента в SQL этого оператора может быть принят за параметр.
+    CASE
+      WHEN STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'акт') > 0 THEN 'По актам'
+      WHEN STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'акцион') > 0
+        OR STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'меню') > 0
+        OR STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'сезон') > 0 THEN 'Акционный'
+      WHEN STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'индив') > 0 THEN 'Индивидуальный'
+      WHEN STRPOS(LOWER(COALESCE(CAST(tariff_name AS text), '')), 'стандарт') > 0 THEN 'Стандарт'
+      ELSE 'Не сегментирован'
+    END,
+    cast(tariff_source AS text),
     cast(round(cast(retl_cnt AS numeric)) AS bigint)::text,
     cast(round(cast(retl_with_term_cnt AS numeric)) AS bigint)::text,
     cast(round(cast(active_retl_cnt AS numeric)) AS bigint)::text,
@@ -71,4 +105,4 @@ SELECT
     cast(kedr_obshiy_chod AS text),
     cast(round(cast(kedr_src_cnt AS numeric)) AS bigint)::text,
     cast(kedr_obshiy_chod_contrib AS text)
-FROM {target_acq_fin_temp}
+FROM f2
