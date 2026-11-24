@@ -130,11 +130,11 @@ COLS = {
     'agr': pick(cft_raw, ['номер', 'договор'], exclude=['тариф', 'индивид']),
     'status': pick(cft_raw, ['статус']),
     'start': pick(cft_raw, ['начал']),
-    'end': pick(cft_raw, ['окончан']),
+    'end': pick(cft_raw, ['окончан'], exclude=['тариф']),
     'close': pick(cft_raw, ['закрыт'], exclude=['статус']),
     'branch': pick(cft_raw, ['филиал'], required=False),
-    'tariff': pick(cft_raw, ['тариф'], exclude=['индивид', 'комисс'], required=False),
-    'ind_tariff': pick(cft_raw, ['индивид'], required=False),
+    'tariff': pick(cft_raw, ['тариф'], exclude=['индивид', 'комисс', 'дата'], required=False),
+    'ind_tariff': pick(cft_raw, ['индивид'], exclude=['комисс'], required=False),
     'id': pick(cft_raw, [], regex=r'(^|\W)id(\W|$)', required=False),
 }
 comm_cols = [c for c in cft_raw.columns if 'комисс' in _low(c)]
