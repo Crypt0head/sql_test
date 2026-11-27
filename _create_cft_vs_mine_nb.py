@@ -26,7 +26,7 @@ def code(text: str) -> None:
 md(
     """# Выгрузка договоров из ЦФТ и моя выгрузка из Альфы
 
-- Выгрузка ЦФТ берётся целиком, как есть. Колонки ищутся по названиям: наименование клиента, номер договора, статус, код филиала, даты начала, окончания и закрытия, тарифный план, индивидуальный тарифный план, ID, комиссии. Необязательные колонки, если их нет, пропускаются.
+- Какие договоры ЦФТ идут в сравнение, задаёт `CFT_ACTIVE_RULE`. По умолчанию `'term'` - как в Альфе: дата начала не позже даты среза, дата окончания пустая или не раньше неё. Дата закрытия не учитывается: в ЦФТ она обычно на полгода позже даты окончания. `'all'` - весь файл. Колонки ищутся по названиям: наименование клиента, номер договора, статус, код филиала, даты начала, окончания и закрытия, тарифный план, индивидуальный тарифный план, ID, комиссии. Необязательные колонки, если их нет, пропускаются.
 - Моя выгрузка - лист `С ТЭ на <дата>` из `trade_acquiring_clients_<дата>.xlsx`. **Дата должна совпадать с датой среза ЦФТ**, иначе часть расхождений будет из-за разницы дат.
 - Договоры сопоставляются по номеру. Если номер не совпал, но совпал ID ЦФТ с моим «ЦФТ ID», это тот же договор под другим номером.
 - К озеру один запрос: `ods_alpha.scd1_agreements` + `scd1_companies` (около минуты). Из него ИНН и наименование для номеров ЦФТ и причины. `scd1_agr_terms` не читается: если договор ЦФТ в Альфе проходит все фильтры, кроме привязки P, а у меня его нет, причина - привязка терминала P.
@@ -45,8 +45,9 @@ from rail_connectors.connection import connect
 
 AS_OF_DATE = '2026-09-01'
 BASE_DIR = Path('/home/jovyan/documents/Equaring')
-CFT_FILE = BASE_DIR / 'cft_acq_contracts.xlsx'
+CFT_FILE = Path('CFT_clients_010926.xlsx').resolve()  # файл лежит рядом с тетрадкой
 CFT_SHEET = 0
+CFT_ACTIVE_RULE = 'term'  # 'term' - как в Альфе: начало <= даты, окончание пустое или >= даты (дата закрытия не учитывается); 'all' - весь файл
 MINE_FILE = BASE_DIR / ('trade_acquiring_clients_%s.xlsx' % AS_OF_DATE)
 PREV_FILE = BASE_DIR / 'Скрипт для Ани по сборке продукта эквайринг' / 'cdwh_acq_clients.xlsx'
 OUT_FILE = BASE_DIR / ('te_cft_vs_mine_%s.xlsx' % AS_OF_DATE)
@@ -54,7 +55,7 @@ OUT_FILE = BASE_DIR / ('te_cft_vs_mine_%s.xlsx' % AS_OF_DATE)
 as_of = pd.Timestamp(AS_OF_DATE)
 as_of_ru = as_of.strftime('%d.%m.%Y')
 MINE_SHEET = 'С ТЭ на %s' % as_of_ru
-print(CFT_FILE, MINE_FILE, MINE_SHEET, sep='\n')
+print(CFT_FILE, CFT_FILE.exists(), MINE_FILE, MINE_FILE.exists(), MINE_SHEET, sep='\n')
 
 LAKE_USER = input('Логин Impala: ').strip()
 LAKE_PASSWORD = getpass.getpass('Пароль Impala: ')
@@ -165,6 +166,25 @@ cft_rows = len(cft)
 dup_numbers = int(cft['agr_key'].duplicated(keep=False).sum())
 cft = cft[cft['agr_key'].notna()].drop_duplicates('agr_key').reset_index(drop=True)
 
+cft['Действует на дату (ЦФТ)'] = (
+    (cft['Дата начала (ЦФТ)'].isna() | (cft['Дата начала (ЦФТ)'] <= as_of))
+    & (cft['Дата окончания (ЦФТ)'].isna() | (cft['Дата окончания (ЦФТ)'] >= as_of))
+)
+term_filter = pd.crosstab(
+    cft['Статус (ЦФТ)'].fillna('(пусто)'),
+    cft['Действует на дату (ЦФТ)'].map({True: 'Остаётся', False: 'Исключён'}),
+    margins=True, margins_name='Всего',
+).rename_axis('Статус в ЦФТ: фильтр по сроку действия на %s' % as_of_ru).reset_index()
+cft_all = cft
+if CFT_ACTIVE_RULE == 'term':
+    cft = cft[cft['Действует на дату (ЦФТ)']].reset_index(drop=True)
+elif CFT_ACTIVE_RULE != 'all':
+    raise ValueError("CFT_ACTIVE_RULE: 'term' или 'all'")
+print('Правило ЦФТ: %s | договоров в файле %s, в сравнении %s, исключено %s (начало позже даты: %s, окончание раньше даты: %s)' % (
+    CFT_ACTIVE_RULE, len(cft_all), len(cft), len(cft_all) - len(cft),
+    int((cft_all['Дата начала (ЦФТ)'] > as_of).sum()), int((cft_all['Дата окончания (ЦФТ)'] < as_of).sum())))
+display(term_filter)
+
 mine_raw = pd.read_excel(MINE_FILE, sheet_name=MINE_SHEET, dtype=object)
 my = pd.DataFrame({
     'agr_key': mine_raw['Номер договора'].map(norm_agr),
@@ -265,10 +285,9 @@ my['Есть в ЦФТ'] = my['agr_key'].isin(both_keys)
 pairs = cft[cft['Есть у меня']].merge(my[['agr_key', 'ЦФТ ID']], on='agr_key')
 pairs = pairs[pairs['ID (ЦФТ)'].notna() & pairs['ЦФТ ID'].notna()]
 id_same = float((pairs['ID (ЦФТ)'] == pairs['ЦФТ ID']).mean() * 100) if len(pairs) else 0.0
-ID_IS_AGR = COLS['id'] is not None and id_same >= 80
-print('ID в ЦФТ совпадает с моим «ЦФТ ID» у %.1f%% общих договоров (%s пар) -> %s'
-      % (id_same, len(pairs), 'это ID договора, сопоставляю по нему' if ID_IS_AGR
-         else 'это не ID договора, по ID не сопоставляю'))
+ID_IS_AGR = False
+print('id в ЦФТ совпадает с моим «ЦФТ ID» (ID клиента) у %.1f%% общих договоров (%s пар). '
+      'Что это за id, проверяет qc_te_cft_report_alpha.ipynb; здесь по id не сопоставляю.' % (id_same, len(pairs)))
 
 my_by_id = my[~my['Есть в ЦФТ'] & my['ЦФТ ID'].notna()].drop_duplicates('ЦФТ ID').set_index('ЦФТ ID')['Номер договора (мой)']
 cft_by_id = cft[~cft['Есть у меня'] & cft['ID (ЦФТ)'].notna()].drop_duplicates('ID (ЦФТ)').set_index('ID (ЦФТ)')['Номер договора (ЦФТ)']
@@ -333,7 +352,11 @@ def cft_reason(r):
         return '%s, в ЦФТ статус «%s»' % (r['reason'], r['Статус (ЦФТ)'] if pd.notna(r['Статус (ЦФТ)']) else 'пусто')
     return r['reason']
 
+cft_end_all = cft_all.set_index('agr_key')['Дата окончания (ЦФТ)']
+
 def my_reason(r):
+    if r['agr_key'] in cft_end_all.index and r['agr_key'] not in both_keys:
+        return 'В ЦФТ есть, но срок окончания раньше %s (в Альфе действует)' % as_of_ru
     if pd.notna(r['Номер в ЦФТ по ID']):
         return 'Тот же договор в ЦФТ под другим номером (совпал ID)'
     if COLS['branch'] and pd.notna(r['РФ']) and r['РФ'] not in rf_in_cft:
@@ -361,7 +384,8 @@ def pct(a, b):
 sc, mc = client_split(cft, 'Клиент у меня'), client_split(my, 'Клиент в ЦФТ')
 counts = pd.DataFrame([
     ('Строк в файле', cft_rows, len(mine_raw)),
-    ('Договоров (уникальных номеров)', len(cft), len(my)),
+    ('Договоров в файле (уникальных номеров)', len(cft_all), len(my)),
+    ('Договоров в сравнении', len(cft), len(my)),
     ('  из них с датой окончания раньше %s' % as_of_ru, int((cft['Дата окончания (ЦФТ)'] < as_of).sum()), None),
     ('Филиалов', cft['Код филиала'].nunique() if COLS['branch'] else None, my['РФ'].nunique()),
     ('Клиентов по ИНН', cft['inn'].nunique(), my['inn'].nunique()),
@@ -375,7 +399,9 @@ counts = pd.DataFrame([
      int(only_my['Номер в ЦФТ по ID'].notna().sum())),
     ('Клиентов есть у другой стороны', sc[1], mc[1]),
     ('Клиентов нет у другой стороны', sc[2], mc[2]),
-], columns=['Показатель', 'ЦФТ (весь файл)', 'Моя выгрузка на %s' % as_of_ru])
+], columns=['Показатель',
+            'ЦФТ (весь файл)' if CFT_ACTIVE_RULE == 'all' else 'ЦФТ (действуют по сроку на %s)' % as_of_ru,
+            'Моя выгрузка на %s' % as_of_ru])
 
 def reason_table(df, title):
     t = df['Причина'].value_counts().rename_axis(title).reset_index(name='Договоров')
@@ -463,7 +489,7 @@ ind_tariff = pd.DataFrame([
     ('Индивидуальный ТП заполнен', int(cft['Индивидуальный ТП (ЦФТ)'].notna().sum())),
     ('  из них есть у меня', int((cft['Индивидуальный ТП (ЦФТ)'].notna() & cft['Есть у меня']).sum())),
     ('ID заполнен', int(cft['ID (ЦФТ)'].notna().sum())),
-    ('ID совпадает с моим «ЦФТ ID» у общих договоров, %', round(id_same, 1)),
+    ('id совпадает с моим «ЦФТ ID» (ID клиента) у общих договоров, %', round(id_same, 1)),
 ] + [('Заполнена «%s»' % c, int(cft_raw[c].notna().sum())) for c in comm_cols],
     columns=['Показатель', 'Значение'])
 display(tariffs)
@@ -479,8 +505,8 @@ code(
     prev_keys = set(prev_raw[pick(prev_raw, ['номер', 'договор'], exclude=['тариф', 'индивид'])].map(norm_agr).dropna())
     prev_branch = pick(prev_raw, ['филиал'], required=False)
     prev_codes = set(prev_raw[prev_branch].map(norm_code).dropna()) if prev_branch else set()
-    new_codes = sorted(set(cft['Код филиала'].dropna()) - prev_codes) if prev_codes else []
-    cft_keys = set(cft['agr_key'])
+    new_codes = sorted(set(cft_all['Код филиала'].dropna()) - prev_codes) if prev_codes else []
+    cft_keys = set(cft_all['agr_key'])
     changes = pd.DataFrame([
         ('Договоров в прошлой выгрузке', len(prev_keys)),
         ('Договоров в новой выгрузке', len(cft_keys)),
@@ -488,7 +514,7 @@ code(
         ('Только в новой', len(cft_keys - prev_keys)),
         ('  из них есть у меня', len((cft_keys - prev_keys) & set(my['agr_key']))),
         ('Только в прошлой', len(prev_keys - cft_keys)),
-        ('Кодов филиалов: было / стало', '%s / %s' % (len(prev_codes), cft['Код филиала'].nunique())),
+        ('Кодов филиалов: было / стало', '%s / %s' % (len(prev_codes), cft_all['Код филиала'].nunique())),
         ('Новые коды филиалов', ', '.join(new_codes) or '-'),
         ('Новые коды = РФ', ', '.join('%s %s' % (c, code_to_rf.get(c, '?')) for c in new_codes) or '-'),
     ], columns=['Сравнение с прошлой выгрузкой', 'Значение'])
@@ -518,7 +544,7 @@ cft_cols = ['Номер договора (ЦФТ)', 'Клиент (ЦФТ)', 'С
 OUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 with pd.ExcelWriter(OUT_FILE, engine='openpyxl') as w:
     row = 0
-    for t in (counts, math, reasons_cft, reasons_my, by_status, changes):
+    for t in (counts, math, term_filter, reasons_cft, reasons_my, by_status, changes):
         t.to_excel(w, index=False, sheet_name='Итог', startrow=row)
         row += len(t) + 2
     row = 0
@@ -533,9 +559,10 @@ with pd.ExcelWriter(OUT_FILE, engine='openpyxl') as w:
             row += len(t) + 2
     dates(only_cft[['Причина'] + cft_cols + ['Клиент у меня', 'Мой номер по ID', 'Дата окончания (Альфа)']]
           ).rename(columns={'inn': 'ИНН (Альфа)'}).to_excel(w, index=False, sheet_name='Только в ЦФТ')
-    only_my.assign(**{'Наименование (Альфа)': only_my['agr_key'].map(name_by_key)})[
+    dates(only_my.assign(**{'Наименование (Альфа)': only_my['agr_key'].map(name_by_key),
+                            'Дата окончания (ЦФТ)': only_my['agr_key'].map(cft_end_all)})[
         ['Причина', 'Номер договора (мой)', 'ИНН (мой)', 'ЦФТ ID', 'РФ', 'Наименование (Альфа)',
-         'Клиент в ЦФТ', 'Номер в ЦФТ по ID']].to_excel(w, index=False, sheet_name='Только у меня')
+         'Клиент в ЦФТ', 'Дата окончания (ЦФТ)']]).to_excel(w, index=False, sheet_name='Только у меня')
     dates(cft[cft['Есть у меня']][cft_cols]).rename(columns={'inn': 'ИНН (Альфа)'}).to_excel(
         w, index=False, sheet_name='Есть у обоих')
     for ws in w.book.worksheets:
